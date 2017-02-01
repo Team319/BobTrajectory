@@ -2,8 +2,6 @@ package com.team319.trajectory;
 
 import org.json.simple.JSONObject;
 
-import com.team254.lib.trajectory.TrajectoryGenerator;
-
 //Combines left and right motion profiles in one object
 public class SrxTrajectory {
 	public SrxMotionProfile leftProfile;

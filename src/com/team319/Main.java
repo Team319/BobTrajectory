@@ -21,7 +21,7 @@ public class Main {
 		SrxTrajectoryImporter importer = new SrxTrajectoryImporter("Paths");
 		SrxTrajectoryExporter exporter = new SrxTrajectoryExporter("Paths");
 		
-		SrxTrajectory.Config config = new SrxTrajectory.Config();
+		SrxTranslator.Config config = new SrxTranslator.Config();
 		config.name = "BlueHopperAutoPt2";
 		config.dt = .01;
 		config.max_acc = 10.0;

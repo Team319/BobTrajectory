@@ -1,27 +1,23 @@
 package com.team319.trajectory;
 
-import java.io.IOException;
-import java.math.RoundingMode;
-import java.nio.charset.Charset;
-import java.nio.charset.StandardCharsets;
-import java.nio.file.Files;
-import java.nio.file.Paths;
-import java.text.DecimalFormat;
 
 import com.team254.lib.trajectory.Path;
 import com.team254.lib.trajectory.Trajectory;
-import com.team254.lib.trajectory.io.*;
-
-import org.json.simple.JSONObject;
-import org.json.simple.parser.JSONParser;
-import org.json.simple.parser.ParseException;
-import org.json.simple.JSONArray;
+import com.team254.lib.trajectory.TrajectoryGenerator;
 
 public class SrxTranslator {
+	
+	public static class Config extends TrajectoryGenerator.Config{
+		public String name;
+	    public double wheelbase_width;
+	    public double wheel_dia;
+	    public double scale_factor;  //used for reductions between encoder and wheel
+	    public int direction = 1;  //1 = forward, -1 = backward
+	}
 
 	// Reads a Path object generated from 254's trajectory planning software and
 	// creates a CombinedSrxMotionProfile from it
-	public SrxTrajectory getSRXProfileFromChezyPath(Path chezyPath, SrxTrajectory.Config config) {
+	public SrxTrajectory getSRXProfileFromChezyPath(Path chezyPath, SrxTranslator.Config config) {
 
 		// create an array of points for the SRX
 		double[][] leftPoints = extractSRXPointsFromChezyTrajectory(chezyPath.getPair().left, config.wheel_dia,

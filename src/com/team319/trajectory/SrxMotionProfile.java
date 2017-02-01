@@ -9,9 +9,9 @@ import org.json.simple.JSONObject;
 //Generic Motion Profile Class
 public class SrxMotionProfile {
 
-	private int numPoints;
+	public int numPoints;
 	// Position (rotations) Velocity (RPM) Duration (ms)
-	private double[][] points;
+	public double[][] points;
 
 	public SrxMotionProfile() {
 

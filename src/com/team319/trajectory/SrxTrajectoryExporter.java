@@ -5,6 +5,10 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 
+import org.json.simple.JSONObject;
+
+import com.team254.lib.trajectory.WaypointSequence;
+
 public class SrxTrajectoryExporter {
 	
 	public SrxTrajectoryExporter(String directory){
@@ -13,13 +17,19 @@ public class SrxTrajectoryExporter {
 
 	public String directory;
 
-	public boolean exportCombinedSrxMotionProfile(SrxTrajectory combined, String profileName){
+	public boolean exportSrxTrajectory(SrxTrajectory combined, SrxTranslator.Config config, BobWaypointSequence waypoints){
 		
-		String combinedPath = joinFilePaths(directory, profileName + "_SrxTrajectory.json");
+		JSONObject exportJson = new JSONObject();
+		
+		String combinedPath = joinFilePaths(directory, config.name + "_SrxTrajectory.json");
+		
+		exportJson.put("config", config.toJson());
+		exportJson.put("waypoints", waypoints.toJson());
+		exportJson.put("trajectory", combined.toJson());
 
-		String combinedJSON = combined.toJson().toJSONString();
+		String exportString = combined.toJson().toJSONString();
 		
-		if (!writeFile(combinedPath, combinedJSON)){
+		if (!writeFile(combinedPath, exportString)){
 			System.err.println(combinedPath + " could not be written!!!!1");
 			return false;
 		}

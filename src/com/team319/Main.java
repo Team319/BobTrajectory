@@ -3,6 +3,7 @@ package com.team319;
 import com.team254.lib.trajectory.Path;
 import com.team254.lib.trajectory.PathGenerator;
 import com.team254.lib.trajectory.WaypointSequence;
+import com.team319.trajectory.BobWaypointSequence;
 import com.team319.trajectory.SrxTrajectory;
 import com.team319.trajectory.SrxTrajectoryExporter;
 import com.team319.trajectory.SrxTrajectoryImporter;
@@ -48,13 +49,13 @@ public class Main {
 			Path path = PathGenerator.makePath(p, config, config.wheelbase_width, config.name);
 
 			SrxTranslator srxt = new SrxTranslator();
-			SrxTrajectory combined = srxt.getSRXProfileFromChezyPath(path, config);
+			SrxTrajectory combined = srxt.getSrxTrajectoryFromChezyPath(path, config);
 
-			if(!exporter.exportCombinedSrxMotionProfile(combined, config.name)){
+			if(!exporter.exportSrxTrajectory(combined, config, p)){
 				System.err.println("A path could not be written!!!!");
 				System.exit(1);
 			}else{
-				SrxTrajectory t = importer.importSrxTrajectory(config.name);
+				//SrxTrajectory t = importer.importSrxTrajectory(config.name);
 				PathViewer.showPath(path);				
 			}
 		}

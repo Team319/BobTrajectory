@@ -1,6 +1,8 @@
 package com.team319.trajectory;
 
 
+import org.json.simple.JSONObject;
+
 import com.team254.lib.trajectory.Path;
 import com.team254.lib.trajectory.Trajectory;
 import com.team254.lib.trajectory.TrajectoryGenerator;
@@ -13,11 +15,26 @@ public class SrxTranslator {
 	    public double wheel_dia;
 	    public double scale_factor;  //used for reductions between encoder and wheel
 	    public int direction = 1;  //1 = forward, -1 = backward
+	    
+	    public JSONObject toJson(){
+	    	JSONObject obj = new JSONObject();
+	    	obj.put("name", name);
+	    	obj.put("wheelbase_width", wheelbase_width);
+	    	obj.put("wheel_dia", wheel_dia);
+	    	obj.put("scale_factor", scale_factor);
+	    	obj.put("direction", direction);
+	    	obj.put("dt", dt);
+	    	obj.put("max_vel", max_vel);
+	    	obj.put("max_acc", max_acc);
+	    	obj.put("max_jerk", max_jerk);
+	    	
+	    	return obj;
+	    }
 	}
 
 	// Reads a Path object generated from 254's trajectory planning software and
 	// creates a CombinedSrxMotionProfile from it
-	public SrxTrajectory getSRXProfileFromChezyPath(Path chezyPath, SrxTranslator.Config config) {
+	public SrxTrajectory getSrxTrajectoryFromChezyPath(Path chezyPath, SrxTranslator.Config config) {
 
 		// create an array of points for the SRX
 		double[][] leftPoints = extractSRXPointsFromChezyTrajectory(chezyPath.getPair().left, config.wheel_dia,

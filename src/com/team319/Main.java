@@ -29,8 +29,8 @@ public class Main {
 		config.max_acc = 10.0;
 		config.max_jerk = 60.0;
 		config.max_vel = 15.0;
-		config.wheelbase_width = 23.25 / 12;
-		config.wheel_dia = 5.875;
+		config.wheelbase_width_feet = 23.25 / 12;
+		config.wheel_dia_inches = 5.875;
 		config.scale_factor = 2.778;
 		config.direction = -1;
 
@@ -39,7 +39,7 @@ public class Main {
 		p.addWaypoint(new WaypointSequence.Waypoint(0, 0, 0));
 		p.addWaypoint(new WaypointSequence.Waypoint(-3, -1, .8));
 
-		Path path = PathGenerator.makePath(p, config, config.wheelbase_width, config.name);
+		Path path = PathGenerator.makePath(p, config, config.wheelbase_width_feet, config.name);
 
 		SrxTranslator srxt = new SrxTranslator();
 		SrxTrajectory combined = srxt.getSrxTrajectoryFromChezyPath(path, config);

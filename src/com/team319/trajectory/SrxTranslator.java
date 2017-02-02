@@ -11,16 +11,16 @@ public class SrxTranslator {
 	
 	public static class Config extends TrajectoryGenerator.Config{
 		public String name;
-	    public double wheelbase_width;
-	    public double wheel_dia;
+	    public double wheelbase_width_feet;
+	    public double wheel_dia_inches;
 	    public double scale_factor;  //used for reductions between encoder and wheel
 	    public int direction = 1;  //1 = forward, -1 = backward
 	    
 	    public JSONObject toJson(){
 	    	JSONObject obj = new JSONObject();
 	    	obj.put("name", name);
-	    	obj.put("wheelbase_width", wheelbase_width);
-	    	obj.put("wheel_dia", wheel_dia);
+	    	obj.put("wheelbase_width_feet", wheelbase_width_feet);
+	    	obj.put("wheel_dia_inches", wheel_dia_inches);
 	    	obj.put("scale_factor", scale_factor);
 	    	obj.put("direction", direction);
 	    	obj.put("dt", dt);
@@ -37,11 +37,11 @@ public class SrxTranslator {
 	public SrxTrajectory getSrxTrajectoryFromChezyPath(Path chezyPath, SrxTranslator.Config config) {
 
 		// create an array of points for the SRX
-		double[][] leftPoints = extractSRXPointsFromChezyTrajectory(chezyPath.getPair().left, config.wheel_dia,
+		double[][] leftPoints = extractSRXPointsFromChezyTrajectory(chezyPath.getPair().left, config.wheel_dia_inches,
 				config.scale_factor, config.direction);
 
 		// do it again for the right side
-		double[][] rightPoints = extractSRXPointsFromChezyTrajectory(chezyPath.getPair().right, config.wheel_dia,
+		double[][] rightPoints = extractSRXPointsFromChezyTrajectory(chezyPath.getPair().right, config.wheel_dia_inches,
 				config.scale_factor, config.direction);
 
 		// create the motion profile objects

@@ -25,17 +25,17 @@ public class SrxTrajectoryImporter {
 		String relativeFilePath = joinFilePaths(this.path, fileName);
 		File file = new File(relativeFilePath);
 		
-		JSONObject combinedJson = null;
+		JSONObject jsonTraj = null;
 		JSONParser parser = new JSONParser();
 		
 		try {
-			String profileData = readFile(file.getAbsolutePath());
-			combinedJson = (JSONObject) parser.parse(profileData);
+			String data = readFile(file.getAbsolutePath());
+			jsonTraj = (JSONObject) parser.parse(data);
 		} catch (Exception e) {
 			return null;
 		}
 		
-		SrxTrajectory cSrxProfile = new SrxTrajectory(combinedJson);
+		SrxTrajectory cSrxProfile = new SrxTrajectory((JSONObject) jsonTraj.get("trajectory"));
 		
 		return cSrxProfile;
 		

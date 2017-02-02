@@ -5,6 +5,11 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 
+import org.json.simple.JSONArray;
+import org.json.simple.JSONObject;
+
+import com.team254.lib.trajectory.WaypointSequence;
+
 public class SrxTrajectoryExporter {
 	
 	public SrxTrajectoryExporter(String directory){
@@ -13,18 +18,37 @@ public class SrxTrajectoryExporter {
 
 	public String directory;
 
-	public boolean exportCombinedSrxMotionProfile(SrxTrajectory combined, String profileName){
+	public boolean exportSrxTrajectory(SrxTrajectory combined, SrxTranslator.Config config, WaypointSequence waypoints){
 		
-		String combinedPath = joinFilePaths(directory, profileName + "_SrxTrajectory.json");
+		JSONObject exportJson = new JSONObject();
+		
+		String combinedPath = joinFilePaths(directory, config.name + "_SrxTrajectory.json");
+		
+		exportJson.put("config", config.toJson());
+		exportJson.put("waypoints", waypointSequenceToJson(waypoints));
+		exportJson.put("trajectory", combined.toJson());
 
-		String combinedJSON = combined.toJson().toJSONString();
+		String exportString = exportJson.toJSONString();
 		
-		if (!writeFile(combinedPath, combinedJSON)){
+		if (!writeFile(combinedPath, exportString)){
 			System.err.println(combinedPath + " could not be written!!!!1");
 			return false;
 		}
 		
 		return true;
+	}
+	
+	public JSONArray waypointSequenceToJson(WaypointSequence wps){
+		JSONArray arr = new JSONArray();
+		for (int i=0; i < wps.getNumWaypoints(); i++){
+			JSONObject j = new JSONObject();
+			j.put("x", wps.getWaypoint(i).x);
+			j.put("y", wps.getWaypoint(i).y);
+			j.put("theta", wps.getWaypoint(i).theta);
+			arr.add(j);
+		}
+		
+		return arr;
 	}
 
 	private boolean writeFile(String filePath, String data) {

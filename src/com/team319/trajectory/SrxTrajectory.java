@@ -12,9 +12,9 @@ public class SrxTrajectory {
 		this.rightProfile = right;
 	}
 
-	public SrxTrajectory(JSONObject combinedProfile){
-		leftProfile = new SrxMotionProfile((JSONObject) combinedProfile.get("left"));
-		rightProfile = new SrxMotionProfile((JSONObject) combinedProfile.get("right"));
+	public SrxTrajectory(JSONObject json){
+		leftProfile = new SrxMotionProfile((JSONObject) json.get("left"));
+		rightProfile = new SrxMotionProfile((JSONObject) json.get("right"));
 	}
 
 	public JSONObject toJson(){

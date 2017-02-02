@@ -20,7 +20,7 @@ public class Main {
 
 	public static void main(String[] args) {
 
-		SrxTrajectoryImporter importer = new SrxTrajectoryImporter("Paths");
+		//SrxTrajectoryImporter importer = new SrxTrajectoryImporter("Paths");
 		SrxTrajectoryExporter exporter = new SrxTrajectoryExporter("Paths");
 
 		SrxTranslator.Config config = new SrxTranslator.Config();
@@ -32,12 +32,12 @@ public class Main {
 		config.wheelbase_width_feet = 23.25 / 12;
 		config.wheel_dia_inches = 5.875;
 		config.scale_factor = 2.778;
-		config.direction = -1;
+		config.direction = 1;
 
 		// Description of this auto mode path.
 		WaypointSequence p = new WaypointSequence(10);
 		p.addWaypoint(new WaypointSequence.Waypoint(0, 0, 0));
-		p.addWaypoint(new WaypointSequence.Waypoint(-3, -1, .8));
+		p.addWaypoint(new WaypointSequence.Waypoint(5, 0, 0));
 
 		Path path = PathGenerator.makePath(p, config, config.wheelbase_width_feet, config.name);
 

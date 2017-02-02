@@ -7,11 +7,9 @@ import com.team254.lib.trajectory.WaypointSequence;
 import com.team254.lib.util.ChezyMath;
 
 /**
- * A WaypointSequence is a sequence of Waypoints.  #whatdidyouexpect
- *
- * @author Art Kalb
- * @author Stephen Pinkerton
- * @author Jared341
+ * Just 254's WaypointSequence, but JSONable
+ * 
+ * @author ttremblay
  */
 public class BobWaypointSequence extends WaypointSequence{
 

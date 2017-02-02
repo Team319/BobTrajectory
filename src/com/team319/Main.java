@@ -48,7 +48,7 @@ public class Main {
 			System.err.println("A path could not be written!!!!");
 			System.exit(1);
 		} else {
-			SrxTrajectory t = importer.importSrxTrajectory(config.name);
+			///SrxTrajectory t = importer.importSrxTrajectory(config.name);
 			PathViewer.showPath(path);
 		}
 	}

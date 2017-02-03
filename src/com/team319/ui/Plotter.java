@@ -16,6 +16,7 @@ public class Plotter {
 	
 	public void plotChezyTrajectory(Path path) {
 		Stage stage = new Stage();
+		
 		stage.setTitle("Scatter Chart Sample");
 		
 		final NumberAxis xAxis = new NumberAxis(getMinXY(path)[0]-2.5, getMaxXY(path)[0]+2.5, .5);
@@ -25,7 +26,8 @@ public class Plotter {
 		yAxis.setLabel("y");
 		sc.setTitle(path.getName());
 
-		XYChart.Series series1 = new XYChart.Series();
+		ScatterChart.Series series1 = new ScatterChart.Series();
+		
 		series1.setName("Left");
 		for (int i = 0; i < path.getPair().left.getNumSegments(); i++) {
 			series1.getData().add(new XYChart.Data(path.getPair().left.getSegment(i).x, path.getPair().left.getSegment(i).y));
@@ -34,7 +36,7 @@ public class Plotter {
 		XYChart.Series series2 = new XYChart.Series();
 		series2.setName("Right");
 		for (int i = 0; i < path.getPair().left.getNumSegments(); i++) {
-			series1.getData().add(new XYChart.Data(path.getPair().right.getSegment(i).x, path.getPair().right.getSegment(i).y));
+			series2.getData().add(new XYChart.Data(path.getPair().right.getSegment(i).x, path.getPair().right.getSegment(i).y));
 		}
 		
 		sc.getData().addAll(series1, series2);
@@ -44,7 +46,7 @@ public class Plotter {
 		stage.setScene(scene);
 		stage.show();
 	}
-	
+	/*
 	public void plotChezyTrajectory(Path path, double xMin, double xMax, double yMin, double yMax) {
 		Stage stage = new Stage();
 		stage.setTitle("Scatter Chart Sample");
@@ -65,7 +67,7 @@ public class Plotter {
 		XYChart.Series series2 = new XYChart.Series();
 		series2.setName("Right");
 		for (int i = 0; i < path.getPair().left.getNumSegments(); i++) {
-			series1.getData().add(new XYChart.Data(path.getPair().right.getSegment(i).x, path.getPair().right.getSegment(i).y));
+			series2.getData().add(new XYChart.Data(path.getPair().right.getSegment(i).x, path.getPair().right.getSegment(i).y));
 		}
 		
 		sc.getData().addAll(series1, series2);
@@ -75,7 +77,7 @@ public class Plotter {
 		stage.setScene(scene);
 		stage.show();
 	}
-	
+	*/
 	private double[] getMaxXY(Path p)
 	{
 		double maxX = -100;

@@ -35,10 +35,6 @@ public class SrxTranslator {
 	// Reads a Path object generated from 254's trajectory planning software and
 	// creates a CombinedSrxMotionProfile from it
 	public SrxTrajectory getSrxTrajectoryFromChezyPath(Path chezyPath, SrxTranslator.Config config) {
-		
-		if (config.direction == -1){
-			chezyPath.goRight();
-		}
 
 		// create an array of points for the SRX
 		double[][] leftPoints = extractSRXPointsFromChezyTrajectory(chezyPath.getPair().left, config.wheel_dia_inches,
@@ -66,10 +62,10 @@ public class SrxTranslator {
 		for (int i = 0; i < traj.getSegments().length; i++) {
 
 			// translate from feet to rotations
-			points[i][0] = direction * convertFeetToEncoderRotations(traj.getSegment(i).pos, wheelDiameterInches, scaleFactor);
+			points[i][0] = convertFeetToEncoderRotations(traj.getSegment(i).pos, wheelDiameterInches, scaleFactor);
 
 			// translate from fps to rpm
-			points[i][1] = direction * convertFpsToEncoderRpm(traj.getSegment(i).vel, wheelDiameterInches, scaleFactor);
+			points[i][1] = convertFpsToEncoderRpm(traj.getSegment(i).vel, wheelDiameterInches, scaleFactor);
 
 			// translate from seconds to milliseconds
 			points[i][2] = traj.getSegment(i).dt * 1000;

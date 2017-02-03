@@ -3,6 +3,7 @@ package com.team319;
 import com.team254.lib.trajectory.Path;
 import com.team254.lib.trajectory.PathGenerator;
 import com.team254.lib.trajectory.WaypointSequence;
+import com.team319.trajectory.BobPathGenerator;
 import com.team319.trajectory.BobWaypointSequence;
 import com.team319.trajectory.SrxTrajectory;
 import com.team319.trajectory.SrxTrajectoryExporter;
@@ -20,7 +21,7 @@ public class Main {
 
 	public static void main(String[] args) {
 
-		SrxTrajectoryImporter importer = new SrxTrajectoryImporter("Paths");
+		//SrxTrajectoryImporter importer = new SrxTrajectoryImporter("Paths");
 		SrxTrajectoryExporter exporter = new SrxTrajectoryExporter("Paths");
 
 		SrxTranslator.Config config = new SrxTranslator.Config();
@@ -37,9 +38,9 @@ public class Main {
 		// Description of this auto mode path.
 		WaypointSequence p = new WaypointSequence(10);
 		p.addWaypoint(new WaypointSequence.Waypoint(0, 0, 0));
-		p.addWaypoint(new WaypointSequence.Waypoint(-3, -1, .8));
+		p.addWaypoint(new WaypointSequence.Waypoint(-3, -1.8, .8));
 
-		Path path = PathGenerator.makePath(p, config, config.wheelbase_width_feet, config.name);
+		Path path = BobPathGenerator.makePath(p, config);
 
 		SrxTranslator srxt = new SrxTranslator();
 		SrxTrajectory combined = srxt.getSrxTrajectoryFromChezyPath(path, config);

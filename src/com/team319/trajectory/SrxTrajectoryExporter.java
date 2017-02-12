@@ -18,7 +18,7 @@ public class SrxTrajectoryExporter {
 
 	public String directory;
 
-	public boolean exportSrxTrajectory(SrxTrajectory combined, SrxTranslator.Config config, WaypointSequence waypoints){
+	public boolean exportSrxTrajectory(SrxTrajectory combined, SrxTranslatorConfig config, WaypointSequence waypoints){
 		
 		JSONObject exportJson = new JSONObject();
 		

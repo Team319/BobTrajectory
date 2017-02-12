@@ -4,18 +4,31 @@ import com.team254.lib.trajectory.Path;
 import com.team254.lib.trajectory.PathGenerator;
 import com.team254.lib.trajectory.Trajectory;
 import com.team254.lib.trajectory.Trajectory.Pair;
+import com.team319.ui.PathViewer;
+import com.team254.lib.trajectory.TrajectoryGenerator;
 import com.team254.lib.trajectory.WaypointSequence;
 
 public class BobPathGenerator extends PathGenerator {
+
 	
-	public static Path makePath(WaypointSequence waypoints, SrxTranslator.Config config){
-		Path p = PathGenerator.makePath(waypoints, config, config.wheelbase_width_feet, config.name);
+	public SrxTranslatorConfig config;
+	public WaypointSequence waypointSequence;
+	private Path _p;
+	
+	public BobPathGenerator (SrxTranslatorConfig config){
+		this.config = new SrxTranslatorConfig(config);
+		this.waypointSequence = new WaypointSequence(10);
+		
+	}
+	
+	public void makePath(){
+		Path p = PathGenerator.makePath(this.waypointSequence, this.config, this.config.wheelbase_width_feet, this.config.name);
 		
 		if (config.direction == -1){
-			return reversePath(p);
+			this._p = reversePath(p);
 		}
 		else{
-			return p;
+			this._p = p;
 		}
 	}
 	
@@ -28,5 +41,23 @@ public class BobPathGenerator extends PathGenerator {
 		
 		return new Path(p.getName(),new Pair(oldRight, oldLeft));
 	}
+	
+	public void exportPath(String relativePathName){
+		SrxTrajectoryExporter exporter = new SrxTrajectoryExporter(relativePathName);
+		
+		this.makePath();
+
+		SrxTranslator srxt = new SrxTranslator();
+		SrxTrajectory combined = srxt.getSrxTrajectoryFromChezyPath(_p, this.config);
+
+		if (!exporter.exportSrxTrajectory(combined, this.config, this.waypointSequence)) {
+			System.err.println("A path could not be written!!!!");
+			System.exit(1);
+		} else {
+			///SrxTrajectory t = importer.importSrxTrajectory(config.name);
+			PathViewer.showPath(_p);
+		}
+	}
+	
 
 }

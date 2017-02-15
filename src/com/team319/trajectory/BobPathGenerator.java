@@ -21,12 +21,10 @@ public class BobPathGenerator extends PathGenerator {
 	}
 	
 	public Path getPath(){
-		makePath();
 		return _p; 
 	}
 	
 	public void appendPath(Path toAppend){
-		makePath();
 		_p.getLeftWheelTrajectory().append(toAppend.getLeftWheelTrajectory());
 		_p.getRightWheelTrajectory().append(toAppend.getRightWheelTrajectory());
 	}

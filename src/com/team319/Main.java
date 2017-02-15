@@ -57,6 +57,8 @@ public class Main {
 		blueHopperAutoPt2.waypointSequence.addWaypoint(new WaypointSequence.Waypoint(6.75, 2.75, Math.toRadians(90.0)));
 		blueHopperAutoPt2.waypointSequence.addWaypoint(new WaypointSequence.Waypoint(10, 0, Math.toRadians(179)));
 		
+		blueHopperAutoPt1.makePath();
+		blueHopperAutoPt2.makePath();
 		blueHopperAutoPt1.appendPath(blueHopperAutoPt2.getPath());
 		
 		

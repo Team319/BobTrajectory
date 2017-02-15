@@ -1,5 +1,7 @@
 package com.team319.ui;
 
+import java.text.DecimalFormat;
+
 import com.team254.lib.trajectory.Path;
 import com.team254.lib.trajectory.Trajectory.Segment;
 
@@ -24,7 +26,12 @@ public class Plotter {
 		final ScatterChart<Number, Number> sc = new ScatterChart<Number, Number>(xAxis, yAxis);
 		xAxis.setLabel("x");
 		yAxis.setLabel("y");
-		sc.setTitle(path.getName());
+		DecimalFormat df = new DecimalFormat("0.00##");
+		StringBuilder title = new StringBuilder();
+		title.append(path.getName()).append(" : ")
+		.append(df.format(path.getLeftWheelTrajectory().getNumSegments() * 0.01))
+		.append("s");
+		sc.setTitle(title.toString());
 
 		ScatterChart.Series series1 = new ScatterChart.Series();
 		

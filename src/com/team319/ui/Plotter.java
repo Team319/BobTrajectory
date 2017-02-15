@@ -29,7 +29,7 @@ public class Plotter {
 		DecimalFormat df = new DecimalFormat("0.00##");
 		StringBuilder title = new StringBuilder();
 		title.append(path.getName()).append(" : ")
-		.append(df.format(path.getLeftWheelTrajectory().getNumSegments() * 0.01))
+		.append(df.format(path.getLeftWheelTrajectory().getNumSegments() * path.getLeftWheelTrajectory().getSegment(0).dt))
 		.append("s");
 		sc.setTitle(title.toString());
 

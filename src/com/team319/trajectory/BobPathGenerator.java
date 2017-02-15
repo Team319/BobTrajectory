@@ -1,12 +1,18 @@
 package com.team319.trajectory;
 
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+import java.nio.file.StandardOpenOption;
+
 import com.team254.lib.trajectory.Path;
 import com.team254.lib.trajectory.PathGenerator;
 import com.team254.lib.trajectory.Trajectory;
 import com.team254.lib.trajectory.Trajectory.Pair;
 import com.team319.ui.PathViewer;
-import com.team254.lib.trajectory.TrajectoryGenerator;
+
 import com.team254.lib.trajectory.WaypointSequence;
+import com.team254.lib.trajectory.io.IPathSerializer;
 
 public class BobPathGenerator extends PathGenerator {
 
@@ -21,7 +27,7 @@ public class BobPathGenerator extends PathGenerator {
 		
 	}
 	
-	public void makePath(){
+	private void makePath(){
 		Path p = PathGenerator.makePath(this.waypointSequence, this.config, this.config.wheelbase_width_feet, this.config.name);
 		
 		if (config.direction == -1){
@@ -32,7 +38,7 @@ public class BobPathGenerator extends PathGenerator {
 		}
 	}
 	
-	private static Path reversePath(Path p){
+	private Path reversePath(Path p){
 		Trajectory oldLeft = p.getLeftWheelTrajectory();
 		Trajectory oldRight = p.getRightWheelTrajectory();
 		
@@ -45,7 +51,7 @@ public class BobPathGenerator extends PathGenerator {
 	public void exportPath(String relativePathName){
 		SrxTrajectoryExporter exporter = new SrxTrajectoryExporter(relativePathName);
 		
-		this.makePath();
+		makePath();
 
 		SrxTranslator srxt = new SrxTranslator();
 		SrxTrajectory combined = srxt.getSrxTrajectoryFromChezyPath(_p, this.config);
@@ -59,5 +65,18 @@ public class BobPathGenerator extends PathGenerator {
 		}
 	}
 	
-
+	public void exportPathWithSerializer(IPathSerializer serializer, String relativePathName) {
+		makePath();
+		
+		String pathName = relativePathName + "/" + _p.getName();
+		String data = serializer.serialize(_p);
+		try {
+			Files.write(Paths.get(pathName), data.getBytes(), 
+					StandardOpenOption.WRITE, StandardOpenOption.CREATE, StandardOpenOption.TRUNCATE_EXISTING);
+			PathViewer.showPath(_p);
+		} catch (IOException e) {
+			System.err.println("A path could not be written!!!!");
+			System.exit(1);
+		}
+	}
 }

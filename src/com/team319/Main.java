@@ -1,16 +1,9 @@
 package com.team319;
 
-import com.team254.lib.trajectory.Path;
-import com.team254.lib.trajectory.PathGenerator;
 import com.team254.lib.trajectory.WaypointSequence;
+import com.team254.lib.trajectory.io.VelocityOnlyFileSerializer;
 import com.team319.trajectory.BobPathGenerator;
-import com.team319.trajectory.BobWaypointSequence;
-import com.team319.trajectory.SrxTrajectory;
-import com.team319.trajectory.SrxTrajectoryExporter;
-import com.team319.trajectory.SrxTrajectoryImporter;
-import com.team319.trajectory.SrxTranslator;
 import com.team319.trajectory.SrxTranslatorConfig;
-import com.team319.ui.PathViewer;
 
 /**
  * Forked from 254's 2014 Trajectory library just a comment to make a change
@@ -58,8 +51,21 @@ public class Main {
 		blueHopperAutoPt2.waypointSequence.addWaypoint(new WaypointSequence.Waypoint(-4, -1, Math.toRadians(45)));
 		
 		
+		SrxTranslatorConfig thConfig = new SrxTranslatorConfig();
+		thConfig.name = "TripleHelixConfig";
+		thConfig.dt = .01;
+		thConfig.max_acc = 10.0;
+		thConfig.max_jerk = 60.0;
+		thConfig.max_vel = 5.0;
+		thConfig.wheelbase_width_feet = 27/12.0; //23.25 / 12  - original, Jhanson
+		thConfig.wheel_dia_inches = 3.5;
+		thConfig.scale_factor = .743;
 		
-		
+		BobPathGenerator redGear = new BobPathGenerator(thConfig);
+		redGear.config.name = "RedGear";
+		redGear.config.direction = 1;
+		redGear.waypointSequence.addWaypoint(new WaypointSequence.Waypoint(0, 0, 0));
+		redGear.waypointSequence.addWaypoint(new WaypointSequence.Waypoint(7.4, 2, Math.toRadians(60)));
 
 		// Description of this auto mode path.
 		//WaypointSequence p = new WaypointSequence(10);
@@ -81,5 +87,6 @@ public class Main {
 		
 		blueHopperAutoPt1.exportPath("Paths");
 		blueHopperAutoPt2.exportPath("Paths");
+		redGear.exportPathWithSerializer(new VelocityOnlyFileSerializer(), "Paths");
 	}
 }

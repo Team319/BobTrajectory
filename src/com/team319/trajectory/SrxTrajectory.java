@@ -23,5 +23,10 @@ public class SrxTrajectory {
 		trajectory.put("right",rightProfile.toJson());
 		return trajectory;
 	}
+	
+	public void appendProfiles(SrxMotionProfile leftProfileToAppend, SrxMotionProfile rightProfileToAppend){
+		this.leftProfile.append(leftProfileToAppend);
+		this.rightProfile.append(rightProfileToAppend);
+	}
 
 }

@@ -1,11 +1,7 @@
 package com.team319.trajectory;
 
-
-import org.json.simple.JSONObject;
-
 import com.team254.lib.trajectory.Path;
 import com.team254.lib.trajectory.Trajectory;
-import com.team254.lib.trajectory.TrajectoryGenerator;
 
 public class SrxTranslator {
 
@@ -28,7 +24,14 @@ public class SrxTranslator {
 
 		// Combine
 		return new SrxTrajectory(left, right);
-
+	}
+	
+	
+	public SrxTrajectory combineSrxTrajectories(SrxTrajectory first, SrxTrajectory second){
+		SrxTrajectory combinedTrajectory = new SrxTrajectory(first.leftProfile, first.rightProfile);
+		
+		return combinedTrajectory;
+		
 	}
 
 	public double[][] extractSRXPointsFromChezyTrajectory(Trajectory traj, double wheelDiameterInches,
@@ -74,4 +77,5 @@ public class SrxTranslator {
 		double encoderRotations = wheelRotations * scaleFactor;
 		return encoderRotations;
 	}
+	
 }

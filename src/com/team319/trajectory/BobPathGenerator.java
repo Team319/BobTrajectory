@@ -5,7 +5,6 @@ import com.team254.lib.trajectory.PathGenerator;
 import com.team254.lib.trajectory.Trajectory;
 import com.team254.lib.trajectory.Trajectory.Pair;
 import com.team319.ui.PathViewer;
-import com.team254.lib.trajectory.TrajectoryGenerator;
 import com.team254.lib.trajectory.WaypointSequence;
 
 public class BobPathGenerator extends PathGenerator {
@@ -19,6 +18,17 @@ public class BobPathGenerator extends PathGenerator {
 		this.config = new SrxTranslatorConfig(config);
 		this.waypointSequence = new WaypointSequence(10);
 		
+	}
+	
+	public Path getPath(){
+		makePath();
+		return _p; 
+	}
+	
+	public void appendPath(Path toAppend){
+		makePath();
+		_p.getLeftWheelTrajectory().append(toAppend.getLeftWheelTrajectory());
+		_p.getRightWheelTrajectory().append(toAppend.getRightWheelTrajectory());
 	}
 	
 	public void makePath(){
@@ -45,7 +55,7 @@ public class BobPathGenerator extends PathGenerator {
 	public void exportPath(String relativePathName){
 		SrxTrajectoryExporter exporter = new SrxTrajectoryExporter(relativePathName);
 		
-		this.makePath();
+		//this.makePath();
 
 		SrxTranslator srxt = new SrxTranslator();
 		SrxTrajectory combined = srxt.getSrxTrajectoryFromChezyPath(_p, this.config);

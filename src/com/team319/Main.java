@@ -54,9 +54,10 @@ public class Main {
 		BobPathGenerator blueHopperAutoPt2 = new BobPathGenerator(standardConfig);
 		blueHopperAutoPt2.config.name = "BlueHopperAutoPt2";
 		blueHopperAutoPt2.config.direction = -1;
-		blueHopperAutoPt2.waypointSequence.addWaypoint(new WaypointSequence.Waypoint(0, 0, 0));
-		blueHopperAutoPt2.waypointSequence.addWaypoint(new WaypointSequence.Waypoint(-4, -1, Math.toRadians(45)));
+		blueHopperAutoPt2.waypointSequence.addWaypoint(new WaypointSequence.Waypoint(6.75, 2.75, Math.toRadians(90.0)));
+		blueHopperAutoPt2.waypointSequence.addWaypoint(new WaypointSequence.Waypoint(10, 0, Math.toRadians(179)));
 		
+		blueHopperAutoPt1.appendPath(blueHopperAutoPt2.getPath());
 		
 		
 		

@@ -2,6 +2,8 @@ package com.team319.trajectory;
 
 import java.math.RoundingMode;
 import java.text.DecimalFormat;
+import java.util.ArrayList;
+import java.util.Arrays;
 
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
@@ -38,6 +40,18 @@ public class SrxMotionProfile {
 				//System.out.println(pointsArray[i][0] + "," + pointsArray[i][1] + "," + pointsArray[i][2]);
 			}
 		}
+	}
+	
+	public void append(SrxMotionProfile toAppend){
+		int newNumPoints = this.numPoints + toAppend.numPoints;
+		double[][] newPoints = new double[newNumPoints][3];
+		
+		ArrayList<double[]> newPointsList = new ArrayList<double[]>(Arrays.asList(points));
+		
+		newPointsList.addAll(Arrays.asList(toAppend.points));
+		
+		this.numPoints = newNumPoints;
+		this.points = newPointsList.toArray(newPoints);
 	}
 
 

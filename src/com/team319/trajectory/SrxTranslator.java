@@ -16,11 +16,11 @@ public class SrxTranslator {
 
 		// create an array of points for the SRX
 		double[][] leftPoints = extractSRXPointsFromChezyTrajectory(chezyPath.getPair().left, config.wheel_dia_inches,
-				config.scale_factor, config.direction);
+				config.scale_factor);
 
 		// do it again for the right side
 		double[][] rightPoints = extractSRXPointsFromChezyTrajectory(chezyPath.getPair().right, config.wheel_dia_inches,
-				config.scale_factor, config.direction);
+				config.scale_factor);
 
 		// create the motion profile objects
 		SrxMotionProfile left = new SrxMotionProfile(leftPoints.length, leftPoints);
@@ -32,7 +32,7 @@ public class SrxTranslator {
 	}
 
 	public double[][] extractSRXPointsFromChezyTrajectory(Trajectory traj, double wheelDiameterInches,
-			double scaleFactor, int direction) {
+			double scaleFactor) {
 		// create an array of points for the SRX
 		double[][] points = new double[traj.getSegments().length][3];
 
@@ -69,7 +69,7 @@ public class SrxTranslator {
 		// convert feet to wheel rotations using the circumference of the wheel
 		double wheelRotations = feet * 12 / (wheelDiameterInches * Math.PI);
 
-		// convert wheel rotations to encoder rotations using the recuction
+		// convert wheel rotations to encoder rotations using the reduction
 		// between the two
 		double encoderRotations = wheelRotations * scaleFactor;
 		return encoderRotations;

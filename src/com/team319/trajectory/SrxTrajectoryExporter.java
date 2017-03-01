@@ -17,6 +17,28 @@ public class SrxTrajectoryExporter {
 	}
 
 	public String directory;
+	
+	public boolean exportSrxTrajectory(SrxTrajectory combined, String pathName, BobPath...bobPaths){
+		JSONObject exportJson = new JSONObject();
+		
+		String combinedPath = joinFilePaths(directory, pathName + "_SrxTrajectory.json");
+		
+		exportJson.put("config", bobPaths[0].getConfig().toJson());
+		for (BobPath bobPath : bobPaths) {
+			exportJson.put(bobPath.getConfig().name + "_waypoints", waypointSequenceToJson(bobPath.getWaypointSequence()));
+		}
+		//exportJson.put("waypoints", waypointSequenceToJson(waypoints));
+		exportJson.put("trajectory", combined.toJson());
+
+		String exportString = exportJson.toJSONString();
+		
+		if (!writeFile(combinedPath, exportString)){
+			System.err.println(combinedPath + " could not be written!!!!1");
+			return false;
+		}
+		
+		return true;
+	}
 
 	public boolean exportSrxTrajectory(SrxTrajectory combined, SrxTranslatorConfig config, WaypointSequence waypoints){
 		

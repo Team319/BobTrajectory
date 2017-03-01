@@ -45,7 +45,7 @@ public class BobPathGenerator extends PathGenerator {
 	 * @param newPathName the name of the new generated path
 	 * @param bobPaths the BobPaths to append and export
 	 */
-	public static void appendAndExportPaths(String relativeDirectoryName, String newPathName, BobPath...bobPaths){
+	public static void appendAndExportPaths(String relativeDirectoryName, String newPathName, boolean invertY, BobPath...bobPaths){
 		SrxTrajectoryExporter exporter = new SrxTrajectoryExporter(relativeDirectoryName);
 		
 		Path tmp = makePath(bobPaths[0]);
@@ -55,6 +55,15 @@ public class BobPathGenerator extends PathGenerator {
 			tmp = makePath(bobPaths[i]);
 			exportPath.getLeftWheelTrajectory().append(tmp.getLeftWheelTrajectory());
 			exportPath.getRightWheelTrajectory().append(tmp.getRightWheelTrajectory());
+		}
+		
+		if (invertY)
+		{			
+			Trajectory oldLeft = exportPath.getLeftWheelTrajectory();
+			Trajectory oldRight = exportPath.getRightWheelTrajectory();
+						
+			exportPath = new Path(newPathName, new Pair(oldRight, oldLeft));
+			exportPath.goRight();	
 		}
 		
 		SrxTranslator srxt = new SrxTranslator();

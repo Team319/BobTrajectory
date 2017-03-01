@@ -77,7 +77,8 @@ public class Main {
 
 		BobPathGenerator.exportPath("Paths", blueHopperAutoPt1);
 		BobPathGenerator.exportPath("Paths", blueHopperAutoPt2);
-		BobPathGenerator.appendAndExportPaths("Paths", "appendedPath", blueHopperAutoPt2, toAppend);
+		BobPathGenerator.appendAndExportPaths("Paths", "appendedPath", false, blueHopperAutoPt2, toAppend);
+		BobPathGenerator.appendAndExportPaths("Paths", "appendedAndFlipperPath", true, blueHopperAutoPt2, toAppend);
 		//redGear.exportPathWithSerializer(new VelocityOnlyFileSerializer(), "Paths");
 	}
 }

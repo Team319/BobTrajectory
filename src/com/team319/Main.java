@@ -21,64 +21,35 @@ public class Main {
 		//Standard configs between all trajectories
 		standardConfig.name = "StandardConfig";
 		standardConfig.dt = .01;
-		standardConfig.max_acc = 20.0;
+		standardConfig.max_acc = 10.0;
 		standardConfig.max_jerk = 60.0;
-		standardConfig.max_vel = 4.0;
+		standardConfig.max_vel = 4.0; // gearbob was 6.0
 		standardConfig.wheelbase_width_feet = 32.5/12.0;
 		standardConfig.wheel_dia_inches = 3.5;
-		standardConfig.scale_factor = .743;
+		standardConfig.scale_factor = 2.35; //0.899 // gearbob is 2.35
+		standardConfig.encoder_ticks_per_rev = 1024;
 		
-		BobPath blueHopperAutoPt1 = new BobPath(standardConfig, "BlueHopperAutoPt1", 1);
-		blueHopperAutoPt1.addWaypoint(new WaypointSequence.Waypoint(0, 0, 0));
-		blueHopperAutoPt1.addWaypoint(new WaypointSequence.Waypoint(5.5, .625, Math.toRadians(35.0)));
-		blueHopperAutoPt1.addWaypoint(new WaypointSequence.Waypoint(6.75, 2.75, Math.toRadians(90.0)));		
+		SrxTranslatorConfig slowConfig = new SrxTranslatorConfig(standardConfig);
+		slowConfig.max_vel = 4.0;
+		
+		
+		
+		BobPath ThreeFeet = new BobPath(standardConfig, "ThreeFeet", 1);
+		ThreeFeet.addWaypoint(new WaypointSequence.Waypoint(0, 0, 0));
+		ThreeFeet.addWaypoint(new WaypointSequence.Waypoint(3.0, 0.0, Math.toRadians(0.0)));
+		
+		BobPath OneFoot = new BobPath(standardConfig, "OneFoot", 1);
+		OneFoot.addWaypoint(new WaypointSequence.Waypoint(0, 0, 0));
+		OneFoot.addWaypoint(new WaypointSequence.Waypoint(1.0, 0.0, Math.toRadians(0.0)));
+		
+	
 
-		BobPath blueHopperAutoPt2 = new BobPath(standardConfig, "BlueHopperAutoPt2", -1);
-		blueHopperAutoPt2.addWaypoint(new WaypointSequence.Waypoint(0, 0, 0));
-		blueHopperAutoPt2.addWaypoint(new WaypointSequence.Waypoint(-4, -1, Math.toRadians(45)));
+				BobPathGenerator.exportPath("Paths", ThreeFeet);
+				BobPathGenerator.exportPath("Paths", OneFoot);
+			
 		
-		BobPath toAppend = new BobPath(standardConfig, "toAppend", 1);
-		toAppend.addWaypoint(new WaypointSequence.Waypoint(-4, -1, Math.toRadians(45)));
-		toAppend.addWaypoint(new WaypointSequence.Waypoint(-4, 3, Math.toRadians(80)));	
-		
-		
-		
-		SrxTranslatorConfig thConfig = new SrxTranslatorConfig();
-		thConfig.name = "TripleHelixConfig";
-		thConfig.dt = .01;
-		thConfig.max_acc = 10.0;
-		thConfig.max_jerk = 60.0;
-		thConfig.max_vel = 5.0;
-		thConfig.wheelbase_width_feet = 27/12.0;
-		thConfig.wheel_dia_inches = 3.5;
-		thConfig.scale_factor = .743;
-		
-		BobPath redGear = new BobPath(thConfig,"RedGear",1);
-		redGear.addWaypoint(new WaypointSequence.Waypoint(0, 0, 0));
-		redGear.addWaypoint(new WaypointSequence.Waypoint(7.4, 2, Math.toRadians(60)));
-
-		// Description of this auto mode path.
-		//WaypointSequence p = new WaypointSequence(10);
-		//p.addWaypoint(new WaypointSequence.Waypoint(0, 0, 0));
-		//p.addWaypoint(new WaypointSequence.Waypoint(5.5, .625, Math.toRadians(35.0)));//BHApt1
-		//p.addWaypoint(new WaypointSequence.Waypoint(6.75, 2.75, Math.toRadians(90.0)));//BHApt1//3.5
-		//p.addWaypoint(new WaypointSequence.Waypoint(-4, -1, Math.toRadians(45)));//BHApt2
-		//p.addWaypoint(new WaypointSequence.Waypoint(6.5, 2, Math.toRadians(-5)));//BHApt3
-		
-		//p.addWaypoint(new WaypointSequence.Waypoint(5.5, .625, Math.toRadians(35.0)));//RHApt1
-		//p.addWaypoint(new WaypointSequence.Waypoint(6.75, 2.75, Math.toRadians(90.0)));//RHApt1
-		//p.addWaypoint(new WaypointSequence.Waypoint(-4, -1, Math.toRadians(45)));//RHApt2
-		//p.addWaypoint(new WaypointSequence.Waypoint(6.5, 2, Math.toRadians(-5)));//RHApt3
-		
-		//p.addWaypoint(new WaypointSequence.Waypoint(5, 0, 0));//drive forward 5 feet
-		//p.addWaypoint(new WaypointSequence.Waypoint(15, 0, 0));//drive forward 15 feet
-		
-		
-
-		BobPathGenerator.exportPath("Paths", blueHopperAutoPt1);
-		BobPathGenerator.exportPath("Paths", blueHopperAutoPt2);
-		BobPathGenerator.appendAndExportPaths("Paths", "appendedPath", false, blueHopperAutoPt2, toAppend);
-		BobPathGenerator.appendAndExportPaths("Paths", "appendedAndFlippedPath", true, blueHopperAutoPt2, toAppend);
+		//BobPathGenerator.appendAndExportPaths("Paths", "appendedPath", false, blueHopperThenShootAutoLeftSidePt2, toAppend);
+		//BobPathGenerator.appendAndExportPaths("Paths", "appendedAndFlippedPath", true, blueHopperThenShootAutoLeftSidePt2, toAppend); 
 		//redGear.exportPathWithSerializer(new VelocityOnlyFileSerializer(), "Paths");
 	}
 }

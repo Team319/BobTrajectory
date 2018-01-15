@@ -8,6 +8,7 @@ public class SrxTranslatorConfig extends TrajectoryGenerator.Config {
 	public String name;
 	public double wheelbase_width_feet;
 	public double wheel_dia_inches;
+	public int encoder_ticks_per_rev;
 	public double scale_factor; // used for reductions between encoder and wheel
 	public int direction = 1; // 1 = forward, -1 = backward
 
@@ -24,6 +25,7 @@ public class SrxTranslatorConfig extends TrajectoryGenerator.Config {
 		this.scale_factor = toCopy.scale_factor;
 		this.wheel_dia_inches = toCopy.wheel_dia_inches;
 		this.wheelbase_width_feet = toCopy.wheelbase_width_feet;
+		this.encoder_ticks_per_rev = toCopy.encoder_ticks_per_rev;
 	}
 
 	public JSONObject toJson() {

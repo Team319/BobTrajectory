@@ -6,6 +6,8 @@ import com.team254.lib.trajectory.WaypointSequence.Waypoint;
 public class BobPath {
 	private SrxTranslatorConfig config;
 	private WaypointSequence waypointSequence;
+	private boolean exportEnabled = true;
+	private boolean useDegrees = true;
 	
 	public BobPath(SrxTranslatorConfig config) {
 		this.config = new SrxTranslatorConfig(config);
@@ -13,15 +15,23 @@ public class BobPath {
 	}
 	
 	public BobPath(SrxTranslatorConfig config, String name, int direction) {
-		this.config = new SrxTranslatorConfig(config);
+		this(config);
 		this.config.name = name;
 		this.config.direction = direction;
-		waypointSequence = new WaypointSequence(10);
+	}
+	
+	public BobPath(SrxTranslatorConfig config, String name, int direction, boolean useDegrees) {
+		this(config, name, direction);
+		this.useDegrees = useDegrees;
 	}
 
 	public BobPath(BobPath toCopy) {
 		config = toCopy.config;
 		waypointSequence = toCopy.waypointSequence;
+	}
+	
+	public boolean isExportEnabled() {
+		return this.isExportEnabled();
 	}
 	
 	public void setWaypointSequence(WaypointSequence wps){
@@ -34,6 +44,14 @@ public class BobPath {
 	
 	public void addWaypoint(Waypoint wp){
 		this.waypointSequence.addWaypoint(wp);
+	}
+	
+	public void addWaypointRadians(double x, double y, double theta_rad) {
+		this.waypointSequence.addWaypoint(new Waypoint(x, y, theta_rad));
+	}
+	
+	public void addWaypoint(double x, double y, double theta_deg) {
+		this.waypointSequence.addWaypoint(new Waypoint(x, y, Math.toRadians(theta_deg)));
 	}
 	
 	public void setConfig(SrxTranslatorConfig c){

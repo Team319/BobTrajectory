@@ -109,15 +109,15 @@ public class SrxTranslator {
 	}
 	
 	// convert 254's distance units of feet to SRX's distance units of encoder
-		// rotations
-		public double convertFeetToEncoderTicks(double feet, double wheelDiameterInches, double scaleFactor, int encoderTicksPerRev) {
-			// convert feet to wheel rotations using the circumference of the wheel
-			double wheelRotations = feet * 12 / (wheelDiameterInches * Math.PI);
+	// rotations
+	public double convertFeetToEncoderTicks(double feet, double wheelDiameterInches, double scaleFactor, int encoderTicksPerRev) {
+		// convert feet to wheel rotations using the circumference of the wheel
+		double wheelRotations = feet * 12 / (wheelDiameterInches * Math.PI);
 
-			// convert wheel rotations to encoder rotations using the reduction
-			// between the two
-			double encoderRotations = wheelRotations * scaleFactor;
-			double encoderTicks = encoderRotations * encoderTicksPerRev;
-			return encoderTicks;
-		}
+		// convert wheel rotations to encoder rotations using the reduction
+		// between the two
+		double encoderRotations = wheelRotations * scaleFactor;
+		double encoderTicks = encoderRotations * encoderTicksPerRev;
+		return encoderTicks;
+	}
 }

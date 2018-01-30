@@ -15,7 +15,6 @@ import com.team319.trajectory.SrxTranslatorConfig;
 public class Main {
 
 	public static void main(String[] args) {
-		//SrxTranslator translator = new SrxTranslator();
 		SrxTranslatorConfig standardConfig = new SrxTranslatorConfig();
 		
 		//Standard configs between all trajectories
@@ -30,22 +29,18 @@ public class Main {
 		standardConfig.encoder_ticks_per_rev = 1024;
 		
 		SrxTranslatorConfig slowConfig = new SrxTranslatorConfig(standardConfig);
-		slowConfig.max_vel = 4.0;
-		
-		
+		slowConfig.max_vel = 4.0;		
 		
 		BobPath ThreeFeet = new BobPath(standardConfig, "ThreeFeet", 1);
-		ThreeFeet.addWaypoint(new WaypointSequence.Waypoint(0, 0, 0));
-		ThreeFeet.addWaypoint(new WaypointSequence.Waypoint(3.0, 0.0, Math.toRadians(0.0)));
+		ThreeFeet.addWaypoint(0, 0, 0);
+		ThreeFeet.addWaypoint(3.0, 0.0, 0.0);
 		
 		BobPath OneFoot = new BobPath(standardConfig, "OneFoot", 1);
-		OneFoot.addWaypoint(new WaypointSequence.Waypoint(0, 0, 0));
-		OneFoot.addWaypoint(new WaypointSequence.Waypoint(1.0, 0.0, Math.toRadians(0.0)));
-		
-	
+		OneFoot.addWaypoint(0, 0, 0);
+		OneFoot.addWaypoint(1.0, 0.0, 0.0);	
 
-				BobPathGenerator.exportPath("Paths", ThreeFeet);
-				BobPathGenerator.exportPath("Paths", OneFoot);
+		BobPathGenerator.exportPath("Paths", ThreeFeet);
+		BobPathGenerator.exportPath("Paths", OneFoot);
 			
 		
 		//BobPathGenerator.appendAndExportPaths("Paths", "appendedPath", false, blueHopperThenShootAutoLeftSidePt2, toAppend);

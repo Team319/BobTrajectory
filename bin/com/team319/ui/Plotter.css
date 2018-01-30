@@ -1,0 +1,13 @@
+.default-color0.chart-symbol { /* solid circle */
+	-fx-stroke: orangered;
+    -fx-background-color: orangered, orangered;
+    -fx-background-radius: 2px;
+    -fx-padding: 1px;
+}
+
+.default-color1.chart-symbol { /* solid circle */
+	-fx-stroke: blue;
+    -fx-background-color: blue, blue;
+    -fx-background-radius: 2px;
+    -fx-padding: 1px;
+}

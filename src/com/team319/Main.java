@@ -1,7 +1,5 @@
 package com.team319;
 
-import com.team254.lib.trajectory.WaypointSequence;
-import com.team254.lib.trajectory.io.VelocityOnlyFileSerializer;
 import com.team319.trajectory.BobPath;
 import com.team319.trajectory.BobPathGenerator;
 import com.team319.trajectory.SrxTranslatorConfig;

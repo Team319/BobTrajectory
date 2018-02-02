@@ -9,3 +9,6 @@ A library for Generating paths using 254's 2014 code and following them via Talo
 5. Run Main.java, you'll see the generated path in a new window.
 6. Download your exported trajectory JSON file to the roborio
 7. Import via the roborio with SrxTrajectoryImporter.
+
+
+For more details, see the wiki: https://github.com/Team319/BobTrajectory/wiki

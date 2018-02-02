@@ -1,7 +1,5 @@
 package com.team319;
 
-import com.team254.lib.trajectory.WaypointSequence;
-import com.team254.lib.trajectory.io.VelocityOnlyFileSerializer;
 import com.team319.trajectory.BobPath;
 import com.team319.trajectory.BobPathGenerator;
 import com.team319.trajectory.SrxTranslatorConfig;
@@ -18,7 +16,6 @@ public class Main {
 	 * @param args
 	 */
 	public static void main(String[] args) {
-		//SrxTranslator translator = new SrxTranslator();
 		SrxTranslatorConfig standardConfig = new SrxTranslatorConfig();
 		
 		//length of robot is 38.5
@@ -41,10 +38,11 @@ public class Main {
 		//--------------------MISC. AUTOS----------//
 		
 		BobPath ThreeFeet = new BobPath(standardConfig, "ThreeFeet", 1);
-		ThreeFeet.addWaypoint(new WaypointSequence.Waypoint(0, 0, 0));
-		ThreeFeet.addWaypoint(new WaypointSequence.Waypoint(3.0, 0.0, Math.toRadians(0.0)));
+		ThreeFeet.addWaypoint(0, 0, 0);
+		ThreeFeet.addWaypoint(3.0, 0.0, 0.0);
 		
 		BobPath OneFoot = new BobPath(standardConfig, "OneFoot", 1);
+
 		OneFoot.addWaypoint(new WaypointSequence.Waypoint(0, 0, 0));
 		OneFoot.addWaypoint(new WaypointSequence.Waypoint(1.0, 0.0, Math.toRadians(0.0)));
 		
@@ -101,6 +99,7 @@ public class Main {
 		BobPath CenterToLeftSwitchPt5 = new BobPath(standardConfig, "CenterToLeftSwitchPt5", 1);
 		CenterToLeftSwitchPt5.addWaypoint(new WaypointSequence.Waypoint(0.0, 0.0, 0.0));
 		CenterToLeftSwitchPt5.addWaypoint(new WaypointSequence.Waypoint(6.5, 0.0, 0.0));
+
 		
 		//--------------------EXPORTERS----------//
 				

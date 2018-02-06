@@ -1,7 +1,6 @@
 package com.team319;
 
 import com.team254.lib.trajectory.WaypointSequence;
-import com.team254.lib.trajectory.io.VelocityOnlyFileSerializer;
 import com.team319.trajectory.BobPath;
 import com.team319.trajectory.BobPathGenerator;
 import com.team319.trajectory.SrxTranslatorConfig;
@@ -15,6 +14,8 @@ import com.team319.trajectory.SrxTranslatorConfig;
 public class Main {
 
 	public static void main(String[] args) {
+		
+		final double ROBOT_LENGTH = 33;
 		//SrxTranslator translator = new SrxTranslator();
 		SrxTranslatorConfig standardConfig = new SrxTranslatorConfig();
 		
@@ -23,33 +24,58 @@ public class Main {
 		standardConfig.dt = .01;
 		standardConfig.max_acc = 10.0;
 		standardConfig.max_jerk = 60.0;
-		standardConfig.max_vel = 4.0; // gearbob was 6.0
-		standardConfig.wheelbase_width_feet = 32.5/12.0;
-		standardConfig.wheel_dia_inches = 3.5;
-		standardConfig.scale_factor = 2.35; //0.899 // gearbob is 2.35
-		standardConfig.encoder_ticks_per_rev = 1024;
+		standardConfig.max_vel = 6.0; 
+		standardConfig.wheelbase_width_feet = inFeet(27);
+		standardConfig.wheel_dia_inches = 5;
+		standardConfig.scale_factor = 1.23; 
+		standardConfig.encoder_ticks_per_rev = 480;
 		
 		SrxTranslatorConfig slowConfig = new SrxTranslatorConfig(standardConfig);
 		slowConfig.max_vel = 4.0;
 		
+		// X IS YOUR FORWARD MOVEMENT AND Y IS YOUR SIDEWAYS MOVEMENT
 		
+		BobPath scalingCalibration = new BobPath(standardConfig, "scaling_calibration", 1);
+		scalingCalibration.addWaypoint(new WaypointSequence.Waypoint(0.0, 0.0, 0.0));
+		scalingCalibration.addWaypoint(new WaypointSequence.Waypoint(5.0, 0.0, Math.toRadians(0.0)));
 		
-		BobPath ThreeFeet = new BobPath(standardConfig, "ThreeFeet", 1);
-		ThreeFeet.addWaypoint(new WaypointSequence.Waypoint(0, 0, 0));
-		ThreeFeet.addWaypoint(new WaypointSequence.Waypoint(3.0, 0.0, Math.toRadians(0.0)));
+		BobPath turningCalibration = new BobPath(standardConfig, "turning_calibration", 1);
+		turningCalibration.addWaypoint(new WaypointSequence.Waypoint(0, 0, 0));
+		turningCalibration.addWaypoint(new WaypointSequence.Waypoint(3.0, 3.0, Math.toRadians(89.99)));
 		
-		BobPath OneFoot = new BobPath(standardConfig, "OneFoot", 1);
-		OneFoot.addWaypoint(new WaypointSequence.Waypoint(0, 0, 0));
-		OneFoot.addWaypoint(new WaypointSequence.Waypoint(1.0, 0.0, Math.toRadians(0.0)));
+		BobPath centerSwitch = new BobPath(standardConfig, "CenterSwitch", 1);
+		centerSwitch.addWaypoint(new WaypointSequence.Waypoint(inFeet(ROBOT_LENGTH), 0, 0));
+		centerSwitch.addWaypoint(new WaypointSequence.Waypoint(inFeet(140), inFeet(60), 0));
 		
+		BobPath sameSideSwitch = new BobPath(standardConfig, "SameSideSwitch", 1);
+		sameSideSwitch.addWaypoint(new WaypointSequence.Waypoint(inFeet(ROBOT_LENGTH), 0, 0));
+		sameSideSwitch.addWaypoint(new WaypointSequence.Waypoint(inFeet(140), inFeet(-57), Math.toRadians(0.0)));
+		
+		BobPath sameSideScale = new BobPath(standardConfig, "SameSideScale", 1);
+		sameSideScale.addWaypoint(new WaypointSequence.Waypoint(inFeet(ROBOT_LENGTH), 0, 0));
+		sameSideScale.addWaypoint(new WaypointSequence.Waypoint(inFeet(300), inFeet(-40), 0));
+		
+		BobPath oppositeSideScale = new BobPath(standardConfig, "OppositeSideScale", 1);
+		oppositeSideScale.addWaypoint(new WaypointSequence.Waypoint(inFeet(ROBOT_LENGTH), 0, 0));
+		oppositeSideScale.addWaypoint(new WaypointSequence.Waypoint(inFeet(192), inFeet(-110), Math.toRadians(-89.99)));
+		oppositeSideScale.addWaypoint(new WaypointSequence.Waypoint(inFeet(192), inFeet(-140), Math.toRadians(-89.99)));
+		oppositeSideScale.addWaypoint(new WaypointSequence.Waypoint(inFeet(300), inFeet(-209), 0));
 	
 
-				BobPathGenerator.exportPath("Paths", ThreeFeet);
-				BobPathGenerator.exportPath("Paths", OneFoot);
+		BobPathGenerator.exportPath("Paths", scalingCalibration);
+		BobPathGenerator.exportPath("Paths", turningCalibration);
+		BobPathGenerator.exportPath("Paths", centerSwitch);
+		BobPathGenerator.exportPath("Paths", sameSideSwitch);
+		BobPathGenerator.exportPath("Paths", sameSideScale);
+		BobPathGenerator.exportPath("Paths", oppositeSideScale);
 			
 		
 		//BobPathGenerator.appendAndExportPaths("Paths", "appendedPath", false, blueHopperThenShootAutoLeftSidePt2, toAppend);
 		//BobPathGenerator.appendAndExportPaths("Paths", "appendedAndFlippedPath", true, blueHopperThenShootAutoLeftSidePt2, toAppend); 
 		//redGear.exportPathWithSerializer(new VelocityOnlyFileSerializer(), "Paths");
+	}
+	
+	private static double inFeet(double inches) {
+		return ((double) inches) / 12.0;
 	}
 }

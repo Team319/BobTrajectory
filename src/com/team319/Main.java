@@ -1,5 +1,6 @@
 package com.team319;
 
+import com.team254.lib.trajectory.WaypointSequence;
 import com.team319.trajectory.BobPath;
 import com.team319.trajectory.BobPathGenerator;
 import com.team319.trajectory.SrxTranslatorConfig;
@@ -105,8 +106,9 @@ public class Main {
 				
 				//BobPathGenerator.exportPath("Paths", ThreeFeet);
 				//BobPathGenerator.exportPath("Paths", OneFoot);
-				BobPathGenerator.exportPath("Paths", FiveFeetAndTurn);
-				BobPathGenerator.exportPath("Paths", CrossTheLine);
+				BobPathGenerator.exportPathToJavaFile("Paths", FiveFeetAndTurn);
+				//BobPathGenerator.exportPath("Paths", CrossTheLine);
+				BobPathGenerator.exportPathToJavaFile("Paths", CrossTheLine);
 				//BobPathGenerator.exportPath("Paths", CenterToRightSwitch);
 				//BobPathGenerator.exportPath("Paths", CenterToRightSwitchPt2);
 				//BobPathGenerator.exportPath("Paths", CenterToRightSwitchPt3);

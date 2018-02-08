@@ -40,7 +40,13 @@ public class SrxTrajectoryExporter {
 		sb.append(serializeWaypoints(waypoints));
 		
 		sb.append("	\r\n" + 
-				"    public " + config.name + "() {\r\n" + 
+				"	public " + config.name + "() {\r\n" + 
+				"		this(false);\r\n" + 
+				"	}\r\n" + 
+				"		");
+		
+		sb.append("	\r\n" + 
+				"    public " + config.name + "(boolean flipped) {\r\n" + 
 				"		super();\r\n" + 
 				"		\r\n" + 
 				"		");
@@ -59,8 +65,13 @@ public class SrxTrajectoryExporter {
 		sb.append("\r\n" + 
 				"		};\r\n" + 
 				"		\r\n" + 
-				"		this.leftProfile = new SrxMotionProfile(leftPoints.length, leftPoints);\r\n" + 
-				"		this.rightProfile = new SrxMotionProfile(rightPoints.length, rightPoints);\r\n" + 
+				"		if (flipped) {\r\n" +
+				"			rightProfile = new SrxMotionProfile(leftPoints.length, leftPoints);\r\n" + 
+				"			leftProfile = new SrxMotionProfile(rightPoints.length, rightPoints);\r\n" + 
+				"		} else {\r\n" +
+				"			leftProfile = new SrxMotionProfile(leftPoints.length, leftPoints);\r\n" + 
+				"			rightProfile = new SrxMotionProfile(rightPoints.length, rightPoints);\r\n" + 
+				"		}\r\n" +
 				"	}\r\n" + 
 				"\r\n" + 
 				"}");

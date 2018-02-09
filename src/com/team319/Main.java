@@ -116,8 +116,12 @@ public class Main {
 				
 				//BobPathGenerator.exportPath("Paths", ThreeFeet);
 				//BobPathGenerator.exportPath("Paths", OneFoot);
-				//BobPathGenerator.exportPath("Paths", FiveFeetAndTurn);
+
+				BobPathGenerator.exportPathToJavaFile("Paths", FiveFeetAndTurn);
 				//BobPathGenerator.exportPath("Paths", CrossTheLine);
+				BobPathGenerator.exportPathToJavaFile("Paths", CrossTheLine);
+
+
 				//BobPathGenerator.exportPath("Paths", CenterToRightSwitch);
 				//BobPathGenerator.exportPath("Paths", CenterToRightSwitchPt2);
 				//BobPathGenerator.exportPath("Paths", CenterToRightSwitchPt3);

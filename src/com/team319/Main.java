@@ -36,10 +36,10 @@ public class Main {
 		powerUpConfig.dt = .01;
 		powerUpConfig.max_acc = 10.0;
 		powerUpConfig.max_jerk = 60.0;
-		powerUpConfig.max_vel = 8.0;
-		powerUpConfig.wheelbase_width_feet = 23.5/12.0;
+		powerUpConfig.max_vel = 4.0; //8.0
+		powerUpConfig.wheelbase_width_feet = 33.5/12.0;//23.5, then 29.5, 35.5
 		powerUpConfig.wheel_dia_inches = 6.0;
-		powerUpConfig.scale_factor = 2.35;
+		powerUpConfig.scale_factor = 3.49; //3.08 
 		powerUpConfig.encoder_ticks_per_rev = 1024;
 		
 		
@@ -64,6 +64,10 @@ public class Main {
 		BobPath CrossTheLine = new BobPath(powerUpConfig, "CrossTheLine", 1);
 		CrossTheLine.addWaypoint(0.0, 0.0, 0.0);
 		CrossTheLine.addWaypoint(10.0, 0.0, 0.0);
+		
+		BobPath TestSTurnAuto = new BobPath(powerUpConfig, "TestSTurnAuto", 1);
+		TestSTurnAuto.addWaypoint(0.0, 0.0, 0.0);
+		TestSTurnAuto.addWaypoint(8.375, 5.5, 0.0);
 		
 		
 		//--------------------RIGHT SIDE AUTOS----------//
@@ -114,20 +118,18 @@ public class Main {
 		
 		//--------------------EXPORTERS----------//
 				
-				//BobPathGenerator.exportPath("Paths", ThreeFeet);
+				BobPathGenerator.exportPathToJavaFile("Paths", ThreeFeet);
 				//BobPathGenerator.exportPath("Paths", OneFoot);
-
 				BobPathGenerator.exportPathToJavaFile("Paths", FiveFeetAndTurn);
 				//BobPathGenerator.exportPath("Paths", CrossTheLine);
+				BobPathGenerator.exportPath("Paths", TestSTurnAuto);
 				BobPathGenerator.exportPathToJavaFile("Paths", CrossTheLine);
-
-
-				//BobPathGenerator.exportPath("Paths", CenterToRightSwitch);
+				BobPathGenerator.exportPathToJavaFile("Paths", CenterToRightSwitch);
 				//BobPathGenerator.exportPath("Paths", CenterToRightSwitchPt2);
 				//BobPathGenerator.exportPath("Paths", CenterToRightSwitchPt3);
 				//BobPathGenerator.exportPath("Paths", CenterToRightSwitchPt4);
 				//BobPathGenerator.exportPath("Paths", CenterToRightSwitchPt5);
-				//BobPathGenerator.exportPath("Paths", CenterToLeftSwitch);
+				BobPathGenerator.exportPathToJavaFile("Paths", CenterToLeftSwitch);
 				//BobPathGenerator.exportPath("Paths", CenterToLeftSwitchPt2);
 				//BobPathGenerator.exportPath("Paths", CenterToLeftSwitchPt3);
 				//BobPathGenerator.exportPath("Paths", CenterToLeftSwitchPt4);

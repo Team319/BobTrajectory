@@ -18,6 +18,94 @@ public class SrxTrajectoryExporter {
 
 	public String directory;
 	
+	public boolean exportSrxTrajectoryAsJavaFile(SrxTrajectory combined, SrxTranslatorConfig config, WaypointSequence waypoints) {		
+		String combinedPath = joinFilePaths(directory, config.name + ".java");
+		
+		StringBuilder sb = new StringBuilder();
+		
+		// package and imports
+		sb.append("package org.usfirst.frc.team319.paths;\r\n" + 
+				"\r\n" + 
+				"import org.usfirst.frc.team319.models.SrxMotionProfile;\r\n" + 
+				"import org.usfirst.frc.team319.models.SrxTrajectory;\r\n\r\n");
+		
+		//beginning of the class
+		sb.append("public class " + config.name + " extends SrxTrajectory{");
+		
+		sb.append("\r\n" + 
+				"	\r\n" + 
+				"	// WAYPOINTS:\r\n" + 
+				"	// (X,Y,degrees)\r\n");
+		
+		sb.append(serializeWaypoints(waypoints));
+		
+		sb.append("	\r\n" + 
+				"	public " + config.name + "() {\r\n" + 
+				"		this(false);\r\n" + 
+				"	}\r\n" + 
+				"		");
+		
+		sb.append("	\r\n" + 
+				"    public " + config.name + "(boolean flipped) {\r\n" + 
+				"		super();\r\n" + 
+				"		\r\n" + 
+				"		");
+		
+		sb.append("double[][] leftPoints = {\r\n");
+		
+		sb.append(serializeTrajectoryPoints(combined.leftProfile));
+		
+		sb.append("\r\n" + 
+				"		};\r\n" + 
+				"		\r\n" + 
+				"		double[][] rightPoints = {\r\n");
+		
+		sb.append(serializeTrajectoryPoints(combined.rightProfile));
+		
+		sb.append("\r\n" + 
+				"		};\r\n" + 
+				"		\r\n" + 
+				"		if (flipped) {\r\n" +
+				"			rightProfile = new SrxMotionProfile(leftPoints.length, leftPoints);\r\n" + 
+				"			leftProfile = new SrxMotionProfile(rightPoints.length, rightPoints);\r\n" + 
+				"		} else {\r\n" +
+				"			leftProfile = new SrxMotionProfile(leftPoints.length, leftPoints);\r\n" + 
+				"			rightProfile = new SrxMotionProfile(rightPoints.length, rightPoints);\r\n" + 
+				"		}\r\n" +
+				"	}\r\n" + 
+				"\r\n" + 
+				"}");
+
+		if (!writeFile(combinedPath, sb.toString())){
+			System.err.println(combinedPath + " could not be written!!!!1");
+			return false;
+		}
+		
+		return true;
+	}
+	
+	private String serializeWaypoints(WaypointSequence wps) {
+		StringBuilder sb = new StringBuilder();
+		
+		for (int i = 0; i < wps.getNumWaypoints(); i++) {
+			sb.append(String.format("	// (%.2f,%.2f,%.2f)\r\n", wps.getWaypoint(i).x, wps.getWaypoint(i).y, Math.toDegrees(wps.getWaypoint(i).theta)));
+		}
+		return sb.toString();
+	}
+	
+	private String serializeTrajectoryPoints(SrxMotionProfile profile) {
+		StringBuilder sb = new StringBuilder();
+		
+		for (int i = 0; i < profile.points.length; i++) {
+			sb.append(String.format("				{%.3f,%.3f,%.3f}", profile.points[i][0],profile.points[i][1],profile.points[i][2]));
+			if (i < profile.points.length -1) {
+				sb.append(",\r\n");
+			}
+		}
+		
+		return sb.toString();
+	}
+	
 	public boolean exportSrxTrajectory(SrxTrajectory combined, String pathName, BobPath...bobPaths){
 		JSONObject exportJson = new JSONObject();
 		

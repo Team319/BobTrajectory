@@ -18,7 +18,12 @@ public class SrxTrajectoryExporter {
 
 	public String directory;
 	
-	public boolean exportSrxTrajectoryAsJavaFile(SrxTrajectory combined, SrxTranslatorConfig config, WaypointSequence waypoints) {		
+	public boolean exportSrxTrajectoryAsJavaFile(SrxTrajectory combined, SrxTranslatorConfig config, WaypointSequence waypoints) {	
+		return exportSrxTrajectoryAsJavaFile(combined, config, waypoints, 1, 1);
+	}
+	
+	public boolean exportSrxTrajectoryAsJavaFile(SrxTrajectory combined, SrxTranslatorConfig config, 
+			WaypointSequence waypoints, int leftDirection, int rightDirection) {		
 		String combinedPath = joinFilePaths(directory, config.name + ".java");
 		
 		StringBuilder sb = new StringBuilder();
@@ -53,14 +58,14 @@ public class SrxTrajectoryExporter {
 		
 		sb.append("double[][] leftPoints = {\r\n");
 		
-		sb.append(serializeTrajectoryPoints(combined.leftProfile));
+		sb.append(serializeTrajectoryPoints(combined.leftProfile, leftDirection));
 		
 		sb.append("\r\n" + 
 				"		};\r\n" + 
 				"		\r\n" + 
 				"		double[][] rightPoints = {\r\n");
 		
-		sb.append(serializeTrajectoryPoints(combined.rightProfile));
+		sb.append(serializeTrajectoryPoints(combined.rightProfile, rightDirection));
 		
 		sb.append("\r\n" + 
 				"		};\r\n" + 
@@ -93,11 +98,11 @@ public class SrxTrajectoryExporter {
 		return sb.toString();
 	}
 	
-	private String serializeTrajectoryPoints(SrxMotionProfile profile) {
+	private String serializeTrajectoryPoints(SrxMotionProfile profile, int direction) {
 		StringBuilder sb = new StringBuilder();
 		
 		for (int i = 0; i < profile.points.length; i++) {
-			sb.append(String.format("				{%.3f,%.3f,%.3f}", profile.points[i][0],profile.points[i][1],profile.points[i][2]));
+			sb.append(String.format("				{%.3f,%.3f,%.3f}", direction * profile.points[i][0], direction * profile.points[i][1],profile.points[i][2]));
 			if (i < profile.points.length -1) {
 				sb.append(",\r\n");
 			}

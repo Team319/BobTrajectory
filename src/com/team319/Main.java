@@ -107,10 +107,10 @@ public class Main {
 		CenterToRightSwitchPt5.addWaypoint(0.0, 0.0, 0.0);
 		CenterToRightSwitchPt5.addWaypoint(6.5, 0.0, 0.0);
 		
-		BobPath RightWallToScaleRightSide = new BobPath(powerUpHighGearConfig, "RightWallToScaleRightSide", -1);
-		RightWallToScaleRightSide.addWaypoint(0.0, 0.0, 0.0);
-		RightWallToScaleRightSide.addWaypoint(12.0, 0.0, 0.0);
-		RightWallToScaleRightSide.addWaypoint(22.5, 4.0, 15.0);
+		BobPath RightWallToRightScale = new BobPath(powerUpHighGearConfig, "RightWallToRightScale", -1);
+		RightWallToRightScale.addWaypoint(0.0, 0.0, 0.0);
+		RightWallToRightScale.addWaypoint(12.0, 0.0, 0.0);
+		RightWallToRightScale.addWaypoint(22.5, 4.0, 15.0);
 		
 		BobPath ScaleToSwitchCubeRightSide = new BobPath(powerUpHighGearConfig, "ScaleToSwitchCubeRightSide", 1) ;
 		ScaleToSwitchCubeRightSide.addWaypoint(0.0, 0.0, 0.0);
@@ -154,10 +154,10 @@ public class Main {
 		CenterToLeftSwitchPt5.addWaypoint(0.0, 0.0, 0.0);
 		CenterToLeftSwitchPt5.addWaypoint(6.5, 0.0, 0.0);
 		
-		BobPath LeftWallToScaleLeftSide = new BobPath(powerUpHighGearConfig, "LeftWallToScaleLeftSide", -1);
-		LeftWallToScaleLeftSide.addWaypoint(0.0, 0.0, 0.0);
-		LeftWallToScaleLeftSide.addWaypoint(12.0, 0.0, 0.0);
-		LeftWallToScaleLeftSide.addWaypoint(22.5, 4.0, 15.0);
+		BobPath LeftWallToLeftScale = new BobPath(powerUpHighGearConfig, "LeftWallToLeftScale", -1);
+		LeftWallToLeftScale.addWaypoint(0.0, 0.0, 0.0);
+		LeftWallToLeftScale.addWaypoint(12.0, 0.0, 0.0);
+		LeftWallToLeftScale.addWaypoint(22.5, -4.0, -15.0);
 		
 		BobPath ScaleToSwitchCubeLeftSide = new BobPath(powerUpHighGearConfig, "ScaleToSwitchCubeLeftSide", 1) ;
 		ScaleToSwitchCubeLeftSide.addWaypoint(0.0, 0.0, 0.0);
@@ -191,7 +191,7 @@ public class Main {
 				BobPathGenerator.exportPathToJavaFile("Paths", CenterToRightSwitchPt4);
 				BobPathGenerator.exportPathToJavaFile("Paths", CenterToRightSwitchPt5);
 			*/	
-				BobPathGenerator.exportPathToJavaFile("Paths", RightWallToScaleRightSide);
+				BobPathGenerator.exportPathToJavaFile("Paths", RightWallToRightScale);
 				BobPathGenerator.exportPathToJavaFile("Paths", ScaleToSwitchCubeRightSide);
 				BobPathGenerator.exportPathToJavaFile("Paths", RightWallToRightSwitch);
 				BobPathGenerator.exportPathToJavaFile("Paths", RightWallToRightSwitchPt2);
@@ -207,7 +207,7 @@ public class Main {
 				BobPathGenerator.exportPathToJavaFile("Paths", CenterToLeftSwitchPt5);
 			*/
 				
-				BobPathGenerator.exportPathToJavaFile("Paths", LeftWallToScaleLeftSide);
+				BobPathGenerator.exportPathToJavaFile("Paths", LeftWallToLeftScale);
 				BobPathGenerator.exportPathToJavaFile("Paths", ScaleToSwitchCubeLeftSide);
 				BobPathGenerator.exportPathToJavaFile("Paths", LeftWallToLeftSwitch);
 				BobPathGenerator.exportPathToJavaFile("Paths", LeftWallToLeftSwitchPt2);

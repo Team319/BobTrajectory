@@ -3,7 +3,7 @@ package org.usfirst.frc.team319.paths;
 import org.usfirst.frc.team319.models.SrxMotionProfile;
 import org.usfirst.frc.team319.models.SrxTrajectory;
 
-public class LeftWallToScaleLeftSide extends SrxTrajectory{
+public class RightWallToRightScale extends SrxTrajectory{
 	
 	// WAYPOINTS:
 	// (X,Y,degrees)
@@ -11,11 +11,11 @@ public class LeftWallToScaleLeftSide extends SrxTrajectory{
 	// (12.00,0.00,0.00)
 	// (22.50,4.00,15.00)
 	
-	public LeftWallToScaleLeftSide() {
+	public RightWallToRightScale() {
 		this(false);
 	}
 			
-    public LeftWallToScaleLeftSide(boolean flipped) {
+    public RightWallToRightScale(boolean flipped) {
 		super();
 		
 		double[][] leftPoints = {

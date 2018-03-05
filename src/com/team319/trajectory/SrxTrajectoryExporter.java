@@ -102,7 +102,7 @@ public class SrxTrajectoryExporter {
 		StringBuilder sb = new StringBuilder();
 		
 		for (int i = 0; i < profile.points.length; i++) {
-			sb.append(String.format("				{%.3f,%.3f,%.3f}", direction * profile.points[i][0], direction * profile.points[i][1],profile.points[i][2]));
+			sb.append(String.format("				{%.3f,%.3f,%.3f,%.3f}", direction * profile.points[i][0], direction * profile.points[i][1],profile.points[i][2],profile.points[i][3]));
 			if (i < profile.points.length -1) {
 				sb.append(",\r\n");
 			}

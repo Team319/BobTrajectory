@@ -34,7 +34,7 @@ public class SrxTranslator {
 	public double[][] extractSRXPointsFromChezyTrajectory(Trajectory traj, double wheelDiameterInches,
 			double scaleFactor, int encoderTicksPerRev) {
 		// create an array of points for the SRX
-				double[][] points = new double[traj.getSegments().length][3];
+				double[][] points = new double[traj.getSegments().length][4];
 
 				// Fill that array
 				for (int i = 0; i < traj.getSegments().length; i++) {
@@ -46,6 +46,8 @@ public class SrxTranslator {
 
 					// translate from seconds to milliseconds
 					points[i][2] = traj.getSegment(i).dt * 1000;
+					
+					points[i][3] = Math.toDegrees(traj.getSegment(i).heading);
 				}
 				return points;
 	}

@@ -9,11 +9,8 @@ import com.team254.lib.trajectory.Path;
 import com.team254.lib.trajectory.PathGenerator;
 import com.team254.lib.trajectory.Trajectory;
 import com.team254.lib.trajectory.Trajectory.Pair;
-import com.team319.ui.PathViewer;
-
-import com.team254.lib.trajectory.WaypointSequence;
-import com.team254.lib.trajectory.WaypointSequence.Waypoint;
 import com.team254.lib.trajectory.io.IPathSerializer;
+import com.team319.ui.PathViewer;
 
 public class BobPathGenerator extends PathGenerator {
 
@@ -112,7 +109,7 @@ public class BobPathGenerator extends PathGenerator {
 			PathViewer.showPath(chezyPath);
 		}
 	}
-	public static void exportPathToJavaFile(String relativeDirectoryName, BobPath bobPath, int turnDirection) {
+	public static void exportRotationToJavaFile(String relativeDirectoryName, BobRotation bobPath) {
 		SrxTrajectoryExporter exporter = new SrxTrajectoryExporter(relativeDirectoryName);
 
 		Path chezyPath = makePath(bobPath);
@@ -121,7 +118,7 @@ public class BobPathGenerator extends PathGenerator {
 		SrxTrajectory combined = srxt.getSrxTrajectoryFromChezyPath(chezyPath, bobPath.getConfig());
 
 		if (!exporter.exportSrxTrajectoryAsJavaFile(combined, bobPath.getConfig(), 
-				bobPath.getWaypointSequence(), turnDirection, -turnDirection)) {
+				bobPath.getWaypointSequence(), 1, -1)) {
 			System.err.println("A path could not be written!!!!");
 			System.exit(1);
 		} else {

@@ -3,6 +3,7 @@ package com.team319;
 import com.team254.lib.trajectory.WaypointSequence;
 import com.team319.trajectory.BobPath;
 import com.team319.trajectory.BobPathGenerator;
+import com.team319.trajectory.BobRotation;
 import com.team319.trajectory.SrxTranslatorConfig;
 /**
  * Forked from 254's 2014 Trajectory library just a comment to make a change
@@ -60,9 +61,7 @@ public class Main {
 		turnConfig.max_vel = 4.0;
 		turnConfig.max_acc = 3;
 		
-		BobPath sameSideSwitchPart2 = new BobPath(turnConfig, "SameSideSwitchPart2", 1);
-		sameSideSwitchPart2.addWaypoint(new WaypointSequence.Waypoint(inInches(0), inInches(0), Math.toRadians(0)));
-		sameSideSwitchPart2.addWaypoint(new WaypointSequence.Waypoint(inDegrees(90), 0, 0));
+		BobRotation sameSideSwitchPart2 = new BobRotation(turnConfig, "SameSideSwitchPart2", 90);
 		
 		SrxTranslatorConfig straightConfig = new SrxTranslatorConfig(standardConfig);
 		straightConfig.max_vel = 5.0;
@@ -78,7 +77,7 @@ public class Main {
 		
 		
 		BobPathGenerator.exportPathToJavaFile("Paths", sameSideSwitch);
-		BobPathGenerator.exportPathToJavaFile("Paths", sameSideSwitchPart2, 1);
+		BobPathGenerator.exportRotationToJavaFile("Paths", sameSideSwitchPart2);
 		BobPathGenerator.exportPathToJavaFile("Paths", sameSideSwitchPart3);
 		BobPathGenerator.exportPathToJavaFile("Paths", sameSideSwitchPart4);
 	}
@@ -109,26 +108,22 @@ public class Main {
 		sameSideScale.addWaypoint(new WaypointSequence.Waypoint(inInches(200), inInches(0), 0));
 		sameSideScale.addWaypoint(new WaypointSequence.Waypoint(inInches(280), inInches(-15), Math.toRadians(-25)));
 		
-		BobPath sameSideScalePart2 = new BobPath(turnConfig, "SameSideScalePart2", 1);
-		sameSideScalePart2.addWaypoint(0, 0, 0);
-		sameSideScalePart2.addWaypoint(inDegrees(130), 0, 0);
+		BobRotation sameSideScalePart2 = new BobRotation(turnConfig, "SameSideScalePart2", 130);
 		
 		BobPath sameSideScalePart3 = new BobPath(sameSideScaleConfig, "SameSideScalePart3", 1);
 		sameSideScalePart3.addWaypoint(new WaypointSequence.Waypoint(inInches(0), inInches(0), Math.toRadians(0)));
 		sameSideScalePart3.addWaypoint(new WaypointSequence.Waypoint(inInches(50), inInches(0), Math.toRadians(0)));
 		
-		BobPath sameSideScalePart4 = new BobPath(turnConfigFast, "SameSideScalePart4", 1);
-		sameSideScalePart4.addWaypoint(0, 0, 0);
-		sameSideScalePart4.addWaypoint(inDegrees(147), 0, 0);
+		BobRotation sameSideScalePart4 = new BobRotation(turnConfigFast, "SameSideScalePart4", 147);
 		
 		BobPath sameSideScalePart5 = new BobPath(sameSideScaleConfig, "SameSideScalePart5", 1);
 		sameSideScalePart5.addWaypoint(new WaypointSequence.Waypoint(inInches(0), inInches(0), Math.toRadians(0)));
 		sameSideScalePart5.addWaypoint(new WaypointSequence.Waypoint(inInches(40), inInches(0), Math.toRadians(0)));
 		
 		BobPathGenerator.exportPathToJavaFile("Paths", sameSideScale);
-		BobPathGenerator.exportPathToJavaFile("Paths", sameSideScalePart2, 1);
+		BobPathGenerator.exportRotationToJavaFile("Paths", sameSideScalePart2);
 		BobPathGenerator.exportPathToJavaFile("Paths", sameSideScalePart3);
-		BobPathGenerator.exportPathToJavaFile("Paths", sameSideScalePart4, -1);
+		BobPathGenerator.exportRotationToJavaFile("Paths", sameSideScalePart4);
 		BobPathGenerator.exportPathToJavaFile("Paths", sameSideScalePart5);
 	}
 	
@@ -148,9 +143,7 @@ public class Main {
 		turnConfig.max_vel = 4.0;
 		turnConfig.max_acc = 3;
 		
-		BobPath oppositeSideScalePart2 = new BobPath(turnConfig, "OppositeSideScalePart2", 1);
-		oppositeSideScalePart2.addWaypoint(new WaypointSequence.Waypoint(0, 0, 0));
-		oppositeSideScalePart2.addWaypoint(new WaypointSequence.Waypoint(inDegrees(171), 0, 0));
+		BobRotation oppositeSideScalePart2 = new BobRotation(turnConfig, "OppositeSideScalePart2", 171);
 		
 		BobPath oppositeSideScalePart3 = new BobPath(turnConfig, "OppositeSideScalePart3", 1);
 		oppositeSideScalePart3.addWaypoint(new WaypointSequence.Waypoint(0, 0, 0));
@@ -160,14 +153,12 @@ public class Main {
 		turnConfig.max_vel = 5.0;
 		turnConfig.max_acc = 4;
 		
-		BobPath oppositeSideScalePart4 = new BobPath(turnConfigFast, "OppositeSideScalePart4", 1);
-		oppositeSideScalePart4.addWaypoint(new WaypointSequence.Waypoint(0, 0, 0));
-		oppositeSideScalePart4.addWaypoint(new WaypointSequence.Waypoint(inDegrees(180), 0, 0));
+		BobRotation oppositeSideScalePart4 = new BobRotation(turnConfigFast, "OppositeSideScalePart4", 180);
 		
 		BobPathGenerator.exportPathToJavaFile("Paths", oppositeSideScale);
-		BobPathGenerator.exportPathToJavaFile("Paths", oppositeSideScalePart2, -1);
+		BobPathGenerator.exportRotationToJavaFile("Paths", oppositeSideScalePart2);
 		BobPathGenerator.exportPathToJavaFile("Paths", oppositeSideScalePart3);
-		BobPathGenerator.exportPathToJavaFile("Paths", oppositeSideScalePart4, -1);
+		BobPathGenerator.exportRotationToJavaFile("Paths", oppositeSideScalePart4);
 	}
 	
 	private static void generateBaseline() {
@@ -203,9 +194,5 @@ public class Main {
 	
 	private static double inInches(double inches) {
 		return ((double) inches) / 12.0;
-	}
-	
-	private static double inDegrees(double degree) {
-		return inInches(90) * degree / 360.0;
 	}
 }

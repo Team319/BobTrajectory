@@ -17,6 +17,10 @@ public class SrxTranslator {
 		// create an array of points for the SRX
 		double[][] leftPoints = extractSRXPointsFromChezyTrajectory(chezyPath.getPair().left, config.wheel_dia_inches,
 				config.scale_factor, config.encoder_ticks_per_rev);
+		
+		// create an array of points for the SRX
+		double[][] centerPoints = extractSRXPointsFromChezyTrajectory(chezyPath.getPair().left, config.wheel_dia_inches,
+				config.scale_factor, config.encoder_ticks_per_rev);
 
 		// do it again for the right side
 		double[][] rightPoints = extractSRXPointsFromChezyTrajectory(chezyPath.getPair().right, config.wheel_dia_inches,
@@ -24,10 +28,11 @@ public class SrxTranslator {
 
 		// create the motion profile objects
 		SrxMotionProfile left = new SrxMotionProfile(leftPoints.length, leftPoints);
+		SrxMotionProfile center = new SrxMotionProfile(centerPoints.length, centerPoints);
 		SrxMotionProfile right = new SrxMotionProfile(rightPoints.length, rightPoints);
 
 		// Combine
-		return new SrxTrajectory(left, right);
+		return new SrxTrajectory(left, center, right);
 
 	}
 	

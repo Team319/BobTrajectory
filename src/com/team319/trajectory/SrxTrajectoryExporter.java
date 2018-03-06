@@ -53,10 +53,22 @@ public class SrxTrajectoryExporter {
 		sb.append("	\r\n" + 
 				"    public " + config.name + "(boolean flipped) {\r\n" + 
 				"		super();\r\n" + 
-				"		\r\n" + 
 				"		");
+				
+		sb.append("\r\n" + 
+				"		if (flipped) {\r\n" +
+				"			rightProfile = new SrxMotionProfile(leftPoints.length, leftPoints);\r\n" + 
+				"			centerProfile = new SrxMotionProfile(centerPoints.length, centerPoints);\r\n" + 
+				"			leftProfile = new SrxMotionProfile(rightPoints.length, rightPoints);\r\n" + 
+				"		} else {\r\n" +
+				"			leftProfile = new SrxMotionProfile(leftPoints.length, leftPoints);\r\n" + 
+				"			centerProfile = new SrxMotionProfile(centerPoints.length, centerPoints);\r\n" + 
+				"			rightProfile = new SrxMotionProfile(rightPoints.length, rightPoints);\r\n" + 
+				"		}\r\n" +
+				"	}\r\n" + 
+				"\r\n");
 		
-		sb.append("double[][] leftPoints = {\r\n");
+		sb.append("		double[][] leftPoints = {\r\n");
 		
 		sb.append(serializeTrajectoryPoints(combined.leftProfile, leftDirection));
 		
@@ -70,17 +82,63 @@ public class SrxTrajectoryExporter {
 		sb.append("\r\n" + 
 				"		};\r\n" + 
 				"		\r\n" + 
-				"		if (flipped) {\r\n" +
-				"			rightProfile = new SrxMotionProfile(leftPoints.length, leftPoints);\r\n" + 
-				"			leftProfile = new SrxMotionProfile(rightPoints.length, rightPoints);\r\n" + 
-				"		} else {\r\n" +
-				"			leftProfile = new SrxMotionProfile(leftPoints.length, leftPoints);\r\n" + 
-				"			rightProfile = new SrxMotionProfile(rightPoints.length, rightPoints);\r\n" + 
-				"		}\r\n" +
-				"	}\r\n" + 
+				"		double[][] centerPoints = {\r\n");
+		
+		sb.append(serializeTrajectoryPoints(combined.centerProfile, 1));
+		sb.append("		};\r\n" + 
+				"\n}");
+		
+		if (!writeFile(combinedPath, sb.toString())){
+			System.err.println(combinedPath + " could not be written!!!!1");
+			return false;
+		}
+		
+		return true;
+	}
+	
+	public boolean exportSrxArcAsJavaFile(SrxTrajectory combined, SrxTranslatorConfig config, 
+			WaypointSequence waypoints) {		
+		String combinedPath = joinFilePaths(directory, config.name + ".java");
+		
+		StringBuilder sb = new StringBuilder();
+		
+		// package and imports
+		sb.append("package org.usfirst.frc.team319.paths;\r\n" + 
 				"\r\n" + 
-				"}");
-
+				"import org.usfirst.frc.team319.models.SrxMotionProfile;\r\n" + 
+				"import org.usfirst.frc.team319.models.SrxTrajectory;\r\n\r\n");
+		
+		//beginning of the class
+		sb.append("public class " + config.name + " extends SrxTrajectory{");
+		
+		sb.append("\r\n" + 
+				"	\r\n" + 
+				"	// WAYPOINTS:\r\n" + 
+				"	// (X,Y,degrees)\r\n");
+		
+		sb.append(serializeWaypoints(waypoints));
+		
+		sb.append("	\r\n" + 
+				"    public " + config.name + "() {\r\n" + 
+				"		super();\r\n" + 
+				"		centerProfile = new SrxMotionProfile(centerPoints.length, centerPoints);\r\n" + 
+				"	}\r\n" + 
+				"\r\n");
+		
+		sb.append("	\r\n" + 
+				"    public " + config.name + "(boolean flipped) {\r\n" + 
+				"		super();\r\n" + 
+				"		this.flipped = flipped;\r\n" +
+				"		centerProfile = new SrxMotionProfile(centerPoints.length, centerPoints);\r\n" + 
+				"	}\r\n" + 
+				"\r\n");
+		
+		sb.append("	double[][] centerPoints = {\r\n");
+		
+		sb.append(serializeTrajectoryPoints(combined.centerProfile, 1));
+		sb.append("		};\r\n" + 
+				"\n}");
+		
 		if (!writeFile(combinedPath, sb.toString())){
 			System.err.println(combinedPath + " could not be written!!!!1");
 			return false;

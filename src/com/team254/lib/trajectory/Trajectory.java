@@ -1,7 +1,5 @@
 package com.team254.lib.trajectory;
 
-import com.team254.lib.util.ChezyMath;
-
 /**
  * Implementation of a Trajectory using arrays as the underlying storage
  * mechanism.
@@ -11,12 +9,14 @@ import com.team254.lib.util.ChezyMath;
 public class Trajectory {
   
   public static class Pair {
-    public Pair(Trajectory left, Trajectory right) {
+    public Pair(Trajectory left, Trajectory center, Trajectory right) {
       this.left = left;
+      this.center = center;
       this.right = right;
     }
 
     public Trajectory left;
+    public Trajectory center;
     public Trajectory right;
   }
 

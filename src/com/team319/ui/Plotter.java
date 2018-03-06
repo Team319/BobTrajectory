@@ -46,7 +46,13 @@ public class Plotter {
 			series2.getData().add(new XYChart.Data(path.getPair().right.getSegment(i).x, path.getPair().right.getSegment(i).y));
 		}
 		
-		sc.getData().addAll(series1, series2);
+		XYChart.Series series3 = new XYChart.Series();
+		series3.setName("Center");
+		for (int i = 0; i < path.getPair().center.getNumSegments(); i++) {
+			series3.getData().add(new XYChart.Data(path.getPair().center.getSegment(i).x, path.getPair().center.getSegment(i).y));
+		}
+		
+		sc.getData().addAll(series1, series2, series3);
 		Scene scene = new Scene(sc, 1000, 800);
 		scene.getStylesheets().clear();
 		scene.getStylesheets().add(getClass().getResource("Plotter.css").toExternalForm());		

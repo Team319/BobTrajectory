@@ -9,11 +9,8 @@ import com.team254.lib.trajectory.Path;
 import com.team254.lib.trajectory.PathGenerator;
 import com.team254.lib.trajectory.Trajectory;
 import com.team254.lib.trajectory.Trajectory.Pair;
-import com.team319.ui.PathViewer;
-
-import com.team254.lib.trajectory.WaypointSequence;
-import com.team254.lib.trajectory.WaypointSequence.Waypoint;
 import com.team254.lib.trajectory.io.IPathSerializer;
+import com.team319.ui.PathViewer;
 
 public class BobPathGenerator extends PathGenerator {
 
@@ -30,12 +27,14 @@ public class BobPathGenerator extends PathGenerator {
 
 	private static Path reversePath(Path p) {
 		Trajectory oldLeft = p.getLeftWheelTrajectory();
+		Trajectory oldCenter = p.getCenterTrajectory();
 		Trajectory oldRight = p.getRightWheelTrajectory();
 
 		oldLeft.scale(-1);
+		oldCenter.scale(-1);
 		oldRight.scale(-1);
 
-		return new Path(p.getName(), new Pair(oldRight, oldLeft));
+		return new Path(p.getName(), new Pair(oldRight, p.getPair().center, oldLeft));
 	}
 	
 	
@@ -60,9 +59,10 @@ public class BobPathGenerator extends PathGenerator {
 		if (invertY)
 		{			
 			Trajectory oldLeft = exportPath.getLeftWheelTrajectory();
+			Trajectory oldCenter = exportPath.getCenterTrajectory();
 			Trajectory oldRight = exportPath.getRightWheelTrajectory();
 						
-			exportPath = new Path(newPathName, new Pair(oldRight, oldLeft));
+			exportPath = new Path(newPathName, new Pair(oldRight, oldCenter, oldLeft));
 			exportPath.goRight();	
 		}
 		
@@ -104,7 +104,44 @@ public class BobPathGenerator extends PathGenerator {
 		SrxTranslator srxt = new SrxTranslator();
 		SrxTrajectory combined = srxt.getSrxTrajectoryFromChezyPath(chezyPath, bobPath.getConfig());
 
-		if (!exporter.exportSrxTrajectoryAsJavaFile(combined, bobPath.getConfig(), bobPath.getWaypointSequence())) {
+		if (!exporter.exportSrxTrajectoryAsJavaFile(combined, bobPath.getConfig(), 
+				bobPath.getWaypointSequence())) {
+			System.err.println("A path could not be written!!!!");
+			System.exit(1);
+		} else {
+			/// SrxTrajectory t = importer.importSrxTrajectory(config.name);
+			PathViewer.showPath(chezyPath);
+		}
+	}
+	
+	public static void exportArcToJavaFile(String relativeDirectoryName, BobPath bobPath) {
+		SrxTrajectoryExporter exporter = new SrxTrajectoryExporter(relativeDirectoryName);
+
+		Path chezyPath = makePath(bobPath);
+
+		SrxTranslator srxt = new SrxTranslator();
+		SrxTrajectory combined = srxt.getSrxTrajectoryFromChezyPath(chezyPath, bobPath.getConfig());
+
+		if (!exporter.exportSrxArcAsJavaFile(combined, bobPath.getConfig(), 
+				bobPath.getWaypointSequence())) {
+			System.err.println("A path could not be written!!!!");
+			System.exit(1);
+		} else {
+			/// SrxTrajectory t = importer.importSrxTrajectory(config.name);
+			PathViewer.showPath(chezyPath);
+		}
+	}
+	
+	public static void exportRotationToJavaFile(String relativeDirectoryName, BobRotation bobPath) {
+		SrxTrajectoryExporter exporter = new SrxTrajectoryExporter(relativeDirectoryName);
+
+		Path chezyPath = makePath(bobPath);
+
+		SrxTranslator srxt = new SrxTranslator();
+		SrxTrajectory combined = srxt.getSrxTrajectoryFromChezyPath(chezyPath, bobPath.getConfig());
+
+		if (!exporter.exportSrxTrajectoryAsJavaFile(combined, bobPath.getConfig(), 
+				bobPath.getWaypointSequence(), 1, -1)) {
 			System.err.println("A path could not be written!!!!");
 			System.exit(1);
 		} else {

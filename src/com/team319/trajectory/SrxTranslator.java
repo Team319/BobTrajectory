@@ -17,6 +17,10 @@ public class SrxTranslator {
 		// create an array of points for the SRX
 		double[][] leftPoints = extractSRXPointsFromChezyTrajectory(chezyPath.getPair().left, config.wheel_dia_inches,
 				config.scale_factor, config.encoder_ticks_per_rev);
+		
+		// create an array of points for the SRX
+		double[][] centerPoints = extractSRXPointsFromChezyTrajectory(chezyPath.getPair().left, config.wheel_dia_inches,
+				config.scale_factor, config.encoder_ticks_per_rev);
 
 		// do it again for the right side
 		double[][] rightPoints = extractSRXPointsFromChezyTrajectory(chezyPath.getPair().right, config.wheel_dia_inches,
@@ -24,18 +28,20 @@ public class SrxTranslator {
 
 		// create the motion profile objects
 		SrxMotionProfile left = new SrxMotionProfile(leftPoints.length, leftPoints);
+		SrxMotionProfile center = new SrxMotionProfile(centerPoints.length, centerPoints);
 		SrxMotionProfile right = new SrxMotionProfile(rightPoints.length, rightPoints);
 
 		// Combine
-		return new SrxTrajectory(left, right);
+		return new SrxTrajectory(left, center, right);
 
 	}
 	
 	public double[][] extractSRXPointsFromChezyTrajectory(Trajectory traj, double wheelDiameterInches,
 			double scaleFactor, int encoderTicksPerRev) {
 		// create an array of points for the SRX
-				double[][] points = new double[traj.getSegments().length][3];
-
+				double[][] points = new double[traj.getSegments().length][4];
+				double lastHeading = 0;
+				double continuousHeading = 0;
 				// Fill that array
 				for (int i = 0; i < traj.getSegments().length; i++) {
 					// translate from feet to encoder ticks
@@ -46,10 +52,19 @@ public class SrxTranslator {
 
 					// translate from seconds to milliseconds
 					points[i][2] = traj.getSegment(i).dt * 1000;
+					double nextHeading = Math.toDegrees(traj.getSegment(i).heading); 
+					if (i != 0) {
+						double headingDifference = nextHeading - lastHeading;
+						if (headingDifference >= 300) {
+							headingDifference -= 360;
+						}
+						continuousHeading += headingDifference;
+					}
+					points[i][3] = continuousHeading;
+					lastHeading = nextHeading;
 				}
 				return points;
 	}
-	
 
 	public double[][] extractSRXPointsFromChezyTrajectory(Trajectory traj, double wheelDiameterInches,
 			double scaleFactor) {

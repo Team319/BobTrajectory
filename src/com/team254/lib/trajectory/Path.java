@@ -40,6 +40,10 @@ public class Path {
     return (goLeft ? pair.left : pair.right);
   }
   
+  public Trajectory getCenterTrajectory() {
+	    return pair.center;
+	  }
+  
   public Trajectory getRightWheelTrajectory() {
     return (goLeft ? pair.right : pair.left);
   }

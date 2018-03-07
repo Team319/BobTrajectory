@@ -144,6 +144,6 @@ public class PathGenerator {
       }
     }
 
-    return new Trajectory.Pair(output[0], output[1]);
+    return new Trajectory.Pair(output[0], input.copy(), output[1]);
   }
 }

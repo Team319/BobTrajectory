@@ -188,10 +188,16 @@ public class Main {
 		BobPath turningCalibration = new BobPath(slowConfig, "turning_calibration", 1);
 		turningCalibration.addWaypoint(new WaypointSequence.Waypoint(0, 0, 0));
 		turningCalibration.addWaypoint(new WaypointSequence.Waypoint(4.0, 4.0, Math.toRadians(89.99)));
+		
+		BobPath test = new BobPath(slowConfig, "test", 1);
+		test.addWaypoint(new WaypointSequence.Waypoint(0, 0,  Math.toRadians(45)));
+		test.addWaypoint(new WaypointSequence.Waypoint(10.0, 10.0, Math.toRadians(-30)));
 
-		BobPathGenerator.exportPathToJavaFile("Paths", scalingCalibration);
-		BobPathGenerator.exportPathToJavaFile("Paths", turningCalibration);
+
+		BobPathGenerator.exportArcToJavaFile("Paths", scalingCalibration);
+		BobPathGenerator.exportArcToJavaFile("Paths", turningCalibration);
 		BobPathGenerator.exportRotationToJavaFile("Paths", new BobRotation(standardConfig, "rotation_calibration", 360));
+		BobPathGenerator.exportArcToJavaFile("Paths", test);
 	}
 	
 	private static double inInches(double inches) {

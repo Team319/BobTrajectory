@@ -40,7 +40,8 @@ public class SrxTranslator {
 			double scaleFactor, int encoderTicksPerRev) {
 		// create an array of points for the SRX
 				double[][] points = new double[traj.getSegments().length][4];
-
+				double lastHeading = 0;
+				double continuousHeading = 0;
 				// Fill that array
 				for (int i = 0; i < traj.getSegments().length; i++) {
 					// translate from feet to encoder ticks
@@ -51,12 +52,19 @@ public class SrxTranslator {
 
 					// translate from seconds to milliseconds
 					points[i][2] = traj.getSegment(i).dt * 1000;
-					
-					points[i][3] = Math.toDegrees(traj.getSegment(i).heading);
+					double nextHeading = Math.toDegrees(traj.getSegment(i).heading); 
+					if (i != 0) {
+						double headingDifference = nextHeading - lastHeading;
+						if (headingDifference >= 300) {
+							headingDifference -= 360;
+						}
+						continuousHeading += headingDifference;
+					}
+					points[i][3] = continuousHeading;
+					lastHeading = nextHeading;
 				}
 				return points;
 	}
-	
 
 	public double[][] extractSRXPointsFromChezyTrajectory(Trajectory traj, double wheelDiameterInches,
 			double scaleFactor) {

@@ -98,7 +98,7 @@ public class SrxTrajectoryExporter {
 	
 	public boolean exportSrxArcAsJavaFile(SrxTrajectory combined, SrxTranslatorConfig config, 
 			WaypointSequence waypoints) {		
-		String combinedPath = joinFilePaths(directory, config.name + ".java");
+		String combinedPath = joinFilePaths(directory, config.name + "Arc.java");
 		
 		StringBuilder sb = new StringBuilder();
 		
@@ -109,7 +109,7 @@ public class SrxTrajectoryExporter {
 				"import org.usfirst.frc.team319.models.SrxTrajectory;\r\n\r\n");
 		
 		//beginning of the class
-		sb.append("public class " + config.name + " extends SrxTrajectory{");
+		sb.append("public class " + config.name + "Arc extends SrxTrajectory{");
 		
 		sb.append("\r\n" + 
 				"	\r\n" + 

@@ -3,7 +3,7 @@ package org.usfirst.frc.team319.paths;
 import org.usfirst.frc.team319.models.SrxMotionProfile;
 import org.usfirst.frc.team319.models.SrxTrajectory;
 
-public class ScaleToSwitchCubeRightSide extends SrxTrajectory{
+public class ScaleToSwitchCubeRightSideArc extends SrxTrajectory{
 	
 	// WAYPOINTS:
 	// (X,Y,degrees)

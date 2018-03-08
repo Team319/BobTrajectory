@@ -24,7 +24,7 @@ public class SrxTrajectoryExporter {
 	
 	public boolean exportSrxTrajectoryAsJavaFile(SrxTrajectory combined, SrxTranslatorConfig config, 
 			WaypointSequence waypoints, int leftDirection, int rightDirection) {		
-		String combinedPath = joinFilePaths(directory, config.name + ".java");
+		String combinedPath = joinFilePaths(directory, config.name + "Path.java");
 		
 		StringBuilder sb = new StringBuilder();
 		

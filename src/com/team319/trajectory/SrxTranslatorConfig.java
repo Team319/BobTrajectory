@@ -11,6 +11,7 @@ public class SrxTranslatorConfig extends TrajectoryGenerator.Config {
 	public int encoder_ticks_per_rev;
 	public double scale_factor; // used for reductions between encoder and wheel
 	public int direction = 1; // 1 = forward, -1 = backward
+	public double robotLength;
 
 	public SrxTranslatorConfig() {
 	}

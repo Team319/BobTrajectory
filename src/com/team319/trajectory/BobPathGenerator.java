@@ -9,6 +9,7 @@ import com.team254.lib.trajectory.Path;
 import com.team254.lib.trajectory.PathGenerator;
 import com.team254.lib.trajectory.Trajectory;
 import com.team254.lib.trajectory.Trajectory.Pair;
+import com.team254.lib.trajectory.WaypointSequence;
 import com.team254.lib.trajectory.io.IPathSerializer;
 import com.team319.ui.PathViewer;
 
@@ -132,22 +133,33 @@ public class BobPathGenerator extends PathGenerator {
 		}
 	}
 	
-	public static void exportRotationToJavaFile(String relativeDirectoryName, BobRotation bobPath) {
+	public static void exportRotationToJavaFile(String relativeDirectoryName, BobRotation bobRotation) {
 		SrxTrajectoryExporter exporter = new SrxTrajectoryExporter(relativeDirectoryName);
 
-		Path chezyPath = makePath(bobPath);
+		SrxTrajectory rotation = new SrxTrajectory();
+		bobRotation.getConfig().name = bobRotation.getName();
+		int numPoints = (int)(bobRotation.getSeconds() / bobRotation.getConfig().dt);
+		double degreesPerPoint = bobRotation.getDegrees() / (numPoints - 1);
+		double[][] points = new double[numPoints][4];
+		for (int i = 0; i < numPoints - 1; i++) {
+			points[i][0] = 0;
+			points[i][1] = 0;
+			points[i][2] = bobRotation.getConfig().dt;
+			points[i][3] = degreesPerPoint * i;
+		}
+		
+		points[numPoints - 1][0] = 0;
+		points[numPoints - 1][1] = 0;
+		points[numPoints - 1][2] = bobRotation.getConfig().dt;
+		points[numPoints - 1][3] = bobRotation.getDegrees();
+		
+		rotation.centerProfile = new SrxMotionProfile(points.length, points);
 
-		SrxTranslator srxt = new SrxTranslator();
-		SrxTrajectory combined = srxt.getSrxTrajectoryFromChezyPath(chezyPath, bobPath.getConfig());
-
-		if (!exporter.exportSrxTrajectoryAsJavaFile(combined, bobPath.getConfig(), 
-				bobPath.getWaypointSequence(), 1, -1)) {
+		if (!exporter.exportSrxArcAsJavaFile(rotation, bobRotation.getConfig(), 
+				new WaypointSequence(0))) {
 			System.err.println("A path could not be written!!!!");
 			System.exit(1);
-		} else {
-			/// SrxTrajectory t = importer.importSrxTrajectory(config.name);
-			PathViewer.showPath(chezyPath);
-		}
+		} 
 	}
 
 	public static void exportPathWithSerializer(IPathSerializer serializer, String relativeDirectoryName, BobPath bobPath) {

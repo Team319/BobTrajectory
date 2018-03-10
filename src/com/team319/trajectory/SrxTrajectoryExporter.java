@@ -35,7 +35,7 @@ public class SrxTrajectoryExporter {
 				"import org.usfirst.frc.team319.models.SrxTrajectory;\r\n\r\n");
 		
 		//beginning of the class
-		sb.append("public class " + config.name + " extends SrxTrajectory{");
+		sb.append("public class " + config.name + "Path extends SrxTrajectory{");
 		
 		sb.append("\r\n" + 
 				"	\r\n" + 
@@ -45,13 +45,13 @@ public class SrxTrajectoryExporter {
 		sb.append(serializeWaypoints(waypoints));
 		
 		sb.append("	\r\n" + 
-				"	public " + config.name + "() {\r\n" + 
+				"	public " + config.name + "Path() {\r\n" + 
 				"		this(false);\r\n" + 
 				"	}\r\n" + 
 				"		");
 		
 		sb.append("	\r\n" + 
-				"    public " + config.name + "(boolean flipped) {\r\n" + 
+				"    public " + config.name + "Path(boolean flipped) {\r\n" + 
 				"		super();\r\n" + 
 				"		");
 				
@@ -103,7 +103,7 @@ public class SrxTrajectoryExporter {
 		StringBuilder sb = new StringBuilder();
 		
 		// package and imports
-		sb.append("package org.usfirst.frc.team319.paths;\r\n" + 
+		sb.append("package org.usfirst.frc.team319.arcs;\r\n" + 
 				"\r\n" + 
 				"import org.usfirst.frc.team319.models.SrxMotionProfile;\r\n" + 
 				"import org.usfirst.frc.team319.models.SrxTrajectory;\r\n\r\n");
@@ -119,14 +119,14 @@ public class SrxTrajectoryExporter {
 		sb.append(serializeWaypoints(waypoints));
 		
 		sb.append("	\r\n" + 
-				"    public " + config.name + "() {\r\n" + 
+				"    public " + config.name + "Arc() {\r\n" + 
 				"		super();\r\n" + 
 				"		centerProfile = new SrxMotionProfile(centerPoints.length, centerPoints);\r\n" + 
 				"	}\r\n" + 
 				"\r\n");
 		
 		sb.append("	\r\n" + 
-				"    public " + config.name + "(boolean flipped) {\r\n" + 
+				"    public " + config.name + "Arc(boolean flipped) {\r\n" + 
 				"		super();\r\n" + 
 				"		this.flipped = flipped;\r\n" +
 				"		centerProfile = new SrxMotionProfile(centerPoints.length, centerPoints);\r\n" + 

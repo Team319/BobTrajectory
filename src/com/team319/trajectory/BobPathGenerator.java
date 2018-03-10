@@ -75,7 +75,8 @@ public class BobPathGenerator extends PathGenerator {
 			System.exit(1);
 		} else {
 			/// SrxTrajectory t = importer.importSrxTrajectory(config.name);
-			PathViewer.showPath(exportPath);
+			
+			PathViewer.showPath(exportPath,bobPaths[0].getConfig());
 		}		
 		
 	}
@@ -93,7 +94,7 @@ public class BobPathGenerator extends PathGenerator {
 			System.exit(1);
 		} else {
 			/// SrxTrajectory t = importer.importSrxTrajectory(config.name);
-			PathViewer.showPath(chezyPath);
+			PathViewer.showPath(chezyPath, bobPath.getConfig());
 		}
 	}
 	
@@ -111,8 +112,12 @@ public class BobPathGenerator extends PathGenerator {
 			System.exit(1);
 		} else {
 			/// SrxTrajectory t = importer.importSrxTrajectory(config.name);
-			PathViewer.showPath(chezyPath);
+			PathViewer.showPath(chezyPath, bobPath.getConfig());
 		}
+	}
+	
+	public static void exportPathToJavaFile(BobPath bobPath) {
+		exportPathToJavaFile("Paths", bobPath);
 	}
 	
 	public static void exportArcToJavaFile(String relativeDirectoryName, BobPath bobPath) {
@@ -129,9 +134,13 @@ public class BobPathGenerator extends PathGenerator {
 			System.exit(1);
 		} else {
 			/// SrxTrajectory t = importer.importSrxTrajectory(config.name);
-			PathViewer.showPath(chezyPath);
+			PathViewer.showPath(chezyPath, bobPath.getConfig());
 		}
 	}
+	public static void exportArcToJavaFile(BobPath bobPath) {
+		exportArcToJavaFile("Arcs", bobPath);
+	}
+	
 	
 	public static void exportRotationToJavaFile(String relativeDirectoryName, BobRotation bobRotation) {
 		SrxTrajectoryExporter exporter = new SrxTrajectoryExporter(relativeDirectoryName);
@@ -171,7 +180,7 @@ public class BobPathGenerator extends PathGenerator {
 		try {
 			Files.write(Paths.get(pathName), data.getBytes(), StandardOpenOption.WRITE, StandardOpenOption.CREATE,
 					StandardOpenOption.TRUNCATE_EXISTING);
-			PathViewer.showPath(chezyPath);
+			PathViewer.showPath(chezyPath, bobPath.getConfig());
 		} catch (IOException e) {
 			System.err.println("A path could not be written!!!!");
 			System.exit(1);

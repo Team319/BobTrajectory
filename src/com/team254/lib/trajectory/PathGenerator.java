@@ -46,6 +46,7 @@ public class PathGenerator {
       splines[i] = new Spline();
       if (!Spline.reticulateSplines(path.getWaypoint(i),
               path.getWaypoint(i + 1), splines[i], Spline.QuinticHermite)) {
+    	  System.out.println("COULDN'T RETICULATE SPLINE!!");
         return null;
       }
       spline_lengths[i] = splines[i].calculateLength();

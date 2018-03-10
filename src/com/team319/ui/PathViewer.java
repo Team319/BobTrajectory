@@ -3,13 +3,14 @@ package com.team319.ui;
 import javax.swing.SwingUtilities;
 
 import com.team254.lib.trajectory.Path;
+import com.team319.trajectory.SrxTranslatorConfig;
 
 import javafx.application.Platform;
 import javafx.embed.swing.JFXPanel;
 
 public class PathViewer {
 
-	public static void showPath(final Path path){
+	public static void showPath(final Path path, SrxTranslatorConfig config){
 		SwingUtilities.invokeLater(new Runnable() {
 			@Override
 			public void run() {
@@ -19,7 +20,7 @@ public class PathViewer {
 					@Override
 					public void run() {
 						Plotter pl = new Plotter();
-						pl.plotChezyTrajectory(path);
+						pl.plotChezyTrajectory(path, config);
 					}
 				});
 			}

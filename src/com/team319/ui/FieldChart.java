@@ -17,14 +17,8 @@ public class FieldChart extends ScatterChart<Number, Number> {
 	
 	@Override
 	protected void layoutPlotChildren() {
-	    double x = 0 ; // x coordinate of image in xAxis coordinates
-	    double y = 27 ; // y coordinate of image in yAxis coordinates
-
-	    double layoutX = getXAxis().getDisplayPosition(x);
-	    double layoutY = getYAxis().getDisplayPosition(y);
-
-	    iv1.setLayoutX(layoutX);
-	    iv1.setLayoutY(layoutY);
+	    iv1.setFitHeight(this.getHeight() - 145);
+	    iv1.setFitWidth(this.getWidth() - 88);
 
 	    super.layoutPlotChildren();
 	}

@@ -5,6 +5,7 @@ import java.text.DecimalFormat;
 import com.sun.javafx.geom.Rectangle;
 import com.team254.lib.trajectory.Path;
 import com.team254.lib.trajectory.Trajectory.Segment;
+import com.team319.trajectory.SrxTranslatorConfig;
 
 import javafx.scene.Scene;
 import javafx.scene.chart.NumberAxis;
@@ -18,10 +19,10 @@ public class Plotter {
 	
 	public Plotter(){}
 	
-	public void plotChezyTrajectory(Path path) {
+	public void plotChezyTrajectory(Path path, SrxTranslatorConfig config) {
 		Stage stage = new Stage();
 		
-		stage.setTitle("Scatter Chart Sample");
+		stage.setTitle(config.name);
 		
 		final NumberAxis xAxis = new NumberAxis(0, 27, 0.5);
 		final NumberAxis yAxis = new NumberAxis(0, 27, 0.5);
@@ -55,7 +56,7 @@ public class Plotter {
 		}
 		
 		sc.getData().addAll(series1, series2, series3);
-		Scene scene = new Scene(sc, 725, 750);
+		Scene scene = new Scene(sc, 725, 780);
 		scene.getStylesheets().clear();
 		scene.getStylesheets().add(getClass().getResource("Plotter.css").toExternalForm());		
 		stage.setScene(scene);

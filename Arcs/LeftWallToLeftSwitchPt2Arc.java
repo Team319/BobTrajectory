@@ -12,15 +12,19 @@ public class LeftWallToLeftSwitchPt2Arc extends SrxTrajectory{
 	
     public LeftWallToLeftSwitchPt2Arc() {
 		super();
+		this.highGear = true;
 		centerProfile = new SrxMotionProfile(centerPoints.length, centerPoints);
 	}
 
 	
     public LeftWallToLeftSwitchPt2Arc(boolean flipped) {
 		super();
+		this.highGear = true;
 		this.flipped = flipped;
 		centerProfile = new SrxMotionProfile(centerPoints.length, centerPoints);
 	}
+
+	public boolean highGear = true;
 
 	double[][] centerPoints = {
 				{0.436,8.719,10.000,0.000},

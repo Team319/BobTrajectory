@@ -12,15 +12,19 @@ public class BackwardsThreeFeetArc extends SrxTrajectory{
 	
     public BackwardsThreeFeetArc() {
 		super();
+		this.highGear = true;
 		centerProfile = new SrxMotionProfile(centerPoints.length, centerPoints);
 	}
 
 	
     public BackwardsThreeFeetArc(boolean flipped) {
 		super();
+		this.highGear = true;
 		this.flipped = flipped;
 		centerProfile = new SrxMotionProfile(centerPoints.length, centerPoints);
 	}
+
+	public boolean highGear = true;
 
 	double[][] centerPoints = {
 				{-0.445,-8.892,10.000,0.000},

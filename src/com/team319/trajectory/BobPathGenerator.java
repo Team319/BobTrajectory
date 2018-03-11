@@ -137,6 +137,7 @@ public class BobPathGenerator extends PathGenerator {
 			PathViewer.showPath(chezyPath, bobPath.getConfig());
 		}
 	}
+	
 	public static void exportArcToJavaFile(BobPath bobPath) {
 		exportArcToJavaFile("Arcs", bobPath);
 	}

@@ -121,6 +121,7 @@ public class SrxTrajectoryExporter {
 		sb.append("	\r\n" + 
 				"    public " + config.name + "Arc() {\r\n" + 
 				"		super();\r\n" + 
+				"		this.highGear = " + config.highGear + ";\r\n" +
 				"		centerProfile = new SrxMotionProfile(centerPoints.length, centerPoints);\r\n" + 
 				"	}\r\n" + 
 				"\r\n");
@@ -128,9 +129,13 @@ public class SrxTrajectoryExporter {
 		sb.append("	\r\n" + 
 				"    public " + config.name + "Arc(boolean flipped) {\r\n" + 
 				"		super();\r\n" + 
+				"		this.highGear = " + config.highGear + ";\r\n" +
 				"		this.flipped = flipped;\r\n" +
 				"		centerProfile = new SrxMotionProfile(centerPoints.length, centerPoints);\r\n" + 
 				"	}\r\n" + 
+				"\r\n");
+		
+		sb.append("	public boolean highGear = " + config.highGear + ";\r\n" + 
 				"\r\n");
 		
 		sb.append("	double[][] centerPoints = {\r\n");

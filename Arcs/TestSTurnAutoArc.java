@@ -12,15 +12,19 @@ public class TestSTurnAutoArc extends SrxTrajectory{
 	
     public TestSTurnAutoArc() {
 		super();
+		this.highGear = true;
 		centerProfile = new SrxMotionProfile(centerPoints.length, centerPoints);
 	}
 
 	
     public TestSTurnAutoArc(boolean flipped) {
 		super();
+		this.highGear = true;
 		this.flipped = flipped;
 		centerProfile = new SrxMotionProfile(centerPoints.length, centerPoints);
 	}
+
+	public boolean highGear = true;
 
 	double[][] centerPoints = {
 				{0.445,8.895,10.000,0.000},

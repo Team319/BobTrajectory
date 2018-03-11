@@ -12,15 +12,19 @@ public class OneFootArc extends SrxTrajectory{
 	
     public OneFootArc() {
 		super();
+		this.highGear = true;
 		centerProfile = new SrxMotionProfile(centerPoints.length, centerPoints);
 	}
 
 	
     public OneFootArc(boolean flipped) {
 		super();
+		this.highGear = true;
 		this.flipped = flipped;
 		centerProfile = new SrxMotionProfile(centerPoints.length, centerPoints);
 	}
+
+	public boolean highGear = true;
 
 	double[][] centerPoints = {
 				{0.435,8.704,10.000,0.000},

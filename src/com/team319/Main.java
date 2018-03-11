@@ -24,20 +24,7 @@ public class Main {
 	 * @param args
 	 */
 	public static void main(String[] args) {
-		SrxTranslatorConfig gearBobConfig = new SrxTranslatorConfig();
 		SrxTranslatorConfig powerUpConfig = new SrxTranslatorConfig();
-		// length of robot is 38.5
-
-		// Standard configs between all trajectories
-		gearBobConfig.name = "gearBobConfig";
-		gearBobConfig.dt = .01;
-		gearBobConfig.max_acc = 10.0;
-		gearBobConfig.max_jerk = 60.0;
-		gearBobConfig.max_vel = 4.0; // gearbob was 6.0
-		gearBobConfig.wheelbase_width_feet = 32.5 / 12.0;
-		gearBobConfig.wheel_dia_inches = 3.5;
-		gearBobConfig.scale_factor = 2.35; // 0.899 // gearbob is 2.35
-		gearBobConfig.encoder_ticks_per_rev = 1024;
 
 		powerUpConfig.name = "powerUpConfig";
 		powerUpConfig.dt = .01;
@@ -48,23 +35,22 @@ public class Main {
 		powerUpConfig.wheel_dia_inches = 6.0;
 		powerUpConfig.scale_factor = 6.54; // 3.08
 		powerUpConfig.encoder_ticks_per_rev = 4096;
-
-		SrxTranslatorConfig slowConfig = new SrxTranslatorConfig(gearBobConfig);
-		slowConfig.max_vel = 4.0;
+		powerUpConfig.highGear = false;
 
 		SrxTranslatorConfig powerUpHighGearConfig = new SrxTranslatorConfig(powerUpConfig);
 		powerUpHighGearConfig.max_vel = 6.0;
 		powerUpHighGearConfig.max_acc = 12.0;
 		powerUpHighGearConfig.scale_factor = 5.685; // 10.46
 		powerUpHighGearConfig.wheelbase_width_feet = 23.5/12.0;
+		powerUpHighGearConfig.highGear = true;
 		
 		SrxTranslatorConfig longDistanceConfig = new SrxTranslatorConfig(powerUpHighGearConfig);
 		longDistanceConfig.max_vel = 8.0;
 
-		//generateMisc(powerUpHighGearConfig);
-		//generateCenterSwitch(powerUpHighGearConfig);
+		generateMisc(powerUpHighGearConfig);
+		generateCenterSwitch(powerUpHighGearConfig);
 		generateRightSide(powerUpHighGearConfig);
-		//generateLeftSide(powerUpHighGearConfig);
+		generateLeftSide(powerUpHighGearConfig);
 	}
 
 	private static void generateMisc(SrxTranslatorConfig config) {

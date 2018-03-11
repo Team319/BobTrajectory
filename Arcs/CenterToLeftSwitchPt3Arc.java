@@ -12,15 +12,19 @@ public class CenterToLeftSwitchPt3Arc extends SrxTrajectory{
 	
     public CenterToLeftSwitchPt3Arc() {
 		super();
+		this.highGear = true;
 		centerProfile = new SrxMotionProfile(centerPoints.length, centerPoints);
 	}
 
 	
     public CenterToLeftSwitchPt3Arc(boolean flipped) {
 		super();
+		this.highGear = true;
 		this.flipped = flipped;
 		centerProfile = new SrxMotionProfile(centerPoints.length, centerPoints);
 	}
+
+	public boolean highGear = true;
 
 	double[][] centerPoints = {
 				{0.444,8.880,10.000,0.000},

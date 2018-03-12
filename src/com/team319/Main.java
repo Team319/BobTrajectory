@@ -12,13 +12,13 @@ import com.team319.trajectory.SrxTranslatorConfig;
  * @author ttremblay
  */
 public class Main {
-	
-	public static double robotTotalWidthFeet = 33.0/12.0;
-	public static double robotTotalLengthFeet = 39.0/12.0;
-	
-	public static Waypoint rightSideStartingWaypoint = new Waypoint(robotTotalLengthFeet/2, 45.5/12.0, 0);
-	public static Waypoint leftSideStartingWaypoint = new Waypoint(robotTotalLengthFeet/2, 277.8/12.0, 0);
-	public static Waypoint centerStartingWaypoint = new Waypoint(robotTotalLengthFeet/2, 157.0/12.0, 0);
+
+	public static double robotTotalWidthFeet = 33.0 / 12.0;
+	public static double robotTotalLengthFeet = 39.0 / 12.0;
+
+	public static Waypoint rightSideStartingWaypoint = new Waypoint(robotTotalLengthFeet / 2, 45.5 / 12.0, 0);
+	public static Waypoint leftSideStartingWaypoint = new Waypoint(robotTotalLengthFeet / 2, 277.8 / 12.0, 0);
+	public static Waypoint centerStartingWaypoint = new Waypoint(robotTotalLengthFeet / 2, 157.0 / 12.0, 0);
 
 	/**
 	 * @param args
@@ -41,9 +41,9 @@ public class Main {
 		powerUpHighGearConfig.max_vel = 6.0;
 		powerUpHighGearConfig.max_acc = 12.0;
 		powerUpHighGearConfig.scale_factor = 5.685; // 10.46
-		powerUpHighGearConfig.wheelbase_width_feet = 23.5/12.0;
+		powerUpHighGearConfig.wheelbase_width_feet = 23.5 / 12.0;
 		powerUpHighGearConfig.highGear = true;
-		
+
 		SrxTranslatorConfig longDistanceConfig = new SrxTranslatorConfig(powerUpHighGearConfig);
 		longDistanceConfig.max_vel = 8.0;
 
@@ -79,7 +79,7 @@ public class Main {
 		BobPath FifteenFeet = new BobPath(config, "FifteenFeet", 1);
 		FifteenFeet.addWaypoint(0.0, 0.0, 0.0);
 		FifteenFeet.addWaypoint(15.0, 0.0, 0.0);
-		
+
 		BobPath FifteenFeetReverse = new BobPath(config, "FifteenFeetReverse", -1);
 		FifteenFeetReverse.addWaypoint(0.0, 0.0, 0.0);
 		FifteenFeetReverse.addWaypoint(15.0, 0.0, 0.0);
@@ -158,12 +158,12 @@ public class Main {
 	}
 
 	private static void generateRightSide(SrxTranslatorConfig config) {
-		
+
 		BobPath RightWallToRightScale = new BobPath(config, "RightWallToRightScale", -1);
 		RightWallToRightScale.addWaypoint(rightSideStartingWaypoint);
 		RightWallToRightScale.addWaypointRelative(12.0, 1.0, 10.0);
 		RightWallToRightScale.addWaypointRelative(10.5, 2.0, -10.0);
-		//RightWallToRightScale.addWaypointRelative(22.5, 3.0, 0.0);
+		// RightWallToRightScale.addWaypointRelative(22.5, 3.0, 0.0);
 
 		BobPath ScaleToSwitchCubeRightSide = new BobPath(config, "ScaleToSwitchCubeRightSide", 1);
 		ScaleToSwitchCubeRightSide.addWaypoint(RightWallToRightScale.getLastWaypoint());
@@ -181,7 +181,7 @@ public class Main {
 		RightWallToLeftSide.addWaypoint(rightSideStartingWaypoint);
 		RightWallToLeftSide.addWaypointRelative(13.0, 0.0, 0.0);
 		RightWallToLeftSide.addWaypointRelative(3.0, 3.5, 89.99);
-		
+
 		BobPath RightWallToLeftScale = new BobPath(config, "RightWallToLeftScale", -1);
 		RightWallToLeftScale.addWaypoint(rightSideStartingWaypoint);
 		RightWallToLeftScale.addWaypointRelative(11.5, 0.0, 0.0);
@@ -198,7 +198,7 @@ public class Main {
 	}
 
 	private static void generateLeftSide(SrxTranslatorConfig config) {
-		
+
 		BobPath LeftWallToLeftScale = new BobPath(config, "LeftWallToLeftScale", -1);
 		LeftWallToLeftScale.addWaypoint(leftSideStartingWaypoint);
 		LeftWallToLeftScale.addWaypointRelative(12.0, 0.0, 0.0);

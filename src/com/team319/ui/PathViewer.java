@@ -10,7 +10,7 @@ import javafx.embed.swing.JFXPanel;
 
 public class PathViewer {
 
-	public static void showPath(final Path path, SrxTranslatorConfig config){
+	public static void showPath(final Path path, SrxTranslatorConfig config) {
 		SwingUtilities.invokeLater(new Runnable() {
 			@Override
 			public void run() {

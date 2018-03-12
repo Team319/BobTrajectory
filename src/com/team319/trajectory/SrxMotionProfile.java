@@ -17,13 +17,12 @@ public class SrxMotionProfile {
 
 	}
 
-
 	public SrxMotionProfile(int numPoints, double[][] points) {
 		this.numPoints = numPoints;
 		this.points = points;
 	}
 
-	public SrxMotionProfile(JSONObject srxJson){
+	public SrxMotionProfile(JSONObject srxJson) {
 		numPoints = ((Long) srxJson.get("numPoints")).intValue();
 		JSONArray jsonPoints = (JSONArray) srxJson.get("points");
 
@@ -35,12 +34,11 @@ public class SrxMotionProfile {
 				points[i][0] = (double) singlePoint.get("pos");
 				points[i][1] = (double) singlePoint.get("vel");
 				points[i][2] = (double) singlePoint.get("dt");
-				//System.out.println(pointsArray[i][0] + "," + pointsArray[i][1] + "," + pointsArray[i][2]);
+				// System.out.println(pointsArray[i][0] + "," + pointsArray[i][1] + "," +
+				// pointsArray[i][2]);
 			}
 		}
 	}
-
-
 
 	public String toJsonString() {
 		return this.toJson().toString();

@@ -7,18 +7,16 @@ import java.nio.file.Paths;
 
 public class SrxTrajectoryImporter {
 
-	public String path; 
+	public String path;
 
-	public SrxTrajectoryImporter (String directory){
+	public SrxTrajectoryImporter(String directory) {
 		this.path = directory;
 	}
-	
-	static String readFile(String path) throws IOException 
-	{
-	  byte[] encoded = Files.readAllBytes(Paths.get(path));
-	  return new String(encoded);
-	}
 
+	static String readFile(String path) throws IOException {
+		byte[] encoded = Files.readAllBytes(Paths.get(path));
+		return new String(encoded);
+	}
 
 	public static String joinFilePaths(String path1, String path2) {
 		File file1 = new File(path1);

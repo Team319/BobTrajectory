@@ -16,7 +16,7 @@ public class SrxTranslatorConfig extends TrajectoryGenerator.Config {
 
 	public SrxTranslatorConfig() {
 	}
-	
+
 	public SrxTranslatorConfig(SrxTranslatorConfig toCopy) {
 		this.direction = toCopy.direction;
 		this.dt = toCopy.dt;

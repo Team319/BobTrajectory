@@ -19,13 +19,15 @@ public class Main {
 	public static Waypoint rightSideStartingWaypoint = new Waypoint(robotTotalLengthFeet / 2, 45.5 / 12.0, 0);
 	public static Waypoint leftSideStartingWaypoint = new Waypoint(robotTotalLengthFeet / 2, 277.8 / 12.0, 0);
 	public static Waypoint centerStartingWaypoint = new Waypoint(robotTotalLengthFeet / 2, 157.0 / 12.0, 0);
+	
+	public static SrxTranslatorConfig powerUpConfig;
+	public static SrxTranslatorConfig powerUpHighGearConfig;
+	public static SrxTranslatorConfig longDistanceConfig;
 
-	/**
-	 * @param args
-	 */
+
 	public static void main(String[] args) {
-		SrxTranslatorConfig powerUpConfig = new SrxTranslatorConfig();
 
+		powerUpConfig = new SrxTranslatorConfig();
 		powerUpConfig.name = "powerUpConfig";
 		powerUpConfig.dt = .01;
 		powerUpConfig.max_acc = 10.0;
@@ -37,14 +39,14 @@ public class Main {
 		powerUpConfig.encoder_ticks_per_rev = 4096;
 		powerUpConfig.highGear = false;
 
-		SrxTranslatorConfig powerUpHighGearConfig = new SrxTranslatorConfig(powerUpConfig);
+		powerUpHighGearConfig = new SrxTranslatorConfig(powerUpConfig);
 		powerUpHighGearConfig.max_vel = 6.0;
 		powerUpHighGearConfig.max_acc = 12.0;
 		powerUpHighGearConfig.scale_factor = 5.685; // 10.46
 		powerUpHighGearConfig.wheelbase_width_feet = 23.5 / 12.0;
 		powerUpHighGearConfig.highGear = true;
 
-		SrxTranslatorConfig longDistanceConfig = new SrxTranslatorConfig(powerUpHighGearConfig);
+		longDistanceConfig = new SrxTranslatorConfig(powerUpHighGearConfig);
 		longDistanceConfig.max_vel = 8.0;
 
 		generateMisc(powerUpHighGearConfig);

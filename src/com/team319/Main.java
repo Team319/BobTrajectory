@@ -24,7 +24,6 @@ public class Main {
 	public static SrxTranslatorConfig powerUpHighGearConfig;
 	public static SrxTranslatorConfig longDistanceConfig;
 
-
 	public static void main(String[] args) {
 
 		powerUpConfig = new SrxTranslatorConfig();
@@ -53,6 +52,9 @@ public class Main {
 		generateCenterSwitch(powerUpHighGearConfig);
 		generateRightSide(powerUpHighGearConfig);
 		generateLeftSide(powerUpHighGearConfig);
+		
+		copyArcsToRobotCode();
+		//copyPathsToRobotCode();
 	}
 
 	private static void generateMisc(SrxTranslatorConfig config) {
@@ -229,4 +231,13 @@ public class Main {
 		BobPathGenerator.exportArcToJavaFile(LeftWallToLeftSwitchPt2);
 		BobPathGenerator.exportArcToJavaFile(LeftWallToRightSide);
 	}
+	
+	private static void copyArcsToRobotCode() {
+		BobPathGenerator.copyFilesToRelativeDirectory("Arcs", "..\\frc319-2018\\src\\org\\usfirst\\frc\\team319\\arcs");
+	}
+	
+	private static void copyPathsToRobotCode() {
+		BobPathGenerator.copyFilesToRelativeDirectory("Paths", "..\\frc319-2018\\src\\org\\usfirst\\frc\\team319\\paths");
+	}
+	
 }

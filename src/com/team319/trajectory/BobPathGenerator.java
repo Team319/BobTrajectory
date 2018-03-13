@@ -1,6 +1,11 @@
 package com.team319.trajectory;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.nio.file.StandardOpenOption;
@@ -123,5 +128,40 @@ public class BobPathGenerator extends PathGenerator {
 			System.err.println("A path could not be written!!!!");
 			System.exit(1);
 		}
+	}
+	
+	public static void copyFilesToRelativeDirectory(String fromDirectoryRelative, String toDirectoryRelative) {
+		int fileCount = 0;
+		File fromDirectory = new File(fromDirectoryRelative);
+		File toDirectory = new File(toDirectoryRelative);
+		
+		for (File source : fromDirectory.listFiles()) {
+			try {
+				fileCount++;
+				File dest = new File(toDirectory + "\\" + source.getName());
+				copyFileUsingStream(source,  dest);
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		}
+		
+		System.out.println("Copied " + fileCount + " files to " + toDirectoryRelative);
+	}
+	
+	private static void copyFileUsingStream(File source, File dest) throws IOException {
+	    InputStream is = null;
+	    OutputStream os = null;
+	    try {
+	        is = new FileInputStream(source);
+	        os = new FileOutputStream(dest);
+	        byte[] buffer = new byte[1024];
+	        int length;
+	        while ((length = is.read(buffer)) > 0) {
+	            os.write(buffer, 0, length);
+	        }
+	    } finally {
+	        is.close();
+	        os.close();
+	    }
 	}
 }

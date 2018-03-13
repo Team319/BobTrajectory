@@ -1,8 +1,5 @@
 package com.team319.trajectory;
 
-import org.json.simple.JSONArray;
-import org.json.simple.JSONObject;
-
 import com.team254.lib.trajectory.WaypointSequence;
 import com.team254.lib.util.ChezyMath;
 
@@ -26,14 +23,6 @@ public class BobWaypointSequence extends WaypointSequence {
 		public double x;
 		public double y;
 		public double theta;
-
-		public JSONObject toJson() {
-			JSONObject waypoint = new JSONObject();
-			waypoint.put("x", x);
-			waypoint.put("y", y);
-			waypoint.put("z", theta);
-			return waypoint;
-		}
 	}
 
 	BobWaypoint[] waypoints_;
@@ -73,17 +62,5 @@ public class BobWaypointSequence extends WaypointSequence {
 		}
 
 		return inverted;
-	}
-
-	public JSONObject toJson() {
-		JSONObject obj = new JSONObject();
-		JSONArray arr = new JSONArray();
-		for (int i = 0; i < num_waypoints_; ++i) {
-			arr.add(waypoints_[i].toJson());
-		}
-		obj.put("waypoints", arr);
-
-		return obj;
-
 	}
 }

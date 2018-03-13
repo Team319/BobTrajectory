@@ -1,7 +1,5 @@
 package com.team319.trajectory;
 
-import org.json.simple.JSONObject;
-
 import com.team254.lib.trajectory.TrajectoryGenerator;
 
 public class SrxTranslatorConfig extends TrajectoryGenerator.Config {
@@ -30,20 +28,4 @@ public class SrxTranslatorConfig extends TrajectoryGenerator.Config {
 		this.encoder_ticks_per_rev = toCopy.encoder_ticks_per_rev;
 		this.highGear = toCopy.highGear;
 	}
-
-	public JSONObject toJson() {
-		JSONObject obj = new JSONObject();
-		obj.put("name", name);
-		obj.put("wheelbase_width_feet", wheelbase_width_feet);
-		obj.put("wheel_dia_inches", wheel_dia_inches);
-		obj.put("scale_factor", scale_factor);
-		obj.put("direction", direction);
-		obj.put("dt", dt);
-		obj.put("max_vel", max_vel);
-		obj.put("max_acc", max_acc);
-		obj.put("max_jerk", max_jerk);
-
-		return obj;
-	}
-
 }

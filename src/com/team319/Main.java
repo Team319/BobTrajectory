@@ -37,6 +37,8 @@ public class Main {
 		powerUpConfig.scale_factor = 6.54; // 3.08
 		powerUpConfig.encoder_ticks_per_rev = 4096;
 		powerUpConfig.highGear = false;
+		powerUpConfig.robotLength = 39;
+		powerUpConfig.robotWidth = 33;
 
 		powerUpHighGearConfig = new SrxTranslatorConfig(powerUpConfig);
 		powerUpHighGearConfig.max_vel = 6.0;

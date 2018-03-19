@@ -21,7 +21,7 @@ public class Main {
 	public static Waypoint centerStartingWaypoint = new Waypoint(robotTotalLengthFeet / 2, 157.0 / 12.0, 0);
 	
 	public static SrxTranslatorConfig powerUpConfig;
-	public static SrxTranslatorConfig powerUpHighGearConfig;
+	public static SrxTranslatorConfig switchConfig;
 	public static SrxTranslatorConfig longDistanceConfig;
 
 	public static void main(String[] args) {
@@ -29,29 +29,25 @@ public class Main {
 		powerUpConfig = new SrxTranslatorConfig();
 		powerUpConfig.name = "powerUpConfig";
 		powerUpConfig.dt = .01;
-		powerUpConfig.max_acc = 10.0;
+		powerUpConfig.max_acc = 12.0;
 		powerUpConfig.max_jerk = 60.0;
-		powerUpConfig.max_vel = 4.0; // 8.0
-		powerUpConfig.wheelbase_width_feet = 33.5 / 12.0;// 23.5, then 29.5, 35.5
+		powerUpConfig.max_vel = 8.0; // 8.0
+		powerUpConfig.wheelbase_width_feet = 23.5 / 12.0;// 23.5, then 29.5, 35.5
 		powerUpConfig.wheel_dia_inches = 6.0;
-		powerUpConfig.scale_factor = 6.54; // 3.08
+		powerUpConfig.scale_factor = 5.685; // 3.08
 		powerUpConfig.encoder_ticks_per_rev = 4096;
-		powerUpConfig.highGear = false;
+		powerUpConfig.highGear = true;
 
-		powerUpHighGearConfig = new SrxTranslatorConfig(powerUpConfig);
-		powerUpHighGearConfig.max_vel = 6.0;
-		powerUpHighGearConfig.max_acc = 12.0;
-		powerUpHighGearConfig.scale_factor = 5.685; // 10.46
-		powerUpHighGearConfig.wheelbase_width_feet = 23.5 / 12.0;
-		powerUpHighGearConfig.highGear = true;
-
-		longDistanceConfig = new SrxTranslatorConfig(powerUpHighGearConfig);
+		switchConfig = new SrxTranslatorConfig(powerUpConfig);
+		switchConfig.max_vel = 6.0;
+		
+		longDistanceConfig = new SrxTranslatorConfig(switchConfig);
 		longDistanceConfig.max_vel = 8.0;
 
-		generateMisc(powerUpHighGearConfig);
-		generateCenterSwitch(powerUpHighGearConfig);
-		generateRightSide(powerUpHighGearConfig);
-		generateLeftSide(powerUpHighGearConfig);
+		//generateMisc(powerUpConfig);
+		generateCenterSwitch(switchConfig);
+		//generateRightSide(powerUpConfig);
+		//generateLeftSide(powerUpConfig);
 		
 		copyArcsToRobotCode();
 		//copyPathsToRobotCode();
@@ -91,7 +87,12 @@ public class Main {
 		BobPath BackwardsThreeFeet = new BobPath(config, "BackwardsThreeFeet", -1);
 		BackwardsThreeFeet.addWaypoint(0.0, 0.0, 0.0);
 		BackwardsThreeFeet.addWaypoint(3.0, 0.0, 0.0);
-
+		
+		BobPath TuningTestAuto = new BobPath(config, "TuningTestAuto", 1);
+		TuningTestAuto.addWaypoint(0.0, 0.0, 0.0);
+		TuningTestAuto.addWaypointRelative(4.0, 5.0, 89.99);
+		TuningTestAuto.addWaypointRelative(0.0, 5.0, 0.0);
+		
 		BobPathGenerator.exportArcToJavaFile(ThreeFeet);
 		BobPathGenerator.exportArcToJavaFile(OneFoot);
 		BobPathGenerator.exportArcToJavaFile(FiveFeetAndTurn);
@@ -100,6 +101,8 @@ public class Main {
 		BobPathGenerator.exportArcToJavaFile(FifteenFeet);
 		BobPathGenerator.exportArcToJavaFile(FifteenFeetReverse);
 		BobPathGenerator.exportArcToJavaFile(BackwardsThreeFeet);
+		BobPathGenerator.exportArcToJavaFile(TuningTestAuto);
+		
 	}
 
 	private static void generateCenterSwitch(SrxTranslatorConfig config) {
@@ -115,15 +118,19 @@ public class Main {
 
 		BobPath CenterToRightSwitchPt3 = new BobPath(config, "CenterToRightSwitchPt3", 1);
 		CenterToRightSwitchPt3.addWaypoint(CenterToRightSwitchPt2.getLastWaypoint());
-		CenterToRightSwitchPt3.addWaypointRelative(4.0, 0.0, 0.0);
+		CenterToRightSwitchPt3.addWaypointRelative(3.5, 0.0, 0.0);
 
 		BobPath CenterToRightSwitchPt4 = new BobPath(config, "CenterToRightSwitchPt4", -1);
 		CenterToRightSwitchPt4.addWaypoint(CenterToRightSwitchPt3.getLastWaypoint());
-		CenterToRightSwitchPt4.addWaypointRelative(-3.19, 0.0, 0.0);
+		CenterToRightSwitchPt4.addWaypointRelative(-4.19, 0.0, 0.0);
 
 		BobPath CenterToRightSwitchPt5 = new BobPath(config, "CenterToRightSwitchPt5", 1);
 		CenterToRightSwitchPt5.addWaypoint(CenterToRightSwitchPt4.getLastWaypoint());
 		CenterToRightSwitchPt5.addWaypointRelative(6.375, -4.0, 0.0);
+		
+		BobPath CenterToRightScale = new BobPath(config, "CenterToRightScale", 1);
+		CenterToRightScale.addWaypoint(CenterToRightSwitchPt4.getLastWaypoint());
+		CenterToRightScale.addWaypointRelative(6.375, -8.0, -45.0);
 
 		// --------------------LEFT SIDE AUTOS----------//
 
@@ -137,27 +144,33 @@ public class Main {
 
 		BobPath CenterToLeftSwitchPt3 = new BobPath(config, "CenterToLeftSwitchPt3", 1);
 		CenterToLeftSwitchPt3.addWaypoint(CenterToLeftSwitchPt2.getLastWaypoint());
-		CenterToLeftSwitchPt3.addWaypointRelative(3.5, 0.0, 0.0);
+		CenterToLeftSwitchPt3.addWaypointRelative(3.0, 0.0, 0.0);
 
 		BobPath CenterToLeftSwitchPt4 = new BobPath(config, "CenterToLeftSwitchPt4", -1);
 		CenterToLeftSwitchPt4.addWaypoint(CenterToLeftSwitchPt3.getLastWaypoint());
-		CenterToLeftSwitchPt4.addWaypointRelative(-3.10, 0.0, 0.0);
+		CenterToLeftSwitchPt4.addWaypointRelative(-4.10, 0.0, 0.0);
 
 		BobPath CenterToLeftSwitchPt5 = new BobPath(config, "CenterToLeftSwitchPt5", 1);
 		CenterToLeftSwitchPt5.addWaypoint(CenterToLeftSwitchPt4.getLastWaypoint());
 		CenterToLeftSwitchPt5.addWaypointRelative(6.375, 4.0, 0.0);
+		
+		BobPath CenterToLeftScale = new BobPath(config, "CenterToLeftScale", 1);
+		CenterToLeftScale.addWaypoint(CenterToLeftSwitchPt4.getLastWaypoint());
+		CenterToLeftScale.addWaypointRelative(6.375, 8.0, 45.0);
 
 		BobPathGenerator.exportArcToJavaFile(CenterToRightSwitch);
 		BobPathGenerator.exportArcToJavaFile(CenterToRightSwitchPt2);
 		BobPathGenerator.exportArcToJavaFile(CenterToRightSwitchPt3);
 		BobPathGenerator.exportArcToJavaFile(CenterToRightSwitchPt4);
 		BobPathGenerator.exportArcToJavaFile(CenterToRightSwitchPt5);
+		BobPathGenerator.exportArcToJavaFile(CenterToRightScale);
 
 		BobPathGenerator.exportArcToJavaFile(CenterToLeftSwitch);
 		BobPathGenerator.exportArcToJavaFile(CenterToLeftSwitchPt2);
 		BobPathGenerator.exportArcToJavaFile(CenterToLeftSwitchPt3);
 		BobPathGenerator.exportArcToJavaFile(CenterToLeftSwitchPt4);
 		BobPathGenerator.exportArcToJavaFile(CenterToLeftSwitchPt5);
+		BobPathGenerator.exportArcToJavaFile(CenterToLeftScale);
 
 	}
 
@@ -204,6 +217,11 @@ public class Main {
 		BobPath SwitchCubeToScaleLeftSide = new BobPath(config, "SwitchCubeToScaleLeftSide", -1);
 		SwitchCubeToScaleLeftSide.addWaypoint(ScaleToSwitchCubeLeftSide.getLastWaypoint());
 		SwitchCubeToScaleLeftSide.addWaypointRelative(6.0, 1.5, 0.0);
+		
+		BobPath RightWallToRightScaleNullZone = new BobPath(config, "RightWallToRightScaleNullZone", -1);
+		RightWallToRightScaleNullZone.addWaypoint(rightSideStartingWaypoint);
+		RightWallToRightScaleNullZone.addWaypointRelative(22.0, -2.0, 0.0);
+		RightWallToRightScaleNullZone.addWaypointRelative(3.0, 3.0, 89.99);
 
 		BobPathGenerator.exportArcToJavaFile(RightWallToRightScale);
 		BobPathGenerator.exportArcToJavaFile(ScaleToSwitchCubeRightSide);
@@ -214,6 +232,7 @@ public class Main {
 		BobPathGenerator.exportArcToJavaFile(RightWallToLeftScale);
 		BobPathGenerator.exportArcToJavaFile(ScaleToSwitchCubeLeftSide);
 		BobPathGenerator.exportArcToJavaFile(SwitchCubeToScaleLeftSide);
+		BobPathGenerator.exportArcToJavaFile(RightWallToRightScaleNullZone);
 		
 	}
 

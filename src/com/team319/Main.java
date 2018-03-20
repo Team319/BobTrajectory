@@ -36,6 +36,8 @@ public class Main {
 		powerUpConfig.wheel_dia_inches = 6.0;
 		powerUpConfig.scale_factor = 5.685; // 3.08
 		powerUpConfig.encoder_ticks_per_rev = 4096;
+		powerUpConfig.robotLength = 39;
+		powerUpConfig.robotWidth = 33;
 		powerUpConfig.highGear = true;
 
 		switchConfig = new SrxTranslatorConfig(powerUpConfig);

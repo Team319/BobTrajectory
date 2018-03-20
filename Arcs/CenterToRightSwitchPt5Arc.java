@@ -7,8 +7,8 @@ public class CenterToRightSwitchPt5Arc extends SrxTrajectory{
 	
 	// WAYPOINTS:
 	// (X,Y,degrees)
-	// (4.44,13.08,0.00)
-	// (10.81,9.08,0.00)
+	// (2.93,13.08,0.00)
+	// (9.31,9.08,0.00)
 	
     public CenterToRightSwitchPt5Arc() {
 		super();
@@ -231,7 +231,7 @@ public class CenterToRightSwitchPt5Arc extends SrxTrajectory{
 				{120439.510,37.711,10.000,-0.000},
 				{120442.208,16.246,10.000,-0.000},
 				{120443.204,3.676,10.000,0.000},
-				{120443.388,0.000,10.000,-360.000},
-				{120443.388,0.000,10.000,-360.000}		};
+				{120443.388,0.000,10.000,0.000},
+				{120443.388,0.000,10.000,0.000}		};
 
 }

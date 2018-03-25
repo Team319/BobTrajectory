@@ -52,13 +52,13 @@ public class SrxTranslator {
 			double nextHeading = Math.toDegrees(traj.getSegment(i).heading);
 			if (i != 0) {
 				double headingDifference = nextHeading - lastHeading;
-				if (headingDifference >= 300) {
+				if (headingDifference >= 360) {
 					headingDifference -= 360;
 				}
 				continuousHeading += headingDifference;
 			}
 			points[i][3] = continuousHeading;
-			lastHeading = nextHeading;
+			lastHeading = continuousHeading;
 		}
 		return points;
 	}

@@ -58,7 +58,7 @@ public class SrxTranslator {
 				continuousHeading += headingDifference;
 			}
 			points[i][3] = continuousHeading;
-			lastHeading = nextHeading;
+			lastHeading = continuousHeading;
 		}
 		return points;
 	}

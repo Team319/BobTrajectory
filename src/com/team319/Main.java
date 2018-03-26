@@ -47,7 +47,7 @@ public class Main {
 		longDistanceConfig.max_vel = 8.0;
 
 		//generateMisc(powerUpConfig);
-		//generateCenterSwitch(switchConfig);
+		generateCenterSwitch(switchConfig);
 		generateRightSide(powerUpConfig);
 		//generateLeftSide(powerUpConfig);
 		
@@ -190,6 +190,7 @@ public class Main {
 		//RightWallToRightScale.addWaypointRelative(22.5, 0.0, 0.0);
 
 		BobPath ScaleToSwitchCubeRightSide = new BobPath(config, "ScaleToSwitchCubeRightSide", 1);
+		//ScaleToSwitchCubeRightSide.addWaypoint(19.13,7.29,0.00);
 		ScaleToSwitchCubeRightSide.addWaypoint(RightWallToRightScale.getLastWaypoint());
 		ScaleToSwitchCubeRightSide.addWaypointRelative(-5.0, 0.5, 0.0);
 

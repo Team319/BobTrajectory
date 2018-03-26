@@ -55,7 +55,7 @@ public class PathGenerator {
 
 		// Generate a smooth trajectory over the total distance.
 		Trajectory traj = TrajectoryGenerator.generate(config, TrajectoryGenerator.SCurvesStrategy, 0.0,
-				path.getWaypoint(0).theta, total_distance, 0.0, path.getWaypoint(0).theta);
+				path.getWaypoint(0).theta, total_distance, 0.0, path.getWaypoint(path.num_waypoints_ - 1).theta);
 
 		// Assign headings based on the splines.
 		int cur_spline = 0;

@@ -68,4 +68,15 @@ public class WaypointSequence {
 
 		return inverted;
 	}
+	
+	public WaypointSequence reversed() {
+		WaypointSequence inverted = new WaypointSequence(waypoints_.length);
+		for(int i = waypoints_.length; i > 0; i--)
+		{
+			if (waypoints_[i-1] != null) {
+				inverted.addWaypoint(waypoints_[i-1]);
+			}
+		}
+		return inverted;
+	}
 }

@@ -40,13 +40,16 @@ public class Plotter {
 			gc.setStroke(Color.PURPLE);
 			gc.fillOval(path.getTrajectory().getSegment(i).x * 24, 
 					getFieldPoint(path.getTrajectory().getSegment(i).y), 2, 2);
+			if (i%50 == 0) {
+				drawRobot(path.getTrajectory().getSegment(i), canvas, Color.GREY, 1.0);
+			}
 		}
 
 		ImageView iv1 = new ImageView(new Image("file:field.png", 648, 648, true, true));
 		Segment start = path.getTrajectory().getSegment(0);
 		Segment end = path.getTrajectory().getSegment(path.getTrajectory().getNumSegments() - 1);
-		drawRobot(start, canvas, Color.BLUE);
-		drawRobot(end, canvas, Color.DARKORANGE);
+		drawRobot(start, canvas, Color.BLUE, 5.0);
+		drawRobot(end, canvas, Color.DARKORANGE, 5.0);
 		Group root = new Group();
 		root.getChildren().add(iv1);
 		root.getChildren().add(canvas);
@@ -54,7 +57,7 @@ public class Plotter {
 		stage.show();
 	}
 	
-	private void drawRobot(Segment segment, Canvas canvas, Color color) {
+	private void drawRobot(Segment segment, Canvas canvas, Color color, double thickness) {
 		double x = segment.x * 24;
 	    double y = getFieldPoint(segment.y);
 	    double height = config.robotWidth * 2;
@@ -64,6 +67,7 @@ public class Plotter {
 	    
 	    gc.setFill(color);
 		gc.setStroke(color);
+		gc.setLineWidth(thickness);
 
 	    gc.save();
 	    gc.translate(x, y);

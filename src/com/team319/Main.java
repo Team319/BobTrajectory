@@ -46,10 +46,10 @@ public class Main {
 		longDistanceConfig = new SrxTranslatorConfig(switchConfig);
 		longDistanceConfig.max_vel = 8.0;
 
-		//generateMisc(powerUpConfig);
-		//generateCenterSwitch(switchConfig);
+		generateMisc(powerUpConfig);
+		generateCenterSwitch(switchConfig);
 		generateRightSide(powerUpConfig);
-		//generateLeftSide(powerUpConfig);
+		generateLeftSide(powerUpConfig);
 		
 		copyArcsToRobotCode();
 		//copyPathsToRobotCode();

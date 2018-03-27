@@ -61,6 +61,8 @@ public class SrxTranslator {
 					headingDifference -= 360;
 				}
 				continuousHeading += headingDifference;
+			} else {
+				continuousHeading = nextHeading;
 			}
 			else {
 				if (nextHeading >= 360) {

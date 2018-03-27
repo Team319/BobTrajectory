@@ -1,5 +1,7 @@
 package com.team319.trajectory;
 
+import java.math.BigDecimal;
+
 import com.team254.lib.trajectory.Path;
 import com.team254.lib.trajectory.Trajectory;
 
@@ -49,7 +51,10 @@ public class SrxTranslator {
 
 			// translate from seconds to milliseconds
 			points[i][2] = traj.getSegment(i).dt * 1000;
-			double nextHeading = Math.toDegrees(traj.getSegment(i).heading);
+			double nextHeading = new BigDecimal(Math.toDegrees(traj.getSegment(i).heading)).setScale(2, BigDecimal.ROUND_HALF_EVEN).doubleValue();
+			if (nextHeading > 180) {
+				nextHeading -= 360;
+			}
 			if (i != 0) {
 				double headingDifference = nextHeading - lastHeading;
 				if (headingDifference >= 360) {
@@ -59,7 +64,12 @@ public class SrxTranslator {
 			} else {
 				continuousHeading = nextHeading;
 			}
-			
+			else {
+				if (nextHeading >= 360) {
+					nextHeading -= 360;
+				}
+				continuousHeading = nextHeading;
+			}
 			points[i][3] = continuousHeading;
 			lastHeading = continuousHeading;
 		}

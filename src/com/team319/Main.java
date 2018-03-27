@@ -91,9 +91,14 @@ public class Main {
 		BackwardsThreeFeet.addWaypoint(3.0, 0.0, 0.0);
 		
 		BobPath TuningTestAuto = new BobPath(config, "TuningTestAuto", 1);
-		TuningTestAuto.addWaypoint(0.0, 0.0, 0.0);
+		TuningTestAuto.addWaypoint(centerStartingWaypoint);
 		TuningTestAuto.addWaypointRelative(4.0, 5.0, 89.99);
-		TuningTestAuto.addWaypointRelative(0.0, 5.0, 0.0);
+		TuningTestAuto.addWaypointRelative(0.0, 10.0, 0.0);
+		
+		BobPath TuningTestAutoBackward = new BobPath(config, "TuningTestAutoBackward", 1);
+		TuningTestAutoBackward.addWaypoint(TuningTestAuto.getLastWaypoint());
+		TuningTestAutoBackward.addWaypointRelative(0.0, -10.0, 0.0);
+		TuningTestAutoBackward.addWaypointRelative(-4.0, -5.0, -89.99);
 		
 		BobPath StraightForwardTuning = new BobPath(config, "StraightForwardTuning", -1);
 		StraightForwardTuning.addWaypoint(rightSideStartingWaypoint);
@@ -108,6 +113,7 @@ public class Main {
 		BobPathGenerator.exportArcToJavaFile(FifteenFeetReverse);
 		BobPathGenerator.exportArcToJavaFile(BackwardsThreeFeet);
 		BobPathGenerator.exportArcToJavaFile(TuningTestAuto);
+		BobPathGenerator.exportArcToJavaFile(TuningTestAutoBackward);
 		BobPathGenerator.exportArcToJavaFile(StraightForwardTuning);
 		
 	}
@@ -190,6 +196,7 @@ public class Main {
 		//RightWallToRightScale.addWaypointRelative(22.5, 0.0, 0.0);
 
 		BobPath ScaleToSwitchCubeRightSide = new BobPath(config, "ScaleToSwitchCubeRightSide", 1);
+		//ScaleToSwitchCubeRightSide.addWaypoint(19.13,7.29,0.00);
 		ScaleToSwitchCubeRightSide.addWaypoint(RightWallToRightScale.getLastWaypoint());
 		ScaleToSwitchCubeRightSide.addWaypointRelative(-5.0, 0.5, 0.0);
 

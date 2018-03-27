@@ -207,7 +207,8 @@ public class Spline {
 	}
 
 	public double angleAt(double percentage) {
-		double angle = ChezyMath.boundAngle0to2PiRadians(Math.atan(derivativeAt(percentage)) + theta_offset_);
+		double derivative = derivativeAt(percentage);
+		double angle = ChezyMath.boundAngle0to2PiRadians(Math.atan(derivative) + theta_offset_);
 		return angle;
 	}
 

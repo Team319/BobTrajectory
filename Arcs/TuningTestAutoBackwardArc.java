@@ -3,22 +3,22 @@ package org.usfirst.frc.team319.arcs;
 import org.usfirst.frc.team319.models.SrxMotionProfile;
 import org.usfirst.frc.team319.models.SrxTrajectory;
 
-public class TuningTestAutoArc extends SrxTrajectory{
+public class TuningTestAutoBackwardArc extends SrxTrajectory{
 	
 	// WAYPOINTS:
 	// (X,Y,degrees)
-	// (1.63,13.08,0.00)
-	// (5.63,18.08,89.99)
 	// (5.63,28.08,89.99)
+	// (5.63,18.08,89.99)
+	// (1.63,13.08,0.00)
 	
-    public TuningTestAutoArc() {
+    public TuningTestAutoBackwardArc() {
 		super();
 		this.highGear = true;
 		centerProfile = new SrxMotionProfile(centerPoints.length, centerPoints);
 	}
 
 	
-    public TuningTestAutoArc(boolean flipped) {
+    public TuningTestAutoBackwardArc(boolean flipped) {
 		super();
 		this.highGear = true;
 		this.flipped = flipped;

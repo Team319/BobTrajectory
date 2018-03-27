@@ -57,4 +57,10 @@ public class Path {
 		Trajectory.Segment lastSegment = getLeftWheelTrajectory().getSegment(numSegments - 1);
 		return lastSegment.heading;
 	}
+	
+	public void offsetHeading(double theta_rad) {
+		pair.left.offsetHeading(theta_rad);
+		pair.center.offsetHeading(theta_rad);
+		pair.right.offsetHeading(theta_rad);
+	}
 }

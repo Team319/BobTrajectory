@@ -67,6 +67,20 @@ public class Trajectory {
 	public Trajectory(Segment[] segments) {
 		segments_ = segments;
 	}
+	
+	public void offsetHeading(double theta_rad) {
+		for (Segment segment : segments_) {
+			segment.heading += theta_rad;
+		}
+	}
+	
+	public void reverseSegments() {
+		for (int i = 0; i < segments_.length/2; i++) {
+			Segment temp = segments_[i];
+			segments_[i] = segments_[segments_.length - i - 1];
+			segments_[segments_.length - i - 1] = temp;
+		}
+	}
 
 	public void setInvertedY(boolean inverted) {
 		inverted_y_ = inverted;

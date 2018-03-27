@@ -14,67 +14,7 @@ public class SrxTrajectoryExporter {
 	}
 
 	public String directory;
-
-	public boolean exportSrxTrajectoryAsJavaFile(SrxTrajectory combined, SrxTranslatorConfig config,
-			WaypointSequence waypoints) {
-		return exportSrxTrajectoryAsJavaFile(combined, config, waypoints, 1, 1);
-	}
-
-	public boolean exportSrxTrajectoryAsJavaFile(SrxTrajectory combined, SrxTranslatorConfig config,
-			WaypointSequence waypoints, int leftDirection, int rightDirection) {
-		String combinedPath = joinFilePaths(directory, config.name + "Path.java");
-
-		StringBuilder sb = new StringBuilder();
-
-		// package and imports
-		sb.append("package org.usfirst.frc.team319.paths;\r\n" + "\r\n"
-				+ "import org.usfirst.frc.team319.models.SrxMotionProfile;\r\n"
-				+ "import org.usfirst.frc.team319.models.SrxTrajectory;\r\n\r\n");
-
-		// beginning of the class
-		sb.append("public class " + config.name + "Path extends SrxTrajectory{");
-
-		sb.append("\r\n" + "	\r\n" + "	// WAYPOINTS:\r\n" + "	// (X,Y,degrees)\r\n");
-
-		sb.append(serializeWaypoints(waypoints));
-
-		sb.append("	\r\n" + "	public " + config.name + "Path() {\r\n" + "		this(false);\r\n" + "	}\r\n"
-				+ "		");
-
-		sb.append("	\r\n" + "    public " + config.name + "Path(boolean flipped) {\r\n" + "		super();\r\n"
-				+ "		");
-
-		sb.append("\r\n" + "		if (flipped) {\r\n"
-				+ "			rightProfile = new SrxMotionProfile(leftPoints.length, leftPoints);\r\n"
-				+ "			centerProfile = new SrxMotionProfile(centerPoints.length, centerPoints);\r\n"
-				+ "			leftProfile = new SrxMotionProfile(rightPoints.length, rightPoints);\r\n"
-				+ "		} else {\r\n"
-				+ "			leftProfile = new SrxMotionProfile(leftPoints.length, leftPoints);\r\n"
-				+ "			centerProfile = new SrxMotionProfile(centerPoints.length, centerPoints);\r\n"
-				+ "			rightProfile = new SrxMotionProfile(rightPoints.length, rightPoints);\r\n" + "		}\r\n"
-				+ "	}\r\n" + "\r\n");
-
-		sb.append("		double[][] leftPoints = {\r\n");
-
-		sb.append(serializeTrajectoryPoints(combined.leftProfile, leftDirection));
-
-		sb.append("\r\n" + "		};\r\n" + "		\r\n" + "		double[][] rightPoints = {\r\n");
-
-		sb.append(serializeTrajectoryPoints(combined.rightProfile, rightDirection));
-
-		sb.append("\r\n" + "		};\r\n" + "		\r\n" + "		double[][] centerPoints = {\r\n");
-
-		sb.append(serializeTrajectoryPoints(combined.centerProfile, 1));
-		sb.append("		};\r\n" + "\n}");
-
-		if (!writeFile(combinedPath, sb.toString())) {
-			System.err.println(combinedPath + " could not be written!!!!1");
-			return false;
-		}
-
-		return true;
-	}
-
+	
 	public boolean exportSrxArcAsJavaFile(SrxTrajectory combined, SrxTranslatorConfig config,
 			WaypointSequence waypoints) {
 		String combinedPath = joinFilePaths(directory, config.name + "Arc.java");
@@ -107,7 +47,7 @@ public class SrxTrajectoryExporter {
 
 		sb.append("	double[][] centerPoints = {\r\n");
 
-		sb.append(serializeTrajectoryPoints(combined.centerProfile, 1));
+		sb.append(serializeTrajectoryPoints(combined.arcProfile, 1));
 		sb.append("		};\r\n" + "\n}");
 
 		if (!writeFile(combinedPath, sb.toString())) {

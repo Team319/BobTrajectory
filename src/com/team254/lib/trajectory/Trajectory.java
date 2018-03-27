@@ -8,6 +8,7 @@ package com.team254.lib.trajectory;
  */
 public class Trajectory {
 
+	/*
 	public static class Pair {
 		public Pair(Trajectory left, Trajectory center, Trajectory right) {
 			this.left = left;
@@ -18,7 +19,7 @@ public class Trajectory {
 		public Trajectory left;
 		public Trajectory center;
 		public Trajectory right;
-	}
+	}*/
 
 	public static class Segment {
 

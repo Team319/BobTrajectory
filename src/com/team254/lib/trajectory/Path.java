@@ -6,14 +6,12 @@ package com.team254.lib.trajectory;
  * @author Jared341
  */
 public class Path {
-	protected Trajectory.Pair pair;
+	protected Trajectory trajectory;
 	protected String name_;
-	protected boolean goLeft;
 
-	public Path(String name, Trajectory.Pair newPair) {
+	public Path(String name, Trajectory newTraj) {
 		name_ = name;
-		pair = newPair;
-		goLeft = true;
+		trajectory = newTraj;
 	}
 
 	public Path() {
@@ -24,43 +22,17 @@ public class Path {
 		return name_;
 	}
 
-	public void goLeft() {
-		goLeft = true;
-		pair.left.setInvertedY(false);
-		pair.right.setInvertedY(false);
-	}
-
-	public void goRight() {
-		goLeft = false;
-		pair.left.setInvertedY(true);
-		pair.right.setInvertedY(true);
-	}
-
-	public Trajectory getLeftWheelTrajectory() {
-		return (goLeft ? pair.left : pair.right);
-	}
-
-	public Trajectory getCenterTrajectory() {
-		return pair.center;
-	}
-
-	public Trajectory getRightWheelTrajectory() {
-		return (goLeft ? pair.right : pair.left);
-	}
-
-	public Trajectory.Pair getPair() {
-		return pair;
+	public Trajectory getTrajectory() {
+		return trajectory;
 	}
 
 	public double getEndHeading() {
-		int numSegments = getLeftWheelTrajectory().getNumSegments();
-		Trajectory.Segment lastSegment = getLeftWheelTrajectory().getSegment(numSegments - 1);
+		int numSegments = trajectory.getNumSegments();
+		Trajectory.Segment lastSegment = trajectory.getSegment(numSegments - 1);
 		return lastSegment.heading;
 	}
 	
 	public void offsetHeading(double theta_rad) {
-		pair.left.offsetHeading(theta_rad);
-		pair.center.offsetHeading(theta_rad);
-		pair.right.offsetHeading(theta_rad);
+		trajectory.offsetHeading(theta_rad);
 	}
 }

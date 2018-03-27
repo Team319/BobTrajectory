@@ -24,12 +24,7 @@ public class PathGenerator {
 	 */
 	public static Path makePath(WaypointSequence waypoints, TrajectoryGenerator.Config config, double wheelbase_width,
 			String name) {
-		return new Path(name, generateLeftAndRightFromSeq(waypoints, config, wheelbase_width));
-	}
-
-	static Trajectory.Pair generateLeftAndRightFromSeq(WaypointSequence path, TrajectoryGenerator.Config config,
-			double wheelbase_width) {
-		return makeLeftAndRightTrajectories(generateFromPath(path, config), wheelbase_width);
+		return new Path(name, generateFromPath(waypoints, config));
 	}
 
 	static Trajectory generateFromPath(WaypointSequence path, TrajectoryGenerator.Config config) {
@@ -89,57 +84,5 @@ public class PathGenerator {
 		}
 
 		return traj;
-	}
-
-	/**
-	 * Generate left and right wheel trajectories from a reference.
-	 *
-	 * @param input
-	 *            The reference trajectory.
-	 * @param wheelbase_width
-	 *            The center-to-center distance between the left and right sides.
-	 * @return [0] is left, [1] is right
-	 */
-	static Trajectory.Pair makeLeftAndRightTrajectories(Trajectory input, double wheelbase_width) {
-		Trajectory[] output = new Trajectory[2];
-		output[0] = input.copy();
-		output[1] = input.copy();
-		Trajectory left = output[0];
-		Trajectory right = output[1];
-
-		for (int i = 0; i < input.getNumSegments(); ++i) {
-			Trajectory.Segment current = input.getSegment(i);
-			double cos_angle = Math.cos(current.heading);
-			double sin_angle = Math.sin(current.heading);
-
-			Trajectory.Segment s_left = left.getSegment(i);
-			s_left.x = current.x - wheelbase_width / 2 * sin_angle;
-			s_left.y = current.y + wheelbase_width / 2 * cos_angle;
-			if (i > 0) {
-				// Get distance between current and last segment
-				double dist = Math.sqrt((s_left.x - left.getSegment(i - 1).x) * (s_left.x - left.getSegment(i - 1).x)
-						+ (s_left.y - left.getSegment(i - 1).y) * (s_left.y - left.getSegment(i - 1).y));
-				s_left.pos = left.getSegment(i - 1).pos + dist;
-				s_left.vel = dist / s_left.dt;
-				s_left.acc = (s_left.vel - left.getSegment(i - 1).vel) / s_left.dt;
-				s_left.jerk = (s_left.acc - left.getSegment(i - 1).acc) / s_left.dt;
-			}
-
-			Trajectory.Segment s_right = right.getSegment(i);
-			s_right.x = current.x + wheelbase_width / 2 * sin_angle;
-			s_right.y = current.y - wheelbase_width / 2 * cos_angle;
-			if (i > 0) {
-				// Get distance between current and last segment
-				double dist = Math
-						.sqrt((s_right.x - right.getSegment(i - 1).x) * (s_right.x - right.getSegment(i - 1).x)
-								+ (s_right.y - right.getSegment(i - 1).y) * (s_right.y - right.getSegment(i - 1).y));
-				s_right.pos = right.getSegment(i - 1).pos + dist;
-				s_right.vel = dist / s_right.dt;
-				s_right.acc = (s_right.vel - right.getSegment(i - 1).vel) / s_right.dt;
-				s_right.jerk = (s_right.acc - right.getSegment(i - 1).acc) / s_right.dt;
-			}
-		}
-
-		return new Trajectory.Pair(output[0], input.copy(), output[1]);
-	}
+	}	
 }

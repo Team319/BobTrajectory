@@ -30,34 +30,23 @@ public class Plotter {
 		DecimalFormat df = new DecimalFormat("0.00##");
 		StringBuilder title = new StringBuilder();
 		title.append(path.getName()).append(" : ")
-		.append(df.format(path.getLeftWheelTrajectory().getNumSegments() * path.getLeftWheelTrajectory().getSegment(0).dt))
+		.append(df.format(path.getTrajectory().getNumSegments() * path.getTrajectory().getSegment(0).dt))
 		.append("s");
 		stage.setTitle(title.toString());
 		gc.setLineWidth(5);
-		for (int i = 0; i < path.getPair().left.getNumSegments(); i++) {
-			gc.setFill(Color.BLUE);
-			gc.setStroke(Color.BLUE);
-			gc.fillOval(path.getPair().left.getSegment(i).x * 24, getFieldPoint(path.getPair().left.getSegment(i).y), 1, 1);
-		}
-
-		for (int i = 0; i < path.getPair().right.getNumSegments(); i++) {
-			gc.setFill(Color.RED);
-			gc.setStroke(Color.RED);
-			gc.fillOval(path.getPair().right.getSegment(i).x * 24, getFieldPoint(path.getPair().right.getSegment(i).y), 1, 1);
-		}
-
-		for (int i = 0; i < path.getPair().center.getNumSegments(); i++) {
+		
+		for (int i = 0; i < path.getTrajectory().getNumSegments(); i++) {
 			gc.setFill(Color.PURPLE);
 			gc.setStroke(Color.PURPLE);
-			gc.fillOval(path.getPair().center.getSegment(i).x * 24, 
-					getFieldPoint(path.getPair().center.getSegment(i).y), 1, 1);
+			gc.fillOval(path.getTrajectory().getSegment(i).x * 24, 
+					getFieldPoint(path.getTrajectory().getSegment(i).y), 2, 2);
 		}
 
 		ImageView iv1 = new ImageView(new Image("file:field.png", 648, 648, true, true));
-		Segment start = path.getPair().center.getSegment(0);
-		Segment end = path.getPair().center.getSegment(path.getPair().center.getNumSegments() - 1);
-		drawRobot(start, canvas);
-		drawRobot(end, canvas);
+		Segment start = path.getTrajectory().getSegment(0);
+		Segment end = path.getTrajectory().getSegment(path.getTrajectory().getNumSegments() - 1);
+		drawRobot(start, canvas, Color.BLUE);
+		drawRobot(end, canvas, Color.DARKORANGE);
 		Group root = new Group();
 		root.getChildren().add(iv1);
 		root.getChildren().add(canvas);
@@ -65,13 +54,16 @@ public class Plotter {
 		stage.show();
 	}
 	
-	private void drawRobot(Segment segment, Canvas canvas) {
+	private void drawRobot(Segment segment, Canvas canvas, Color color) {
 		double x = segment.x * 24;
 	    double y = getFieldPoint(segment.y);
 	    double height = config.robotWidth * 2;
 	    double width = config.robotLength * 2;
 
 	    GraphicsContext gc = canvas.getGraphicsContext2D();
+	    
+	    gc.setFill(color);
+		gc.setStroke(color);
 
 	    gc.save();
 	    gc.translate(x, y);

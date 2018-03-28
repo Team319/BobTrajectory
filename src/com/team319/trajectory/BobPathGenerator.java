@@ -52,7 +52,7 @@ public class BobPathGenerator extends PathGenerator {
 
 	private static boolean isDirectionValid(BobPath path) {
 		WaypointSequence wps = path.getWaypointSequence();
-		if (wps.getWaypoint(wps.getNumWaypoints() - 1).x >= wps.getWaypoint(0).x) {
+		if (wps.getWaypoint(1).x >= wps.getWaypoint(0).x) {
 			return true;
 		} else {
 			return false;

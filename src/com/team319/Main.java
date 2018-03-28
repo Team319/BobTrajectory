@@ -47,9 +47,9 @@ public class Main {
 		longDistanceConfig.max_vel = 8.0;
 
 		//generateMisc(powerUpConfig);
-		//generateCenterSwitch(switchConfig);
-		generateRightSide(powerUpConfig);
-		generateLeftSide(powerUpConfig);
+		generateCenterSwitch(switchConfig);
+		//generateRightSide(powerUpConfig);
+		//generateLeftSide(powerUpConfig);
 		
 		copyArcsToRobotCode();
 		//copyPathsToRobotCode();
@@ -144,6 +144,12 @@ public class Main {
 		BobPath CenterToRightScale = new BobPath(config, "CenterToRightScale", 1);
 		CenterToRightScale.addWaypoint(CenterToRightSwitchPt4.getLastWaypoint());
 		CenterToRightScale.addWaypointRelative(6.375, -8.0, -45.0);
+		
+		BobPath CenterToRightScaleReverse = new BobPath(config, "CenterToRightScaleReverse", 1);
+		CenterToRightScaleReverse.addWaypoint(CenterToRightSwitchPt3.getLastWaypoint());
+		CenterToRightScaleReverse.addWaypointRelative(-3.0, -4.5, -89.99);
+		CenterToRightScaleReverse.addWaypointRelative(3.0, -4.5, -89.99);
+		CenterToRightScaleReverse.addWaypointRelative(5.0, 0, 0.0);
 
 		// --------------------LEFT SIDE AUTOS----------//
 
@@ -177,6 +183,7 @@ public class Main {
 		BobPathGenerator.exportArcToJavaFile(CenterToRightSwitchPt4);
 		BobPathGenerator.exportArcToJavaFile(CenterToRightSwitchPt5);
 		BobPathGenerator.exportArcToJavaFile(CenterToRightScale);
+		BobPathGenerator.exportArcToJavaFile(CenterToRightScaleReverse);
 
 		BobPathGenerator.exportArcToJavaFile(CenterToLeftSwitch);
 		BobPathGenerator.exportArcToJavaFile(CenterToLeftSwitchPt2);

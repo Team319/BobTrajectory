@@ -51,20 +51,18 @@ public class SrxTranslator {
 
 			// translate from seconds to milliseconds
 			points[i][2] = traj.getSegment(i).dt * 1000;
-			double nextHeading = new BigDecimal(Math.toDegrees(traj.getSegment(i).heading)).setScale(2, BigDecimal.ROUND_HALF_EVEN).doubleValue();
-			if (nextHeading > 180) {
+			double nextHeading = Math.toDegrees(traj.getSegment(i).heading);
+			//double nextHeading = new BigDecimal(Math.toDegrees(traj.getSegment(i).heading)).setScale(2, BigDecimal.ROUND_HALF_EVEN).doubleValue();
+			/*if (nextHeading > 180) {
 				nextHeading -= 360;
-			}
+			}*/
 			if (i != 0) {
 				double headingDifference = nextHeading - lastHeading;
-				if (headingDifference >= 360) {
+				if (headingDifference >= 300) {
 					headingDifference -= 360;
 				}
 				continuousHeading += headingDifference;
 			}else {
-				if (nextHeading >= 360) {
-					nextHeading -= 360;
-				}
 				continuousHeading = nextHeading;
 			}
 			points[i][3] = continuousHeading;

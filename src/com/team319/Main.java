@@ -47,9 +47,9 @@ public class Main {
 		longDistanceConfig.max_vel = 8.0;
 
 		//generateMisc(powerUpConfig);
-		//generateCenterSwitch(switchConfig);
-		generateRightSide(powerUpConfig);
-		generateLeftSide(powerUpConfig);
+		generateCenterSwitch(switchConfig);
+		//generateRightSide(powerUpConfig);
+		//generateLeftSide(powerUpConfig);
 		
 		copyArcsToRobotCode();
 		//copyPathsToRobotCode();
@@ -140,7 +140,7 @@ public class Main {
 		BobPath CenterToRightSwitchPt5 = new BobPath(config, "CenterToRightSwitchPt5", 1);
 		CenterToRightSwitchPt5.addWaypoint(CenterToRightSwitchPt4.getLastWaypoint());
 		CenterToRightSwitchPt5.addWaypointRelative(6.375, -4.0, 0.0);
-		
+
 		BobPath CenterToRightScalePt1 = new BobPath(config, "CenterToRightScalePt1", -1);
 		CenterToRightScalePt1.addWaypoint(CenterToRightSwitchPt3.getLastWaypoint());
 		CenterToRightScalePt1.addWaypointRelative(-4.0, 1.0, -30.0);
@@ -149,11 +149,11 @@ public class Main {
 		CenterToRightScalePt2.addWaypoint(CenterToRightScalePt1.getLastWaypoint());
 		CenterToRightScalePt2.addWaypointRelative(14.0, -4.0, 45.0);
 		
-		BobPath CenterToRightScaleReverse = new BobPath(config, "CenterToRightScaleReverse", -1);
+		BobPath CenterToRightScaleReverse = new BobPath(config, "CenterToRightScaleReverse", 1);
 		CenterToRightScaleReverse.addWaypoint(CenterToRightSwitchPt3.getLastWaypoint());
-		CenterToRightScaleReverse.addWaypointRelative(-3.0, -4.5, -85.0);
-		CenterToRightScaleReverse.addWaypointRelative(3.0, -4.5, -85.0);
-		CenterToRightScaleReverse.addWaypointRelative(5.0, 0.0, 0.0);
+		CenterToRightScaleReverse.addWaypointRelative(-3.0, -4.5, -89.99);
+		CenterToRightScaleReverse.addWaypointRelative(3.0, -4.5, -89.99);
+		CenterToRightScaleReverse.addWaypointRelative(5.0, 0, 0.0);
 
 		// --------------------LEFT SIDE AUTOS----------//
 

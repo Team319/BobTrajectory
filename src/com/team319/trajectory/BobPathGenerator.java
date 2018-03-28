@@ -27,8 +27,13 @@ public class BobPathGenerator extends PathGenerator {
 		p = PathGenerator.makePath(bobPath.getWaypointSequence(), bobPath.getConfig(),
 				bobPath.getConfig().wheelbase_width_feet, bobPath.getConfig().name);
 
-		if (!isDirectionValid(bobPath)) {
-			p.offsetHeading(-Math.PI);
+		if (isDirectionReversed(bobPath)) {
+			if (p.getCenterTrajectory().getSegment(0).heading > 0) {
+				p.offsetHeading(-Math.PI);
+			}
+			else {
+				p.offsetHeading(Math.PI);
+			}
 		}
 
 		if (bobPath.getConfig().direction == -1) {
@@ -50,12 +55,12 @@ public class BobPathGenerator extends PathGenerator {
 		return new Path(p.getName(), new Pair(left, center, right));
 	}
 
-	private static boolean isDirectionValid(BobPath path) {
+	private static boolean isDirectionReversed(BobPath path) {
 		WaypointSequence wps = path.getWaypointSequence();
 		if (wps.getWaypoint(1).x >= wps.getWaypoint(0).x) {
-			return true;
-		} else {
 			return false;
+		} else {
+			return true;
 		}
 	}
 

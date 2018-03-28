@@ -47,9 +47,9 @@ public class Main {
 		longDistanceConfig.max_vel = 8.0;
 
 		//generateMisc(powerUpConfig);
-		generateCenterSwitch(switchConfig);
+		//generateCenterSwitch(switchConfig);
 		//generateRightSide(powerUpConfig);
-		//generateLeftSide(powerUpConfig);
+		generateLeftSide(powerUpConfig);
 		
 		copyArcsToRobotCode();
 		//copyPathsToRobotCode();
@@ -301,6 +301,11 @@ public class Main {
 		LeftWallToRightScale.addWaypointRelative(4.0, -5.0, -89.99);
 		LeftWallToRightScale.addWaypointRelative(0.0, -8.0, 0.0);//-7.0 ->-9.0 derrick 3/27
 		LeftWallToRightScale.addWaypointRelative(6.0, -4.0, 89.99);//6.0 -> 5.0 derrick 3/27
+		
+		BobPath LeftWallToLeftScaleNullZone = new BobPath(config, "LeftWallToLeftScaleNullZone", -1);
+		LeftWallToLeftScaleNullZone.addWaypoint(leftSideStartingWaypoint);
+		LeftWallToLeftScaleNullZone.addWaypointRelative(22.0, 0.0, 0.0);
+		LeftWallToLeftScaleNullZone.addWaypointRelative(3.0, -3.0, -89.99);
 
 		BobPathGenerator.exportArcToJavaFile(LeftWallToLeftScale);
 		BobPathGenerator.exportArcToJavaFile(ScaleToSwitchCubeLeftSide);
@@ -309,6 +314,7 @@ public class Main {
 		BobPathGenerator.exportArcToJavaFile(LeftWallToLeftSwitchPt2);
 		BobPathGenerator.exportArcToJavaFile(LeftWallToRightSide);
 		BobPathGenerator.exportArcToJavaFile(LeftWallToRightScale);
+		BobPathGenerator.exportArcToJavaFile(LeftWallToLeftScaleNullZone);
 	}
 	
 	private static void copyArcsToRobotCode() {

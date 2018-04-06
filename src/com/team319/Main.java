@@ -46,11 +46,11 @@ public class Main {
 		longDistanceConfig = new SrxTranslatorConfig(switchConfig);
 		longDistanceConfig.max_vel = 8.0;
 
-		//generateMisc(powerUpConfig);
-		//generateCenterSwitch(switchConfig);
+		generateMisc(powerUpConfig);
+		generateCenterSwitch(switchConfig);
 		generateTripleSwitch(switchConfig);
-		//generateRightSide(powerUpConfig);
-		//generateLeftSide(powerUpConfig);
+		generateRightSide(powerUpConfig);
+		generateLeftSide(powerUpConfig);
 		
 		copyArcsToRobotCode();
 		//copyPathsToRobotCode();
@@ -105,6 +105,14 @@ public class Main {
 		StraightForwardTuning.addWaypoint(rightSideStartingWaypoint);
 		StraightForwardTuning.addWaypointRelative(223.0/12.0, 0.0, 0.0);
 		
+		BobPath TestPath = new BobPath(config, "TestPath", 1);
+		TestPath.addWaypoint(centerStartingWaypoint);
+		TestPath.addWaypointRelative(5, 2, 45);
+		
+		BobPath TestPath2 = new BobPath(config, "TestPath2", -1);
+		TestPath2.addWaypoint(TestPath.getLastWaypoint());
+		TestPath2.addWaypointRelative(-3, -3, 0);
+		
 		BobPathGenerator.exportArcToJavaFile(ThreeFeet);
 		BobPathGenerator.exportArcToJavaFile(OneFoot);
 		BobPathGenerator.exportArcToJavaFile(FiveFeetAndTurn);
@@ -116,7 +124,8 @@ public class Main {
 		BobPathGenerator.exportArcToJavaFile(TuningTestAuto);
 		BobPathGenerator.exportArcToJavaFile(TuningTestAutoBackward);
 		BobPathGenerator.exportArcToJavaFile(StraightForwardTuning);
-		
+		BobPathGenerator.exportArcToJavaFile(TestPath);
+		BobPathGenerator.exportArcToJavaFile(TestPath2);
 	}
 
 	private static void generateCenterSwitch(SrxTranslatorConfig config) {

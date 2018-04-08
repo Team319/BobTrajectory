@@ -7,8 +7,8 @@ public class SwitchCubeToScaleLeftSideArc extends SrxTrajectory{
 	
 	// WAYPOINTS:
 	// (X,Y,degrees)
-	// (19.13,16.40,0.00)
-	// (24.13,17.65,-10.00)
+	// (19.13,16.15,0.00)
+	// (24.13,17.40,-10.00)
 	
     public SwitchCubeToScaleLeftSideArc() {
 		super();

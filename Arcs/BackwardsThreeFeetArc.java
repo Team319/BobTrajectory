@@ -8,7 +8,7 @@ public class BackwardsThreeFeetArc extends SrxTrajectory{
 	// WAYPOINTS:
 	// (X,Y,degrees)
 	// (0.00,0.00,0.00)
-	// (3.00,0.00,0.00)
+	// (-3.00,0.00,0.00)
 	
     public BackwardsThreeFeetArc() {
 		super();

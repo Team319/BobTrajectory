@@ -52,9 +52,9 @@ public class Main {
 
 		//generateMisc(powerUpConfig);
 		//generateCenterSwitch(switchConfig);
-		generateTripleSwitch(tripleSwitchConfig);
+		//generateTripleSwitch(tripleSwitchConfig);
 		//generateRightSide(powerUpConfig);
-		//generateLeftSide(powerUpConfig);
+		generateLeftSide(powerUpConfig);
 		
 		copyArcsToRobotCode();
 		//copyPathsToRobotCode();
@@ -408,7 +408,7 @@ public class Main {
 		BobPath LeftWallToLeftScale = new BobPath(config, "LeftWallToLeftScale", -1);
 		LeftWallToLeftScale.addWaypoint(leftSideStartingWaypoint);
 		LeftWallToLeftScale.addWaypointRelative(12.0, -1.0, -10.0);
-		LeftWallToLeftScale.addWaypointRelative(10.5, -4.75, 0.0);
+		LeftWallToLeftScale.addWaypointRelative(10.5, -4.25, 0.0);
 
 		BobPath ScaleToSwitchCubeLeftSide = new BobPath(config, "ScaleToSwitchCubeLeftSide", 1);
 		ScaleToSwitchCubeLeftSide.addWaypoint(LeftWallToLeftScale.getLastWaypoint());
@@ -416,38 +416,45 @@ public class Main {
 		
 		BobPath SwitchCubeToScaleLeftSide = new BobPath(config, "SwitchCubeToScaleLeftSide", -1);
 		SwitchCubeToScaleLeftSide.addWaypoint(ScaleToSwitchCubeLeftSide.getLastWaypoint());
-		SwitchCubeToScaleLeftSide.addWaypointRelative(5.0, 1.25, -10.0);//5.0 to 6.0 derrick 3/27
+		SwitchCubeToScaleLeftSide.addWaypointRelative(5.0, 0.5, -15.0);//5.0 to 6.0 derrick 3/27
 
-		BobPath LeftWallToLeftSwitch = new BobPath(config, "LeftWallToLeftSwitch", -1);
-		LeftWallToLeftSwitch.addWaypoint(leftSideStartingWaypoint);
-		LeftWallToLeftSwitch.addWaypointRelative(17.0, 1.0, 30.0);
+		BobPath LeftWallToLeftSwitchPt1 = new BobPath(config, "LeftWallToLeftSwitchPt1", -1);
+		LeftWallToLeftSwitchPt1.addWaypoint(leftSideStartingWaypoint);
+		LeftWallToLeftSwitchPt1.addWaypointRelative(20.0, -0.6, 5.0);
 
 		BobPath LeftWallToLeftSwitchPt2 = new BobPath(config, "LeftWallToLeftSwitchPt2", 1);
-		LeftWallToLeftSwitchPt2.addWaypoint(LeftWallToLeftSwitch.getLastWaypoint());
-		LeftWallToLeftSwitchPt2.addWaypointRelative(2.0, 1.0, 30.0);
+		LeftWallToLeftSwitchPt2.addWaypoint(LeftWallToLeftSwitchPt1.getLastWaypoint());
+		LeftWallToLeftSwitchPt2.addWaypointRelative(-3.55, -3.55, 35.0);
+		
+		BobPath LeftSwitchToLeftSwitchCube = new BobPath(config, "LeftSwitchToLeftSwitchCube", -1);
+		LeftSwitchToLeftSwitchCube.addWaypoint(LeftWallToLeftSwitchPt2.getLastWaypoint());
+		LeftSwitchToLeftSwitchCube.addWaypointRelative(1.25, 1.25, 0.0);
 
 		BobPath LeftWallToRightSide = new BobPath(config, "LeftWallToRightSide", -1);
 		LeftWallToRightSide.addWaypoint(leftSideStartingWaypoint);
-		LeftWallToRightSide.addWaypointRelative(13.0, 0.0, 0.0);
-		LeftWallToRightSide.addWaypointRelative(3.0, -3.5, -89.99);
+		LeftWallToRightSide.addWaypointRelative(10.25, -0.5, 0.0);
+		LeftWallToRightSide.addWaypointRelative(6.0, -7.0, -89.99);
+		LeftWallToRightSide.addWaypointRelative(0.0, -4.0, 0.0);
 		
 		BobPath LeftWallToRightScale = new BobPath(config, "LeftWallToRightScale", -1);
 		LeftWallToRightScale.addWaypoint(leftSideStartingWaypoint);
-		LeftWallToRightScale.addWaypointRelative(10.5, 0.0, 0.0);
+		LeftWallToRightScale.addWaypointRelative(10.25, -0.5, 0.0);
 		LeftWallToRightScale.addWaypointRelative(6.0, -7.0, -89.99);
-		LeftWallToRightScale.addWaypointRelative(0.0, -6.0, 0.0);//-7.0 ->-9.0 derrick 3/27
-		LeftWallToRightScale.addWaypointRelative(5.0, -5.0, 89.99);//6.0 -> 5.0 derrick 3/27
+		LeftWallToRightScale.addWaypointRelative(0.0, -6.3, 0.0);//-7.0 ->-9.0 derrick 3/27
+		LeftWallToRightScale.addWaypointRelative(5.5, -4.7, 89.99);//6.0 -> 5.0 derrick 3/27
+		
 		
 		BobPath LeftWallToLeftScaleNullZone = new BobPath(config, "LeftWallToLeftScaleNullZone", -1);
 		LeftWallToLeftScaleNullZone.addWaypoint(leftSideStartingWaypoint);
-		LeftWallToLeftScaleNullZone.addWaypointRelative(22.0, 0.0, 0.0);
+		LeftWallToLeftScaleNullZone.addWaypointRelative(22.0, -0.5, 0.0);
 		LeftWallToLeftScaleNullZone.addWaypointRelative(3.0, -3.0, -89.99);
 
 		BobPathGenerator.exportArcToJavaFile(LeftWallToLeftScale);
 		BobPathGenerator.exportArcToJavaFile(ScaleToSwitchCubeLeftSide);
 		BobPathGenerator.exportArcToJavaFile(SwitchCubeToScaleLeftSide);
-		BobPathGenerator.exportArcToJavaFile(LeftWallToLeftSwitch);
+		BobPathGenerator.exportArcToJavaFile(LeftWallToLeftSwitchPt1);
 		BobPathGenerator.exportArcToJavaFile(LeftWallToLeftSwitchPt2);
+		BobPathGenerator.exportArcToJavaFile(LeftSwitchToLeftSwitchCube);
 		BobPathGenerator.exportArcToJavaFile(LeftWallToRightSide);
 		BobPathGenerator.exportArcToJavaFile(LeftWallToRightScale);
 		BobPathGenerator.exportArcToJavaFile(LeftWallToLeftScaleNullZone);

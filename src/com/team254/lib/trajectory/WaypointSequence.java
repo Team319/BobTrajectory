@@ -13,21 +13,27 @@ public class WaypointSequence {
 
 	public static class Waypoint {
 
-		public Waypoint(double x, double y, double theta) {
+		public Waypoint(double x, double y, double theta, double endVelocity, double maxVelocity) {
 			this.x = x;
 			this.y = y;
 			this.theta = theta;
+			this.endVelocity = endVelocity;
+			this.maxVelocity = maxVelocity;
 		}
 
 		public Waypoint(Waypoint tocopy) {
 			this.x = tocopy.x;
 			this.y = tocopy.y;
 			this.theta = tocopy.theta;
+			this.endVelocity = tocopy.endVelocity;
+			this.maxVelocity = tocopy.maxVelocity;
 		}
 
 		public double x;
 		public double y;
 		public double theta;
+		public double endVelocity;
+		public double maxVelocity;
 	}
 
 	Waypoint[] waypoints_;

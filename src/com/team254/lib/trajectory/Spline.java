@@ -63,7 +63,7 @@ public class Spline {
 
 	public static boolean reticulateSplines(double x0, double y0, double theta0, double x1, double y1, double theta1,
 			Spline result, Type type) {
-		System.out.println("Reticulating splines...");
+//		System.out.println("Reticulating splines...");
 		result.type_ = type;
 
 		// Transform x to the origin

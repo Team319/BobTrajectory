@@ -92,7 +92,7 @@ public class TrajectoryGenerator {
 	 *         conditions.
 	 */
 	public static Trajectory generate(Config config, Strategy strategy, double start_vel, double start_heading,
-			double goal_pos, double goal_vel, double goal_heading) {
+			double goal_pos, double goal_vel, double goal_heading, double maxVelocity) {
 		// Choose an automatic strategy.
 		if (strategy == AutomaticStrategy) {
 			strategy = chooseStrategy(start_vel, goal_vel, config.max_vel);
@@ -111,30 +111,27 @@ public class TrajectoryGenerator {
 
 		} else if (strategy == TrapezoidalStrategy) {
 			// How fast can we go given maximum acceleration and deceleration?
-			double start_discount = .5 * start_vel * start_vel / config.max_acc;
-			double end_discount = .5 * goal_vel * goal_vel / config.max_acc;
-
-			double adjusted_max_vel = Math.min(config.max_vel,
-					Math.sqrt(config.max_acc * goal_pos - start_discount - end_discount));
+			double adjusted_max_vel = Math.min(maxVelocity,
+					Math.sqrt(config.max_acc * (goal_pos / 2)));
 			double t_rampup = (adjusted_max_vel - start_vel) / config.max_acc;
-			double x_rampup = start_vel * t_rampup + .5 * config.max_acc * t_rampup * t_rampup;
+			double x_rampup = start_vel * t_rampup * config.max_acc * t_rampup * t_rampup;
 			double t_rampdown = (adjusted_max_vel - goal_vel) / config.max_acc;
-			double x_rampdown = adjusted_max_vel * t_rampdown - .5 * config.max_acc * t_rampdown * t_rampdown;
-			double x_cruise = goal_pos - x_rampdown - x_rampup;
+			double x_rampdown = adjusted_max_vel * t_rampdown * config.max_acc * t_rampdown * t_rampdown;
+			double x_cruise = Math.max(0, goal_pos - x_rampdown - x_rampup);
 
 			// The +.5 is to round to nearest
-			int time = (int) ((t_rampup + t_rampdown + x_cruise / adjusted_max_vel) / config.dt + .5);
+			int time = (int) ((t_rampup + t_rampdown + x_cruise / adjusted_max_vel) / config.dt);
 
 			// Compute the length of the linear filters and impulse.
 			int f1_length = (int) Math.ceil((adjusted_max_vel / config.max_acc) / config.dt);
-			double impulse = (goal_pos / adjusted_max_vel) / config.dt - start_vel / config.max_acc / config.dt
-					+ start_discount + end_discount;
+			int f2_length = (int) Math.ceil((config.max_acc / config.max_jerk) / config.dt);
+			double impulse = time - (t_rampdown / config.dt);
 			traj = secondOrderFilter(f1_length, 1, config.dt, start_vel, adjusted_max_vel, impulse, time,
 					TrapezoidalIntegration);
 
 		} else if (strategy == SCurvesStrategy) {
 			// How fast can we go given maximum acceleration and deceleration?
-			double adjusted_max_vel = Math.min(config.max_vel,
+			double adjusted_max_vel = Math.min(maxVelocity,
 					(-config.max_acc * config.max_acc
 							+ Math.sqrt(config.max_acc * config.max_acc * config.max_acc * config.max_acc
 									+ 4 * config.max_jerk * config.max_jerk * config.max_acc * goal_pos))
@@ -145,7 +142,7 @@ public class TrajectoryGenerator {
 			int f2_length = (int) Math.ceil((config.max_acc / config.max_jerk) / config.dt);
 			double impulse = (goal_pos / adjusted_max_vel) / config.dt;
 			int time = (int) (Math.ceil(f1_length + f2_length + impulse));
-			traj = secondOrderFilter(f1_length, f2_length, config.dt, 0, adjusted_max_vel, impulse, time,
+			traj = secondOrderFilter(f1_length, f2_length, config.dt, start_vel, adjusted_max_vel, impulse, time,
 					TrapezoidalIntegration);
 
 		} else {
@@ -154,11 +151,11 @@ public class TrajectoryGenerator {
 
 		// Now assign headings by interpolating along the path.
 		// Don't do any wrapping because we don't know units.
-		double total_heading_change = goal_heading - start_heading;
-		for (int i = 0; i < traj.getNumSegments(); ++i) {
-			traj.segments_[i].heading = start_heading
-					+ total_heading_change * (traj.segments_[i].pos) / traj.segments_[traj.getNumSegments() - 1].pos;
-		}
+//		double total_heading_change = goal_heading - start_heading;
+//		for (int i = 0; i < traj.getNumSegments(); ++i) {
+//			traj.segments_[i].heading = start_heading
+//					+ total_heading_change * (traj.segments_[i].pos) / traj.segments_[traj.getNumSegments() - 1].pos;
+//		}
 
 		return traj;
 	}

@@ -12,8 +12,8 @@ public class BobWaypointSequence extends WaypointSequence {
 
 	public static class BobWaypoint extends Waypoint {
 
-		public BobWaypoint(double x, double y, double theta) {
-			super(x, y, theta);
+		public BobWaypoint(double x, double y, double theta, double endVelocity, double maxVelocity) {
+			super(x, y, theta, endVelocity, maxVelocity);
 		}
 
 		public BobWaypoint(BobWaypoint tocopy) {

@@ -48,13 +48,14 @@ public class PathGenerator {
 
 		// Generate a smooth trajectory over the total distance.
 		Trajectory traj = TrajectoryGenerator.generate(config, TrajectoryGenerator.TrapezoidalStrategy, 0.0,
-				path.getWaypoint(0).theta, spline_lengths[0], path.getWaypoint(1).endVelocity, path.getWaypoint(1).theta, path.getWaypoint(1).maxVelocity);
+				path.getWaypoint(0).theta, 0, spline_lengths[0], path.getWaypoint(1).endVelocity, path.getWaypoint(1).theta, path.getWaypoint(1).maxVelocity);
 		double distance = spline_lengths[0];
 		for (int i = 2; i < path.num_waypoints_; ++i) {
+			double startDistance = distance;
 			distance += spline_lengths[i - 1];
 			traj.append(
 					TrajectoryGenerator.generate(config, TrajectoryGenerator.TrapezoidalStrategy, path.getWaypoint(i - 1).endVelocity,
-				path.getWaypoint(i - 1).theta, distance, path.getWaypoint(i).endVelocity, path.getWaypoint(i).theta, path.getWaypoint(i).maxVelocity));
+				path.getWaypoint(i - 1).theta, startDistance, distance, path.getWaypoint(i).endVelocity, path.getWaypoint(i).theta, path.getWaypoint(i).maxVelocity));
 		}
 
 		// Assign headings based on the splines.

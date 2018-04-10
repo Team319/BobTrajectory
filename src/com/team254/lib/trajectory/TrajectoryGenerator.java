@@ -91,42 +91,25 @@ public class TrajectoryGenerator {
 	 * @return A Trajectory that satisfies the relevant constraints and end
 	 *         conditions.
 	 */
-	public static Trajectory generate(Config config, Strategy strategy, double start_vel, double start_heading,
+	public static Trajectory generate(Config config, Strategy strategy, double start_vel, double start_heading, double start_pos,
 			double goal_pos, double goal_vel, double goal_heading, double maxVelocity) {
-		// Choose an automatic strategy.
-		if (strategy == AutomaticStrategy) {
-			strategy = chooseStrategy(start_vel, goal_vel, config.max_vel);
-		}
-
 		Trajectory traj;
-		if (strategy == StepStrategy) {
-			double impulse = (goal_pos / config.max_vel) / config.dt;
-
-			// Round down, meaning we may undershoot by less than max_vel*dt.
-			// This is due to discretization and avoids a strange final
-			// velocity.
-			int time = (int) (Math.floor(impulse));
-			traj = secondOrderFilter(1, 1, config.dt, config.max_vel, config.max_vel, impulse, time,
-					TrapezoidalIntegration);
-
-		} else if (strategy == TrapezoidalStrategy) {
+		if (strategy == TrapezoidalStrategy) {
 			// How fast can we go given maximum acceleration and deceleration?
-			double adjusted_max_vel = Math.min(maxVelocity,
-					Math.sqrt(config.max_acc * (goal_pos / 2)));
+			double adjusted_max_vel = maxVelocity;
 			double t_rampup = (adjusted_max_vel - start_vel) / config.max_acc;
-			double x_rampup = start_vel * t_rampup * config.max_acc * t_rampup * t_rampup;
+			double x_rampup = start_vel * t_rampup + (config.max_acc * t_rampup * t_rampup) / 2;
 			double t_rampdown = (adjusted_max_vel - goal_vel) / config.max_acc;
-			double x_rampdown = adjusted_max_vel * t_rampdown * config.max_acc * t_rampdown * t_rampdown;
-			double x_cruise = Math.max(0, goal_pos - x_rampdown - x_rampup);
+			double x_rampdown = adjusted_max_vel * t_rampdown + (config.max_acc * t_rampdown * t_rampdown) / 2;
+			double x_cruise = goal_pos - x_rampdown - x_rampup;
 
 			// The +.5 is to round to nearest
 			int time = (int) ((t_rampup + t_rampdown + x_cruise / adjusted_max_vel) / config.dt);
 
 			// Compute the length of the linear filters and impulse.
-			int f1_length = (int) Math.ceil((adjusted_max_vel / config.max_acc) / config.dt);
-			int f2_length = (int) Math.ceil((config.max_acc / config.max_jerk) / config.dt);
+			int f1_length = (int) (adjusted_max_vel / config.max_acc / config.dt);
 			double impulse = time - (t_rampdown / config.dt);
-			traj = secondOrderFilter(f1_length, 1, config.dt, start_vel, adjusted_max_vel, impulse, time,
+			traj = secondOrderFilter(f1_length, 1, config.dt, start_vel, start_pos, adjusted_max_vel, impulse, time,
 					TrapezoidalIntegration);
 
 		} else if (strategy == SCurvesStrategy) {
@@ -142,7 +125,7 @@ public class TrajectoryGenerator {
 			int f2_length = (int) Math.ceil((config.max_acc / config.max_jerk) / config.dt);
 			double impulse = (goal_pos / adjusted_max_vel) / config.dt;
 			int time = (int) (Math.ceil(f1_length + f2_length + impulse));
-			traj = secondOrderFilter(f1_length, f2_length, config.dt, start_vel, adjusted_max_vel, impulse, time,
+			traj = secondOrderFilter(f1_length, f2_length, config.dt, start_pos, start_vel, adjusted_max_vel, impulse, time,
 					TrapezoidalIntegration);
 
 		} else {
@@ -160,7 +143,7 @@ public class TrajectoryGenerator {
 		return traj;
 	}
 
-	private static Trajectory secondOrderFilter(int f1_length, int f2_length, double dt, double start_vel,
+	private static Trajectory secondOrderFilter(int f1_length, int f2_length, double dt, double start_vel, double start_pos,
 			double max_vel, double total_impulse, int length, IntegrationMethod integration) {
 		if (length <= 0) {
 			return null;
@@ -169,7 +152,7 @@ public class TrajectoryGenerator {
 
 		Trajectory.Segment last = new Trajectory.Segment();
 		// First segment is easy
-		last.pos = 0;
+		last.pos = start_pos;
 		last.vel = start_vel;
 		last.acc = 0;
 		last.jerk = 0;

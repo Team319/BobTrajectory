@@ -70,11 +70,13 @@ public class Plotter {
 		
 		for (int i = 0; i < path.getTrajectory().getNumSegments(); i++) {
 			Segment segment = path.getTrajectory().getSegment(i);
-			gc.setFill(getColor(segment.vel, config.max_vel));
-			gc.setStroke(getColor(segment.vel, config.max_vel));
+//			gc.setFill(getColor(segment.vel, config.max_vel));
+//			gc.setStroke(getColor(segment.vel, config.max_vel));
+			gc.setFill(Color.PURPLE);
+			gc.setStroke(Color.PURPLE);
 			gc.fillOval(segment.x * 24, 
 					getFieldPoint(segment.y), 2, 2);
-			if (i%50 == 0) {
+			if (i%100 == 0) {
 				drawRobot(path.getTrajectory().getSegment(i), canvas, Color.GREY, 1.0);
 			}
 			velocityData.getData().add(new XYChart.Data<>(i, segment.vel));

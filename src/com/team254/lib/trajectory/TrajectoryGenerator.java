@@ -101,16 +101,13 @@ public class TrajectoryGenerator {
 			double x_rampup = start_vel * t_rampup + (config.max_acc * t_rampup * t_rampup) / 2;
 			double t_rampdown = (adjusted_max_vel - goal_vel) / config.max_acc;
 			double x_rampdown = adjusted_max_vel * t_rampdown + (config.max_acc * t_rampdown * t_rampdown) / 2;
-			double x_cruise = goal_pos - x_rampdown - x_rampup;
+			double x_cruise = goal_pos - start_pos - x_rampdown - x_rampup;
 
 			// The +.5 is to round to nearest
 			int time = (int) ((t_rampup + t_rampdown + x_cruise / adjusted_max_vel) / config.dt);
 
-			// Compute the length of the linear filters and impulse.
-			int f1_length = (int) (adjusted_max_vel / config.max_acc / config.dt);
 			double impulse = time - (t_rampdown / config.dt);
-			traj = secondOrderFilter(f1_length, 1, config.dt, start_vel, start_pos, adjusted_max_vel, impulse, time,
-					TrapezoidalIntegration);
+			traj = generateValues(config.dt, start_vel, start_pos, adjusted_max_vel, config.max_acc, impulse, time);
 
 		} else if (strategy == SCurvesStrategy) {
 			// How fast can we go given maximum acceleration and deceleration?
@@ -142,6 +139,43 @@ public class TrajectoryGenerator {
 
 		return traj;
 	}
+	
+	private static Trajectory generateValues(double dt, double start_vel, double start_pos,
+			double max_vel, double max_accel, double total_impulse, int length) {
+		if (length <= 0) {
+			return null;
+		}
+		
+		Trajectory traj = new Trajectory(length);
+		double currentPosition = start_pos;
+		double currentVelocity = start_vel;
+		double currentAcceleration;
+		for (int i = 0; i < length; i++) {
+			if (i >= total_impulse) {
+				currentVelocity -= max_accel * dt;
+				currentAcceleration = -max_accel;
+			} else {
+				currentVelocity += max_accel * dt;
+				currentVelocity = Math.min(max_vel, currentVelocity);
+				currentAcceleration = max_accel;
+			}
+			
+			if (currentVelocity >= max_vel) {
+				currentVelocity = max_vel;
+				currentAcceleration = 0;
+			}
+			currentPosition += currentVelocity * dt;
+			Trajectory.Segment current = new Trajectory.Segment();
+			// First segment is easy
+			current.pos = currentPosition;
+			current.vel = currentVelocity;
+			current.acc = currentAcceleration;
+			current.dt = dt;
+			
+			traj.setSegment(i, current);
+		}
+		return traj;
+	}
 
 	private static Trajectory secondOrderFilter(int f1_length, int f2_length, double dt, double start_vel, double start_pos,
 			double max_vel, double total_impulse, int length, IntegrationMethod integration) {
@@ -170,7 +204,7 @@ public class TrajectoryGenerator {
 				// The impulse is over, so decelerate
 				input -= 1;
 				total_impulse = 0;
-			} else {
+			} else { 
 				total_impulse -= input;
 			}
 

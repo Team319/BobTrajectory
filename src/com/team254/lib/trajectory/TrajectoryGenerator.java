@@ -94,86 +94,58 @@ public class TrajectoryGenerator {
 	public static Trajectory generate(Config config, Strategy strategy, double start_vel, double start_heading, double start_pos,
 			double goal_pos, double goal_vel, double goal_heading, double maxVelocity) {
 		Trajectory traj;
-		if (strategy == TrapezoidalStrategy) {
-			// How fast can we go given maximum acceleration and deceleration?
-			double adjusted_max_vel = maxVelocity;
-			double t_rampup = (adjusted_max_vel - start_vel) / config.max_acc;
-			double x_rampup = start_vel * t_rampup + (config.max_acc * t_rampup * t_rampup) / 2;
-			double t_rampdown = (adjusted_max_vel - goal_vel) / config.max_acc;
-			double x_rampdown = adjusted_max_vel * t_rampdown + (config.max_acc * t_rampdown * t_rampdown) / 2;
-			double x_cruise = goal_pos - start_pos - x_rampdown - x_rampup;
+		// How fast can we go given maximum acceleration and deceleration?
+		double adjusted_max_vel = maxVelocity;
+		//			double t_rampup = (adjusted_max_vel - start_vel) / config.max_acc;
+		double t_rampup = 0;
+		double x_rampup = start_vel * t_rampup + (config.max_acc * t_rampup * t_rampup) / 2.0;
+		double t_rampdown = (adjusted_max_vel - goal_vel) / config.max_acc;
+		//			double t_rampdown = 0;
+		double x_rampdown = adjusted_max_vel * t_rampdown + (config.max_acc * t_rampdown * t_rampdown) / 2.0;
+		double x_cruise = goal_pos - start_pos - x_rampdown - x_rampup;
+		double t_cruise = x_cruise / adjusted_max_vel;
 
-			// The +.5 is to round to nearest
-			int time = (int) ((t_rampup + t_rampdown + x_cruise / adjusted_max_vel) / config.dt);
-
-			double impulse = time - (t_rampdown / config.dt);
-			traj = generateValues(config.dt, start_vel, start_pos, adjusted_max_vel, config.max_acc, impulse, time);
-
-		} else if (strategy == SCurvesStrategy) {
-			// How fast can we go given maximum acceleration and deceleration?
-			double adjusted_max_vel = Math.min(maxVelocity,
-					(-config.max_acc * config.max_acc
-							+ Math.sqrt(config.max_acc * config.max_acc * config.max_acc * config.max_acc
-									+ 4 * config.max_jerk * config.max_jerk * config.max_acc * goal_pos))
-							/ (2 * config.max_jerk));
-
-			// Compute the length of the linear filters and impulse.
-			int f1_length = (int) Math.ceil((adjusted_max_vel / config.max_acc) / config.dt);
-			int f2_length = (int) Math.ceil((config.max_acc / config.max_jerk) / config.dt);
-			double impulse = (goal_pos / adjusted_max_vel) / config.dt;
-			int time = (int) (Math.ceil(f1_length + f2_length + impulse));
-			traj = secondOrderFilter(f1_length, f2_length, config.dt, start_pos, start_vel, adjusted_max_vel, impulse, time,
-					TrapezoidalIntegration);
-
-		} else {
-			return null;
-		}
-
-		// Now assign headings by interpolating along the path.
-		// Don't do any wrapping because we don't know units.
-//		double total_heading_change = goal_heading - start_heading;
-//		for (int i = 0; i < traj.getNumSegments(); ++i) {
-//			traj.segments_[i].heading = start_heading
-//					+ total_heading_change * (traj.segments_[i].pos) / traj.segments_[traj.getNumSegments() - 1].pos;
-//		}
+		int time = (int) ((t_rampup + t_rampdown + t_cruise) / config.dt + 0.5);
+		double impulse = (t_rampup + t_cruise) / config.dt;
+		traj = generateValues(config.dt, start_vel, start_pos, adjusted_max_vel, config.max_acc, impulse, time, goal_pos);
 
 		return traj;
 	}
-	
+
 	private static Trajectory generateValues(double dt, double start_vel, double start_pos,
-			double max_vel, double max_accel, double total_impulse, int length) {
-		if (length <= 0) {
+			double max_vel, double max_accel, double total_impulse, int time, double goalPosition) {
+		if (time <= 0) {
 			return null;
 		}
-		
-		Trajectory traj = new Trajectory(length);
+
+		Trajectory traj = new Trajectory(time);
 		double currentPosition = start_pos;
 		double currentVelocity = start_vel;
-		double currentAcceleration;
-		for (int i = 0; i < length; i++) {
+		double currentAcceleration = 0;
+		for (int i = 0; i < time; i++) {
+			Trajectory.Segment current = new Trajectory.Segment();
+			current.pos = currentPosition;
+			current.vel = currentVelocity;
+			current.acc = currentAcceleration;
+			current.dt = dt;
+
+			traj.setSegment(i, current);
+
 			if (i >= total_impulse) {
 				currentVelocity -= max_accel * dt;
 				currentAcceleration = -max_accel;
 			} else {
 				currentVelocity += max_accel * dt;
-				currentVelocity = Math.min(max_vel, currentVelocity);
 				currentAcceleration = max_accel;
 			}
-			
+
 			if (currentVelocity >= max_vel) {
 				currentVelocity = max_vel;
 				currentAcceleration = 0;
 			}
 			currentPosition += currentVelocity * dt;
-			Trajectory.Segment current = new Trajectory.Segment();
-			// First segment is easy
-			current.pos = currentPosition;
-			current.vel = currentVelocity;
-			current.acc = currentAcceleration;
-			current.dt = dt;
-			
-			traj.setSegment(i, current);
 		}
+		System.out.println("Missing distance: " + (goalPosition - currentPosition));
 		return traj;
 	}
 

@@ -105,8 +105,8 @@ public class Main {
 //		StraightForwardTuning.addWaypointRelative(223.0/12.0, 0.0, 0.0);
 		
 		BobPath mattTest = new BobPath(config, "MattTest", 1);
-		mattTest.addWaypoint(2, 4, 0, 0, 6); // velocity at point (0) max velocity (5)
-		mattTest.addWaypointRelative(13.5, 0, 0, 3, 6);
+		mattTest.addWaypoint(2, 4, 0, 0, 7); // velocity at point (0) max velocity (5)
+		mattTest.addWaypointRelative(13.5, 0, 0, 3, 7);
 		mattTest.addWaypointRelative(4, 4, 89.9, 3, 3);
 		mattTest.addWaypointRelative(0, 8, 0, 5, 5);
 		mattTest.addWaypointRelative(5, 4, -89.9, 0, 5);

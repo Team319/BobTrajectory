@@ -68,7 +68,7 @@ public class TrajectoryGenerator {
 			}
 			currentPosition += currentVelocity * dt;
 		}
-		System.out.println("Missing distance: " + (goalPosition - currentPosition));
+//		System.out.println("Missing distance: " + (goalPosition - currentPosition));
 		return traj;
 	}
 }

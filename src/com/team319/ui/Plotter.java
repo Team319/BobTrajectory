@@ -6,7 +6,6 @@ import com.team254.lib.trajectory.Path;
 import com.team254.lib.trajectory.Trajectory.Segment;
 import com.team319.trajectory.SrxTranslatorConfig;
 
-import javafx.geometry.Side;
 import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
@@ -28,6 +27,7 @@ public class Plotter {
 
 	public Plotter(){}
 
+	@SuppressWarnings("unchecked")
 	public void plotChezyTrajectory(Path path, SrxTranslatorConfig config) {
 		this.config = config;
 		Stage stage = new Stage();
@@ -67,31 +67,35 @@ public class Plotter {
 		position.setTitle("Position");
 		position.setLegendVisible(false); 
 			
+		Segment start = path.getTrajectory().getSegment(0);
+		Segment end = path.getTrajectory().getSegment(path.getTrajectory().getNumSegments() - 1);
+		gc.translate(start.x * 24, getFieldPoint(start.y));
+		gc.rotate(start.heading);
 		
-		for (int i = 0; i < path.getTrajectory().getNumSegments(); i++) {
+		drawRobot(start, canvas, Color.BLUE, 5.0);
+		for (int i = 1; i < path.getTrajectory().getNumSegments(); i++) {
 			Segment segment = path.getTrajectory().getSegment(i);
-//			gc.setFill(getColor(segment.vel, config.max_vel));
-//			gc.setStroke(getColor(segment.vel, config.max_vel));
-			gc.setFill(Color.PURPLE);
-			gc.setStroke(Color.PURPLE);
-			gc.fillOval(segment.x * 24, 
-					getFieldPoint(segment.y), 2, 2);
+			Segment previousSegment = path.getTrajectory().getSegment(i - 1);
 			if (i%100 == 0) {
 				drawRobot(path.getTrajectory().getSegment(i), canvas, Color.GREY, 1.0);
 			}
+			drawPoint(
+					segment.heading - previousSegment.heading, 
+					segment.pos - previousSegment.pos,
+					canvas,
+					getColor(segment.vel, config.max_vel));
 			velocityData.getData().add(new XYChart.Data<>(i, segment.vel));
 			headingData.getData().add(new XYChart.Data<>(i, Math.toDegrees(segment.heading)));
 			positionData.getData().add(new XYChart.Data<>(i, segment.pos));
 		}
+		gc.restore();
 		
 		velocity.getData().addAll(velocityData);
 		heading.getData().addAll(headingData);
 		position.getData().addAll(positionData);
 
 		ImageView iv1 = new ImageView(new Image("file:field.png", 648, 648, true, true));
-		Segment start = path.getTrajectory().getSegment(0);
-		Segment end = path.getTrajectory().getSegment(path.getTrajectory().getNumSegments() - 1);
-		drawRobot(start, canvas, Color.BLUE, 5.0);
+		
 		drawRobot(end, canvas, Color.DARKORANGE, 5.0);
 		Group root = new Group();
 		root.getChildren().add(iv1);
@@ -113,9 +117,20 @@ public class Plotter {
 		stage.show();
 	}
 	
+	private void drawPoint(double heading, double distance, Canvas canvas, Paint color) {
+		GraphicsContext gc = canvas.getGraphicsContext2D();
+
+		gc.setFill(color);
+		gc.setStroke(color);
+		gc.setLineWidth(2);
+
+		gc.save();
+		gc.rotate(Math.toDegrees(-heading));
+		gc.translate(distance * 24, 0);
+		gc.fillOval(0, 0, 2, 2);
+	}
+	
 	private void drawRobot(Segment segment, Canvas canvas, Color color, double thickness) {
-		double x = segment.x * 24;
-	    double y = getFieldPoint(segment.y);
 	    double height = config.robotWidth * 2;
 	    double width = config.robotLength * 2;
 
@@ -125,13 +140,7 @@ public class Plotter {
 		gc.setStroke(color);
 		gc.setLineWidth(thickness);
 
-	    gc.save();
-	    gc.translate(x, y);
-	    gc.rotate(Math.toDegrees(-segment.heading));
 	    gc.strokeRoundRect(-width/2, -height/2, width, height, 10, 10);
-	    gc.translate(-x, -y);
-
-	    gc.restore();
 	}
 
 	private double getFieldPoint(double point) {
@@ -139,13 +148,15 @@ public class Plotter {
 	}
 	
 	private Paint getColor(double speed, double limit) {
-		if (speed >= limit) {
+		double absSpeed = Math.abs(speed);
+		double absLimit = Math.abs(limit);
+		if (absSpeed >= absLimit) {
 			return Color.BLACK;
 		}
-		if (speed / limit == 0.5) {
+		if (absSpeed / absLimit == 0.5) {
 			return Color.web("ffff00");
 		}
-		double percentage = speed / limit * 100;
+		double percentage = absSpeed / absLimit * 100;
 	    int green = percentage < 50 ? 255 : (int)Math.floor(256 - (percentage - 50 ) * 5.12);
 	    int red = percentage > 50 ? 255 : (int)Math.floor((percentage) * 5.12);
 	    return Color.web(String.format("%02X", red) + String.format("%02X", green) + "00");

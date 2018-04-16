@@ -28,7 +28,7 @@ public class Main {
 		powerUpConfig = new SrxTranslatorConfig();
 		powerUpConfig.name = "powerUpConfig";
 		powerUpConfig.dt = .01;
-		powerUpConfig.max_acc = 7;
+		powerUpConfig.max_acc = 2;
 		powerUpConfig.max_jerk = 60.0;
 		powerUpConfig.max_vel = 10.0; // 8.0
 		powerUpConfig.wheelbase_width_feet = 23.5 / 12.0;// 23.5, then 29.5, 35.5
@@ -104,11 +104,23 @@ public class Main {
 //		StraightForwardTuning.addWaypointRelative(223.0/12.0, 0.0, 0.0);
 		
 		BobPath mattTest = new BobPath(config, "MattTest", 1);
-		mattTest.addWaypoint(2, 4, 0, 0, 8); // velocity at point (0) max velocity (5)
+		mattTest.addWaypoint(2, 4, 0, 0, 8);
 		mattTest.addWaypointRelative(13.5, 0, 0, 3, 8);
 		mattTest.addWaypointRelative(4, 4, 89.9, 3, 3);
 		mattTest.addWaypointRelative(0, 8, 0, 5, 5);
 		mattTest.addWaypointRelative(3.5, 4, -89.9, 0, 5);
+		
+		BobPath mattTest2 = new BobPath(config, "MattTest2", -1);
+		mattTest2.addWaypoint(mattTest.getLastWaypoint()); 
+		mattTest2.addWaypointRelative(-3.5, -0.25, 10, 0, 3);
+		
+		SrxTranslatorConfig slowAccConfig = new SrxTranslatorConfig();
+		slowAccConfig.max_acc = 3;
+		BobPath mattTest3 = new BobPath(slowAccConfig, "MattTest3", 1);
+		mattTest3.addWaypoint(0, 0, 0, 0, 5); 
+		mattTest3.addWaypoint(10, 0, 0, 5, 5); 
+		mattTest3.addWaypoint(20, 0, 0, 8, 8);
+		mattTest3.addWaypoint(30, 0, 0, 0, 8);
 		
 //		mattTest.addWaypoint(0, 0, 0, 0, 5);
 //		mattTest.addWaypoint(27, 27, 0, 0, 5);
@@ -125,6 +137,8 @@ public class Main {
 //		BobPathGenerator.exportArcToJavaFile(TuningTestAutoBackward);
 //		BobPathGenerator.exportArcToJavaFile(StraightForwardTuning);
 		BobPathGenerator.exportArcToJavaFile(mattTest);
+//		BobPathGenerator.exportArcToJavaFile(mattTest2);
+//		BobPathGenerator.exportArcToJavaFile(mattTest3);
 		
 		
 	}

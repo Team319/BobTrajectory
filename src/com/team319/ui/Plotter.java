@@ -42,8 +42,11 @@ public class Plotter {
 		stage.setTitle(title.toString());
 		gc.setLineWidth(5);
 		
+		Segment start = path.getTrajectory().getSegment(0);
+		Segment end = path.getTrajectory().getSegment(path.getTrajectory().getNumSegments() - 1);
+		
 		final NumberAxis timeAxis1 = new NumberAxis(0, path.getTrajectory().getNumSegments(), 100);
-		final NumberAxis velocityAxis = new NumberAxis(-config.max_vel, config.max_vel, 1);
+		final NumberAxis velocityAxis = new NumberAxis(-config.max_vel, config.max_vel, 5);
 		velocityAxis.setTickLabelsVisible(false);
 		final ScatterChart<Number, Number> velocity = new ScatterChart<Number, Number>(timeAxis1, velocityAxis);
 		XYChart.Series<Number, Number> velocityData = new XYChart.Series<>();
@@ -59,16 +62,21 @@ public class Plotter {
 		heading.setLegendVisible(false); 
 		
 		final NumberAxis timeAxis3 = new NumberAxis(0, path.getTrajectory().getNumSegments(), 100);
-		final NumberAxis positionAxis = new NumberAxis(0, (int)(path.getTrajectory().getSegment(
-				path.getTrajectory().getNumSegments() - 1).pos), 5);
+		final NumberAxis positionAxis = new NumberAxis(getSmallestPosition(path) - 5, getLargestPosition(path) + 5, 5);
 		positionAxis.setTickLabelsVisible(false);
 		final ScatterChart<Number, Number> position = new ScatterChart<Number, Number>(timeAxis3, positionAxis);
 		XYChart.Series<Number, Number> positionData = new XYChart.Series<>();
 		position.setTitle("Position");
 		position.setLegendVisible(false); 
+		
+		final NumberAxis positionAxis2 = new NumberAxis(0, end.pos, 100);
+		final NumberAxis velocityAxis2 = new NumberAxis(-config.max_vel, config.max_vel, 5);
+		positionAxis.setTickLabelsVisible(false);
+		final ScatterChart<Number, Number> vAtP = new ScatterChart<Number, Number>(positionAxis2, velocityAxis2);
+		XYChart.Series<Number, Number> vAtPData = new XYChart.Series<>();
+		vAtP.setTitle("Velocity at Position");
+		vAtP.setLegendVisible(false); 
 			
-		Segment start = path.getTrajectory().getSegment(0);
-		Segment end = path.getTrajectory().getSegment(path.getTrajectory().getNumSegments() - 1);
 		gc.translate(start.x * 24, getFieldPoint(start.y));
 		gc.rotate(start.heading);
 		
@@ -87,12 +95,14 @@ public class Plotter {
 			velocityData.getData().add(new XYChart.Data<>(i, segment.vel));
 			headingData.getData().add(new XYChart.Data<>(i, Math.toDegrees(segment.heading)));
 			positionData.getData().add(new XYChart.Data<>(i, segment.pos));
+			vAtPData.getData().add(new XYChart.Data<>(segment.pos, segment.vel));
 		}
 		gc.restore();
 		
 		velocity.getData().addAll(velocityData);
 		heading.getData().addAll(headingData);
 		position.getData().addAll(positionData);
+		vAtP.getData().addAll(vAtPData);
 
 		ImageView iv1 = new ImageView(new Image("file:field.png", 648, 648, true, true));
 		
@@ -107,6 +117,7 @@ public class Plotter {
 		charts.getChildren().add(velocity);
 		charts.getChildren().add(position);
 		charts.getChildren().add(heading);
+		charts.getChildren().add(vAtP);
 		pane.getChildren().add(root);
 		pane.getChildren().add(charts);
 		Scene scene = new Scene(pane);
@@ -160,5 +171,25 @@ public class Plotter {
 	    int green = percentage < 50 ? 255 : (int)Math.floor(256 - (percentage - 50 ) * 5.12);
 	    int red = percentage > 50 ? 255 : (int)Math.floor((percentage) * 5.12);
 	    return Color.web(String.format("%02X", red) + String.format("%02X", green) + "00");
+	}
+	
+	private double getLargestPosition(Path path) {
+		double largest = path.getTrajectory().getSegment(0).pos;
+		for (Segment segment : path.getTrajectory().getSegments()) {
+			if (segment.pos > largest) {
+				largest = segment.pos;
+			}
+		}
+		return largest;
+	}
+	
+	private double getSmallestPosition(Path path) {
+		double smallest = path.getTrajectory().getSegment(0).pos;
+		for (Segment segment : path.getTrajectory().getSegments()) {
+			if (segment.pos < smallest) {
+				smallest = segment.pos;
+			}
+		}
+		return smallest;
 	}
 }

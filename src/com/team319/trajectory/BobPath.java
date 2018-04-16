@@ -50,7 +50,20 @@ public class BobPath {
 	public void addWaypoint(double x, double y, double theta_deg, double endVelocity, double maxVelocity) {
 		this.waypointSequence.addWaypoint(new Waypoint(x, y, Math.toRadians(theta_deg), endVelocity, maxVelocity));
 	}
+	
+	public void addWaypoint(double x, double y, double theta_deg) {
+		if (waypointSequence.getNumWaypoints() > 0) {
+			getLastWaypoint().endVelocity = config.max_vel;
+		}
+		addWaypoint(new Waypoint(x, y, Math.toRadians(theta_deg), 0, config.max_vel));
+	}
 
+	public void addWaypointRelative(double x, double y, double theta_deg) {
+		if (waypointSequence.getNumWaypoints() > 1) {
+			getLastWaypoint().endVelocity = config.max_vel;
+		}
+		addWaypointRelative(x, y, theta_deg, 0, config.max_vel);
+	}
 	public void addWaypointRelative(double x, double y, double theta_deg, double endVelocity, double maxVelocity) {
 		Waypoint lastWaypoint = getLastWaypoint();
 		Waypoint newWaypoint = new Waypoint(lastWaypoint.x + x, lastWaypoint.y + y,

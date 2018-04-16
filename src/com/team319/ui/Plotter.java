@@ -40,10 +40,10 @@ public class Plotter {
 		.append(df.format(path.getTrajectory().getNumSegments() * path.getTrajectory().getSegment(0).dt))
 		.append("s");
 		stage.setTitle(title.toString());
-		gc.setLineWidth(5);
-		
 		Segment start = path.getTrajectory().getSegment(0);
 		Segment end = path.getTrajectory().getSegment(path.getTrajectory().getNumSegments() - 1);
+		drawRobot(start, canvas, Color.BLUE, 5.0);
+		drawRobot(end, canvas, Color.DARKORANGE, 5.0);
 		
 		final NumberAxis timeAxis1 = new NumberAxis(0, path.getTrajectory().getNumSegments(), 100);
 		final NumberAxis velocityAxis = new NumberAxis(-config.max_vel, config.max_vel, 5);
@@ -54,7 +54,7 @@ public class Plotter {
 		velocity.setLegendVisible(false); 
 		
 		final NumberAxis timeAxis2 = new NumberAxis(0, path.getTrajectory().getNumSegments(), 100);
-		final NumberAxis headingAxis = new NumberAxis(-180, 180, 30);
+		final NumberAxis headingAxis = new NumberAxis(getSmallestHeading(path) - 10, getLargestHeading(path) + 10, 30);
 		headingAxis.setTickLabelsVisible(false);
 		final ScatterChart<Number, Number> heading = new ScatterChart<Number, Number>(timeAxis2, headingAxis);
 		XYChart.Series<Number, Number> headingData = new XYChart.Series<>();
@@ -76,22 +76,16 @@ public class Plotter {
 		XYChart.Series<Number, Number> vAtPData = new XYChart.Series<>();
 		vAtP.setTitle("Velocity at Position");
 		vAtP.setLegendVisible(false); 
-			
-		gc.translate(start.x * 24, getFieldPoint(start.y));
-		gc.rotate(start.heading);
 		
-		drawRobot(start, canvas, Color.BLUE, 5.0);
 		for (int i = 1; i < path.getTrajectory().getNumSegments(); i++) {
 			Segment segment = path.getTrajectory().getSegment(i);
-			Segment previousSegment = path.getTrajectory().getSegment(i - 1);
-			if (i%100 == 0) {
-				drawRobot(path.getTrajectory().getSegment(i), canvas, Color.GREY, 1.0);
+			gc.setFill(getColor(segment.vel, config.max_vel));
+			gc.setStroke(getColor(segment.vel, config.max_vel));
+			gc.fillOval(segment.x * 24, 
+					getFieldPoint(segment.y), 3, 3);
+			if (i%50 == 0) {
+				drawRobot(segment, canvas, Color.GREY, 1.0);
 			}
-			drawPoint(
-					segment.heading - previousSegment.heading, 
-					segment.pos - previousSegment.pos,
-					canvas,
-					getColor(segment.vel, config.max_vel));
 			velocityData.getData().add(new XYChart.Data<>(i, segment.vel));
 			headingData.getData().add(new XYChart.Data<>(i, Math.toDegrees(segment.heading)));
 			positionData.getData().add(new XYChart.Data<>(i, segment.pos));
@@ -106,7 +100,6 @@ public class Plotter {
 
 		ImageView iv1 = new ImageView(new Image("file:field.png", 648, 648, true, true));
 		
-		drawRobot(end, canvas, Color.DARKORANGE, 5.0);
 		Group root = new Group();
 		root.getChildren().add(iv1);
 		root.getChildren().add(canvas);
@@ -128,30 +121,26 @@ public class Plotter {
 		stage.show();
 	}
 	
-	private void drawPoint(double heading, double distance, Canvas canvas, Paint color) {
-		GraphicsContext gc = canvas.getGraphicsContext2D();
-
-		gc.setFill(color);
-		gc.setStroke(color);
-		gc.setLineWidth(2);
-
-		gc.save();
-		gc.rotate(Math.toDegrees(-heading));
-		gc.translate(distance * 24, 0);
-		gc.fillOval(0, 0, 2, 2);
-	}
-	
 	private void drawRobot(Segment segment, Canvas canvas, Color color, double thickness) {
+		double x = segment.x * 24;
+	    double y = getFieldPoint(segment.y);
 	    double height = config.robotWidth * 2;
 	    double width = config.robotLength * 2;
 
-	    GraphicsContext gc = canvas.getGraphicsContext2D();
+	    GraphicsContext gc = canvas.getGraphicsContext2D();	   
 	    
-	    gc.setFill(color);
-		gc.setStroke(color);
-		gc.setLineWidth(thickness);
+	    gc.setLineWidth(thickness);
 
+		gc.setFill(color);
+		gc.setStroke(color);
+
+	    gc.save();
+	    gc.translate(x, y);
+	    gc.rotate(Math.toDegrees(-segment.heading));
 	    gc.strokeRoundRect(-width/2, -height/2, width, height, 10, 10);
+	    gc.translate(-x, -y);
+
+	    gc.restore();
 	}
 
 	private double getFieldPoint(double point) {
@@ -191,5 +180,25 @@ public class Plotter {
 			}
 		}
 		return smallest;
+	}
+	
+	private double getLargestHeading(Path path) {
+		double largest = path.getTrajectory().getSegment(0).heading;
+		for (Segment segment : path.getTrajectory().getSegments()) {
+			if (segment.heading > largest) {
+				largest = segment.heading;
+			}
+		}
+		return Math.toDegrees(largest);
+	}
+	
+	private double getSmallestHeading(Path path) {
+		double smallest = path.getTrajectory().getSegment(0).heading;
+		for (Segment segment : path.getTrajectory().getSegments()) {
+			if (segment.heading < smallest) {
+				smallest = segment.heading;
+			}
+		}
+		return Math.toDegrees(smallest);
 	}
 }

@@ -11,3 +11,9 @@
     -fx-background-radius: 2px;
     -fx-padding: 1px;
 }
+.default-color2.chart-symbol { /* solid circle */
+	-fx-stroke: purple;
+    -fx-background-color: purple, purple;
+    -fx-background-radius: 2px;
+    -fx-padding: 1px;
+}

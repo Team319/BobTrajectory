@@ -1,5 +1,6 @@
 package com.team319.ui;
 
+import java.io.File;
 import java.text.DecimalFormat;
 
 import com.team254.lib.trajectory.Path;
@@ -114,8 +115,9 @@ public class Plotter {
 		pane.getChildren().add(root);
 		pane.getChildren().add(charts);
 		Scene scene = new Scene(pane);
+		File f = new File("Plotter.css");
 		scene.getStylesheets().clear();
-		scene.getStylesheets().add(getClass().getResource("Plotter.css").toExternalForm());
+		scene.getStylesheets().add("file:///" + f.getAbsolutePath().replace("\\", "/"));
 		stage.setScene(scene);
 		stage.setResizable(false);
 		stage.show();

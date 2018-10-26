@@ -4,6 +4,7 @@ package com.team319;
 import com.team254.lib.trajectory.WaypointSequence.Waypoint;
 import com.team319.trajectory.BobPath;
 import com.team319.trajectory.BobPathGenerator;
+import com.team319.trajectory.BobRotation;
 import com.team319.trajectory.SrxTranslatorConfig;
 
 /**
@@ -51,11 +52,11 @@ public class Main {
 		longDistanceConfig = new SrxTranslatorConfig(switchConfig);
 		longDistanceConfig.max_vel = 8.0;
 
-		//generateMisc(powerUpConfig);
-		generateCenterSwitch(switchConfig);
-		generateTripleSwitch(tripleSwitchConfig);
-		generateRightSide(powerUpConfig);
-		generateLeftSide(powerUpConfig);
+		generateMisc(powerUpConfig);
+//		generateCenterSwitch(switchConfig);
+//		generateTripleSwitch(tripleSwitchConfig);
+//		generateRightSide(powerUpConfig);
+//		generateLeftSide(powerUpConfig);
 		
 //		copyArcsToRobotCode();
 		//copyPathsToRobotCode();
@@ -132,7 +133,7 @@ public class Main {
 		BobPathGenerator.exportArcToJavaFile(TestPath);
 		BobPathGenerator.exportArcToJavaFile(TestPath2);
 		BobPathGenerator.exportArcToJavaFile(BackwardsThreeFeet);
-		
+		BobPathGenerator.exportRotationToJavaFile("Arcs", new BobRotation(config, "TestRotation", 90, 2));
 		
 	}
 

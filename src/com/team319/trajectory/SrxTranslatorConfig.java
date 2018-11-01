@@ -3,7 +3,7 @@ package com.team319.trajectory;
 import com.team254.lib.trajectory.TrajectoryGenerator;
 
 public class SrxTranslatorConfig extends TrajectoryGenerator.Config {
-	public String name;
+	public String name = "config";
 	public double wheelbase_width_feet;
 	public double wheel_dia_inches;
 	public int encoder_ticks_per_rev;
@@ -14,6 +14,7 @@ public class SrxTranslatorConfig extends TrajectoryGenerator.Config {
 	public boolean highGear;
 
 	public SrxTranslatorConfig() {
+		this.dt = 0.01;
 	}
 
 	public SrxTranslatorConfig(SrxTranslatorConfig toCopy) {

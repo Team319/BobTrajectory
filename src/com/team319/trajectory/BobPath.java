@@ -8,18 +8,18 @@ public class BobPath {
 	private WaypointSequence waypointSequence;
 
 	public BobPath(SrxTranslatorConfig config) {
+		this(config, config.name);
+	}
+
+	public BobPath(SrxTranslatorConfig config, String name) {
+		this(config, name, false);
+	}
+
+	public BobPath(SrxTranslatorConfig config, String name, boolean driveBackwards) {
 		this.config = new SrxTranslatorConfig(config);
-		this.waypointSequence = new WaypointSequence(10);
-	}
-
-	public BobPath(SrxTranslatorConfig config, String name, int direction) {
-		this(config);
 		this.config.name = name;
-		this.config.direction = direction;
-	}
-
-	public BobPath(SrxTranslatorConfig config, String name, int direction, boolean useDegrees) {
-		this(config, name, direction);
+		this.waypointSequence = new WaypointSequence(10);
+		this.config.direction = driveBackwards ? -1 : 1;
 	}
 
 	public BobPath(BobPath toCopy) {

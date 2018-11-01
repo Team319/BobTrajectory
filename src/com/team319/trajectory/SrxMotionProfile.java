@@ -1,8 +1,5 @@
 package com.team319.trajectory;
 
-import java.math.RoundingMode;
-import java.text.DecimalFormat;
-
 //Generic Motion Profile Class
 public class SrxMotionProfile {
 

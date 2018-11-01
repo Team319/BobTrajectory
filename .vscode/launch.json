@@ -2,6 +2,28 @@
     "configurations": [
         {
             "type": "java",
+            "name": "CodeLens (Launch) - BobPathCreator",
+            "request": "launch",
+            "cwd": "${workspaceFolder}",
+            "console": "internalConsole",
+            "stopOnEntry": false,
+            "mainClass": "com.team319.BobPathCreator",
+            "args": "",
+            "projectName": "BobTrajectory"
+        },
+        {
+            "type": "java",
+            "name": "CodeLens (Launch) - AbstractBobPathCreator",
+            "request": "launch",
+            "cwd": "${workspaceFolder}",
+            "console": "internalConsole",
+            "stopOnEntry": false,
+            "mainClass": "com.team319.trajectory.AbstractBobPathCreator",
+            "args": "",
+            "projectName": "BobTrajectory"
+        },
+        {
+            "type": "java",
             "name": "CodeLens (Launch) - Main",
             "request": "launch",
             "cwd": "${workspaceFolder}",

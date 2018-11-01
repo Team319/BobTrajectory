@@ -22,12 +22,12 @@ public class SrxTrajectoryExporter {
 		StringBuilder sb = new StringBuilder();
 
 		// package and imports
-		sb.append("package org.usfirst.frc.team319.arcs;\r\n" + "\r\n"
-				+ "import org.usfirst.frc.team319.models.SrxMotionProfile;\r\n"
-				+ "import org.usfirst.frc.team319.models.SrxTrajectory;\r\n\r\n");
+		sb.append("package frc.arcs;\r\n" + "\r\n"
+				+ "import frc.models.SrxMotionProfile;\r\n"
+				+ "import frc.models.SrxTrajectory;\r\n\r\n");
 
 		// beginning of the class
-		sb.append("public class " + config.name + "Arc extends SrxTrajectory{");
+		sb.append("public class " + config.name + "Arc extends SrxTrajectory {");
 
 		sb.append("\r\n" + "	\r\n" + "	// WAYPOINTS:\r\n" + "	// (X,Y,degrees)\r\n");
 

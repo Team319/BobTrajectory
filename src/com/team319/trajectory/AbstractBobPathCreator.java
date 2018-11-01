@@ -1,6 +1,7 @@
 
 package com.team319.trajectory;
 
+import java.io.File;
 import java.util.Arrays;
 import java.util.List;
 
@@ -21,6 +22,7 @@ public abstract class AbstractBobPathCreator {
 	 * move the files into the robot code project
 	 */
 	public void generatePaths() {
+		deleteArcFiles();
 		config = getConfigFile();
 		generateArcFiles(getConfigArcs());
 		generateArcFiles(getArcs());
@@ -67,6 +69,15 @@ public abstract class AbstractBobPathCreator {
 		speedTesting.addWaypointRelative(-3, 3, 89.99, 0, 1);
 
 		return Arrays.asList(distanceScaling, turnScaling, speedTesting);
+	}
+
+	protected void deleteArcFiles() {
+		File dir = new File("Arcs");
+		for(File file: dir.listFiles()) {
+    		if (!file.isDirectory())  {
+				file.delete();
+			}
+		}
 	}
 
 	private void generateArcFiles(List<BobPath> paths) {

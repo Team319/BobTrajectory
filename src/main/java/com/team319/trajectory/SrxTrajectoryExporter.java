@@ -23,8 +23,8 @@ public class SrxTrajectoryExporter {
 
 		// package and imports
 		sb.append("package frc.arcs;\r\n" + "\r\n"
-				+ "import com.team319.models.SrxMotionProfile;\r\n"
-				+ "import com.team319.models.SrxTrajectory;\r\n\r\n");
+				+ "import com.team319.follower.SrxMotionProfile;\r\n"
+				+ "import com.team319.follower.SrxTrajectory;\r\n\r\n");
 
 		// beginning of the class
 		sb.append("public class " + config.name + "Arc extends SrxTrajectory {");

@@ -7,12 +7,10 @@ import com.ctre.phoenix.motion.TrajectoryPoint.TrajectoryDuration;
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.FollowerType;
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
+import com.team319.models.BobTalonSRX;
 
 import edu.wpi.first.wpilibj.Notifier;
 import edu.wpi.first.wpilibj.command.Command;
-import frc.models.BobTalonSRX;
-import frc.models.SrxMotionProfile;
-import frc.models.SrxTrajectory;
 
 public class FollowArc extends Command {
 

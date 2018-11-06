@@ -3,11 +3,9 @@ plugins {
     id "edu.wpi.first.GradleRIO" version "2019.0.0-alpha-3"
 }
 
-allprojects{
-    repositories {
-        jcenter()
-        maven { url "https://jitpack.io" }
-    }
+repositories {
+    jcenter()
+    maven { url "https://jitpack.io" }
 }
 
 def ROBOT_CLASS = "frc.robot.Robot"

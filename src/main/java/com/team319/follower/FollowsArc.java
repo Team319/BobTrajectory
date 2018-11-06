@@ -1,7 +1,9 @@
 package com.team319.follower;
 
+import com.team319.models.BobTalonSRX;
+
 import edu.wpi.first.wpilibj.command.Subsystem;
-import frc.models.BobTalonSRX;
+
 
 
 public interface FollowsArc {

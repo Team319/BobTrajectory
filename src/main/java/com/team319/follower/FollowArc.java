@@ -100,7 +100,7 @@ public class FollowArc extends Command {
 		leftTalon.follow(rightTalon, FollowerType.AuxOutput1);
 		buffer = new Notifier(
 				new BufferLoader(rightTalon, trajectoryToFollow.centerProfile, trajectoryToFollow.flipped,
-						Drivetrain.getInstance().getDistance()));
+						drivetrain.getDistance()));
 
 		buffer.startPeriodic(.005);
 	}

@@ -3,6 +3,13 @@ plugins {
     id "edu.wpi.first.GradleRIO" version "2019.0.0-alpha-3"
 }
 
+allprojects{
+    repositories {
+        jcenter()
+        maven { url "https://jitpack.io" }
+    }
+}
+
 def ROBOT_CLASS = "frc.robot.Robot"
 
 // Define my targets (RoboRIO) and artifacts (deployable files)
@@ -32,6 +39,7 @@ dependencies {
     compile wpilib()
     compile ctre()
     compile navx()
+    compile 'com.github.notmattlythgoe:HelixUtilities:master-SNAPSHOT'
 }
 
 // Setting up my Jar File. In this case, adding all libraries into the main jar ('fat jar')

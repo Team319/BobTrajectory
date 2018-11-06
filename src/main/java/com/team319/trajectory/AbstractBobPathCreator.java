@@ -22,7 +22,7 @@ public abstract class AbstractBobPathCreator {
 	 * move the files into the robot code project
 	 */
 	public void generatePaths() {
-		deleteArcFiles();
+		// deleteArcFiles();
 		config = getConfigFile();
 		generateArcFiles(getConfigArcs());
 		generateArcFiles(getArcs());

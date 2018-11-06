@@ -1,6 +1,9 @@
 package com.team319.ui;
 
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.InputStream;
 import java.text.DecimalFormat;
 
 import com.team254.lib.trajectory.Path;
@@ -99,7 +102,14 @@ public class Plotter {
 		position.getData().addAll(positionData);
 		vAtP.getData().addAll(vAtPData);
 
-		ImageView iv1 = new ImageView(new Image("file:field.png", 648, 648, true, true));
+		FileInputStream input;
+		try {
+			input = new FileInputStream("./src/main/resources/field.png");
+		} catch (FileNotFoundException e) {
+			e.printStackTrace();
+			return;
+		}
+		ImageView iv1 = new ImageView(new Image(input, 648, 648, true, true));
 		
 		Group root = new Group();
 		root.getChildren().add(iv1);
@@ -115,9 +125,9 @@ public class Plotter {
 		pane.getChildren().add(root);
 		pane.getChildren().add(charts);
 		Scene scene = new Scene(pane);
-		File f = new File("Plotter.css");
+		File f = new File("/src/main/resources\\Plotter.css");
 		scene.getStylesheets().clear();
-		scene.getStylesheets().add("file:///" + f.getAbsolutePath().replace("\\", "/"));
+		scene.getStylesheets().add(this.getClass().getResource("Plotter.css").toExternalForm());
 		stage.setScene(scene);
 		stage.setResizable(false);
 		stage.show();

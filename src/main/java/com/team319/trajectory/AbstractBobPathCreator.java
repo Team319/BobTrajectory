@@ -26,7 +26,7 @@ public abstract class AbstractBobPathCreator {
 		config = getConfigFile();
 		generateArcFiles(getConfigArcs());
 		generateArcFiles(getArcs());
-		copyArcsToRobotCode();
+		// copyArcsToRobotCode();
 	}
 
 	/**

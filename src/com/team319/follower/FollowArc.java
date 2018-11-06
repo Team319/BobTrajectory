@@ -13,12 +13,8 @@ import edu.wpi.first.wpilibj.command.Command;
 import frc.models.BobTalonSRX;
 import frc.models.SrxMotionProfile;
 import frc.models.SrxTrajectory;
-import frc.robot.subsystems.Drivetrain;
 
 public class FollowArc extends Command {
-
-	private BobTalonSRX rightTalon = Drivetrain.getInstance().getRight();
-	private BobTalonSRX leftTalon = Drivetrain.getInstance().getLeft();
 
 	private int distancePidSlot = 0;
 	private int rotationPidSlot = 1;
@@ -80,15 +76,21 @@ public class FollowArc extends Command {
 
 	// Runs the runnable
 	private Notifier buffer;
+	private FollowsArc drivetrain;
+	private BobTalonSRX rightTalon;
+	private BobTalonSRX leftTalon;
 
-	public FollowArc(SrxTrajectory trajectoryToFollow) {
-		requires(Drivetrain.getInstance());
+	public FollowArc(FollowsArc drivetrain, SrxTrajectory trajectoryToFollow) {
+		this.drivetrain = drivetrain;
+		requires(drivetrain.getSubsystem());
 		this.trajectoryToFollow = trajectoryToFollow;
+
+		rightTalon = drivetrain.getRight();
+		leftTalon = drivetrain.getLeft();
 	}
 
 	// Called just before this Command runs the first time
 	protected void initialize() {
-		HelixEvents.getInstance().addEvent("DRIVETRAIN", "Starting to follow arc: " + trajectoryToFollow.getClass().getSimpleName());
 		setUpTalon(leftTalon);
 		setUpTalon(rightTalon);
 
@@ -109,7 +111,6 @@ public class FollowArc extends Command {
 
 		if (status.isUnderrun) {
 			// if either MP has underrun, stop both
-			HelixEvents.getInstance().addEvent("DRIVETRAIN", trajectoryToFollow.getClass().getSimpleName() + " has underrun!");
 			setValue = SetValueMotionProfile.Disable;
 		} else if (status.btmBufferCnt > kMinPointsInTalon) {
 			// if we have enough points in the talon, go.
@@ -129,17 +130,14 @@ public class FollowArc extends Command {
 		}
 		boolean leftComplete = status.activePointValid && status.isLast;
 		boolean trajectoryComplete = leftComplete;
-		if (trajectoryComplete) {
-			HelixEvents.getInstance().addEvent("DRIVETRAIN", "Finished following arc: " + trajectoryToFollow.getClass().getSimpleName());
-		}
 		return trajectoryComplete || isFinished;
 	}
 
 	// Called once after isFinished returns true
 	protected void end() {
 		buffer.stop();
-		// resetTalon(rightTalon, ControlMode.PercentOutput, 0);
-		// resetTalon(leftTalon, ControlMode.PercentOutput, 0);
+		resetTalon(rightTalon, ControlMode.PercentOutput, 0);
+		resetTalon(leftTalon, ControlMode.PercentOutput, 0);
 	}
 
 	// Called when another command which requires one or more of the same

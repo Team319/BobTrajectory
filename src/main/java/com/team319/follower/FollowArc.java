@@ -80,7 +80,7 @@ public class FollowArc extends Command {
 
 	public FollowArc(FollowsArc drivetrain, SrxTrajectory trajectoryToFollow) {
 		this.drivetrain = drivetrain;
-		requires(drivetrain.getSubsystem());
+		requires(drivetrain.getRequiredSubsystem());
 		this.trajectoryToFollow = trajectoryToFollow;
 
 		rightTalon = drivetrain.getRight();

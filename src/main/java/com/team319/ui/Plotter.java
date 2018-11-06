@@ -104,7 +104,7 @@ public class Plotter {
 
 		FileInputStream input;
 		try {
-			input = new FileInputStream("./src/main/resources/field.png");
+			input = new FileInputStream("./src/main/java/com/team319/ui/field.png");
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();
 			return;

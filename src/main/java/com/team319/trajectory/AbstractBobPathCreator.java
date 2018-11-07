@@ -73,6 +73,9 @@ public abstract class AbstractBobPathCreator {
 
 	protected void deleteArcFiles() {
 		File dir = new File("Arcs");
+		if (dir == null) {
+			return;
+		}
 		for(File file: dir.listFiles()) {
     		if (!file.isDirectory())  {
 				file.delete();

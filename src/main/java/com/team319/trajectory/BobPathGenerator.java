@@ -66,7 +66,7 @@ public class BobPathGenerator extends PathGenerator {
 	}
 
 	public static void exportArcToJavaFile(BobPath bobPath) {
-		exportArcToJavaFile("Arcs", bobPath);
+		exportArcToJavaFile("src\\main\\java\\frc\\arcs", bobPath);
 	}
 
 	public static void exportRotationToJavaFile(String relativeDirectoryName, BobRotation bobRotation) {

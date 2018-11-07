@@ -66,7 +66,7 @@ public abstract class AbstractBobPathCreator {
 		BobPath speedTesting = new BobPath(config, "SpeedTesting");
 		speedTesting.addWaypoint(new Waypoint(0, 0, 0, 0, 0));
 		speedTesting.addWaypointRelative(3, 3, 89.99, 3, 3);
-		speedTesting.addWaypointRelative(-3, 3, 89.99, 0, 1);
+		speedTesting.addWaypointRelative(-3, 3, 89.99, 0, 3);
 
 		return Arrays.asList(distanceScaling, turnScaling, speedTesting);
 	}

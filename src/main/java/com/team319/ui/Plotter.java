@@ -3,7 +3,6 @@ package com.team319.ui;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
-import java.io.InputStream;
 import java.text.DecimalFormat;
 
 import com.team254.lib.trajectory.Path;
@@ -125,7 +124,6 @@ public class Plotter {
 		pane.getChildren().add(root);
 		pane.getChildren().add(charts);
 		Scene scene = new Scene(pane);
-		File f = new File("/src/main/resources\\Plotter.css");
 		scene.getStylesheets().clear();
 		scene.getStylesheets().add(this.getClass().getResource("Plotter.css").toExternalForm());
 		stage.setScene(scene);

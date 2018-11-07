@@ -55,9 +55,4 @@ public class BobPathCreator extends AbstractBobPathCreator {
 
         return config;
     }
-
-    @Override
-	protected String getRobotProjectName() {
-		return "ArcFollowing";
-	}
 }

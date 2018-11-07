@@ -37,7 +37,7 @@ dependencies {
     compile wpilib()
     compile ctre()
     compile navx()
-    compile 'com.github.notmattlythgoe:HelixUtilities:master-SNAPSHOT'
+    implementation 'com.github.notmattlythgoe:HelixUtilities:master-SNAPSHOT'
 }
 
 // Setting up my Jar File. In this case, adding all libraries into the main jar ('fat jar')

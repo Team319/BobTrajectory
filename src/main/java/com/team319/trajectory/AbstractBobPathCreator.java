@@ -1,7 +1,6 @@
 
 package com.team319.trajectory;
 
-import java.io.File;
 import java.util.Arrays;
 import java.util.List;
 
@@ -22,11 +21,9 @@ public abstract class AbstractBobPathCreator {
 	 * move the files into the robot code project
 	 */
 	public void generatePaths() {
-		deleteArcFiles();
 		config = getConfigFile();
 		generateArcFiles(getConfigArcs());
 		generateArcFiles(getArcs());
-		copyArcsToRobotCode();
 	}
 
 	/**
@@ -42,7 +39,9 @@ public abstract class AbstractBobPathCreator {
 	/**
 	 * Return the project name of the robot code project
 	 */
-	protected abstract String getRobotProjectName();
+	protected String getRobotProjectName() {
+		return "Default";
+	}
 
 	/**
 	 * Generate the configuration arcs, distance, turning, and speed
@@ -71,35 +70,9 @@ public abstract class AbstractBobPathCreator {
 		return Arrays.asList(distanceScaling, turnScaling, speedTesting);
 	}
 
-	protected void deleteArcFiles() {
-		File dir = new File("Arcs");
-		if (dir == null) {
-			return;
-		}
-		for(File file: dir.listFiles()) {
-    		if (!file.isDirectory())  {
-				file.delete();
-			}
-		}
-	}
-
 	private void generateArcFiles(List<BobPath> paths) {
 		for (BobPath path : paths) {
 			BobPathGenerator.exportArcToJavaFile(path);
-		}
-	}
-	
-	private void copyArcsToRobotCode() {
-		try {
-		StringBuilder codePath = new StringBuilder()
-		.append("..\\")
-		.append(getRobotProjectName())
-		.append("\\src\\main\\java\\frc\\arcs");
-
-		BobPathGenerator.copyFilesToRelativeDirectory("Arcs", codePath.toString());
-		} catch (Exception e) {
-			System.out.println("Files could not be copied to the robot project");
-			e.printStackTrace();
 		}
 	}
 }

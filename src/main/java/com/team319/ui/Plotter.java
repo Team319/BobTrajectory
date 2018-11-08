@@ -103,7 +103,7 @@ public class Plotter {
 
 		Group root = new Group();
 		try {
-			ImageView iv1 = new ImageView(new Image(getClass().getResourceAsStream("field.png"), 648, 648, true, true));
+			ImageView iv1 = new ImageView(new Image(getClass().getResourceAsStream("/field.png"), 648, 648, true, true));
 			root.getChildren().add(iv1);
 		} catch(Exception e) { }
 		
@@ -121,7 +121,7 @@ public class Plotter {
 		Scene scene = new Scene(pane);
 		scene.getStylesheets().clear();
 		try {
-			scene.getStylesheets().add(getClass().getResource("Plotter.css").toExternalForm());
+			scene.getStylesheets().add(getClass().getResource("/Plotter.css").toExternalForm());
 		} catch (Exception e) { }
 		stage.setScene(scene);
 		stage.setResizable(false);

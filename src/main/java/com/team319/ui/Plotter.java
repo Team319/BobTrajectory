@@ -103,7 +103,7 @@ public class Plotter {
 
 		Group root = new Group();
 		try {
-			ImageView iv1 = new ImageView(new Image(getClass().getResourceAsStream("/field.png"), 648, 648, true, true));
+			ImageView iv1 = new ImageView(new Image(getClass().getResourceAsStream("field.png"), 648, 648, true, true));
 			root.getChildren().add(iv1);
 		} catch(Exception e) { }
 		

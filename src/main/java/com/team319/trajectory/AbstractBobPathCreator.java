@@ -20,7 +20,7 @@ public abstract class AbstractBobPathCreator {
 	 * Generate the path files, to include config paths, display the paths in GUIS, and 
 	 * move the files into the robot code project
 	 */
-	public void generatePaths() {
+	protected void generatePaths() {
 		config = getConfigFile();
 		generateArcFiles(getConfigArcs());
 		generateArcFiles(getArcs());
@@ -35,13 +35,6 @@ public abstract class AbstractBobPathCreator {
 	 * Return the configuration file that logically defines the robot's characteristics.
 	 */
 	protected abstract SrxTranslatorConfig getConfigFile();
-
-	/**
-	 * Return the project name of the robot code project
-	 */
-	protected String getRobotProjectName() {
-		return "Default";
-	}
 
 	/**
 	 * Generate the configuration arcs, distance, turning, and speed

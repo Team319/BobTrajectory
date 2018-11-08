@@ -85,7 +85,7 @@ public class SrxTrajectoryExporter {
 	private boolean writeFile(String filePath, String data) {
 		try {
 			File file = new File(filePath);
-
+			file.getParentFile().mkdirs();
 			// if file doesnt exists, then create it
 			if (!file.exists()) {
 				file.createNewFile();

@@ -101,17 +101,12 @@ public class Plotter {
 		position.getData().addAll(positionData);
 		vAtP.getData().addAll(vAtPData);
 
-		FileInputStream input;
-		try {
-			input = new FileInputStream("./src/main/java/com/team319/ui/field.png");
-		} catch (FileNotFoundException e) {
-			e.printStackTrace();
-			return;
-		}
-		ImageView iv1 = new ImageView(new Image(input, 648, 648, true, true));
-		
 		Group root = new Group();
-		root.getChildren().add(iv1);
+		try {
+			ImageView iv1 = new ImageView(new Image(getClass().getResourceAsStream("/field.png"), 648, 648, true, true));
+			root.getChildren().add(iv1);
+		} catch(Exception e) { }
+		
 		root.getChildren().add(canvas);
 		
 		HBox pane = new HBox();
@@ -125,7 +120,9 @@ public class Plotter {
 		pane.getChildren().add(charts);
 		Scene scene = new Scene(pane);
 		scene.getStylesheets().clear();
-		scene.getStylesheets().add(this.getClass().getResource("Plotter.css").toExternalForm());
+		try {
+			scene.getStylesheets().add(getClass().getResource("/Plotter.css").toExternalForm());
+		} catch (Exception e) { }
 		stage.setScene(scene);
 		stage.setResizable(false);
 		stage.show();

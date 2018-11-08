@@ -121,7 +121,7 @@ public class Plotter {
 		Scene scene = new Scene(pane);
 		scene.getStylesheets().clear();
 		try {
-			scene.getStylesheets().add(getClass().getResource("/Plotter.css").toExternalForm());
+			scene.getStylesheets().add(getClass().getResource("Plotter.css").toExternalForm());
 		} catch (Exception e) { }
 		stage.setScene(scene);
 		stage.setResizable(false);

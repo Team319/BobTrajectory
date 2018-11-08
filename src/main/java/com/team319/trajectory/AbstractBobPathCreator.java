@@ -48,15 +48,15 @@ public abstract class AbstractBobPathCreator {
 	 */
 	protected List<BobPath> getConfigArcs() {
 		BobPath distanceScaling = new BobPath(config, "DistanceScaling");
-		distanceScaling.addWaypoint(new Waypoint(0, 0, 0, 0, 0));
+		distanceScaling.addWaypoint(new Waypoint(2, 13.5, 0, 0, 0));
 		distanceScaling.addWaypointRelative(3, 0, 0, 0, 3);
 
 		BobPath turnScaling = new BobPath(config, "TurnScaling");
-		turnScaling.addWaypoint(new Waypoint(0, 0, 0, 0, 0));
+		turnScaling.addWaypoint(new Waypoint(2, 13.5, 0, 0, 0));
 		turnScaling.addWaypointRelative(3, 3, 89.99, 0, 3);
 
 		BobPath speedTesting = new BobPath(config, "SpeedTesting");
-		speedTesting.addWaypoint(new Waypoint(0, 0, 0, 0, 0));
+		speedTesting.addWaypoint(new Waypoint(2, 13.5, 0, 0, 0));
 		speedTesting.addWaypointRelative(3, 3, 89.99, 3, 3);
 		speedTesting.addWaypointRelative(-3, 3, 89.99, 0, 3);
 

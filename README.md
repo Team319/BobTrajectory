@@ -11,9 +11,8 @@ A library for Generating paths using 254's 2014 code and following them via Talo
 
     This allows you to pull the dependencies needed from a github repository.
 
-    Add these two lines do the dependencies block: 
-    
-    compile 'com.github.notmattlythgoe:HelixUtilities:master-SNAPSHOT'
+    Add this line to the dependencies block: 
+
     compile 'com.github.Team319:BobTrajectory:switch_to_awt-SNAPSHOT'
 
 2. Create a class that extends the AbstractBobPathCreator class.

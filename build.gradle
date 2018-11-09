@@ -13,7 +13,6 @@ repositories {
 dependencies {
     compile wpilib()
     compile ctre()
-    implementation 'com.github.notmattlythgoe:HelixUtilities:master-SNAPSHOT'
 }
 
 // Force Java 8 Compatibility mode for deployed code, in case the develoment

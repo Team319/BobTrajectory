@@ -7,7 +7,7 @@ import javax.swing.JFrame;
 import javax.swing.JTabbedPane;
 
 import com.team254.lib.trajectory.Path;
-import com.team319.trajectory.SrxTranslatorConfig;
+import com.team319.trajectory.BobPath;
 
 public class Viewer extends JFrame {
 
@@ -20,10 +20,11 @@ public class Viewer extends JFrame {
         tabs = new JTabbedPane();
         tabs.setTabPlacement(JTabbedPane.LEFT);
         add(tabs);
+        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
     }
 
-    public void addPath(Path path, SrxTranslatorConfig config) {
-        displayField(path, config);
+    public void addPath(BobPath bobPath, Path path) {
+        displayField(bobPath, path);
         pack();
     }
 
@@ -36,7 +37,7 @@ public class Viewer extends JFrame {
         return title.toString();
     }
 
-    private void displayField(Path path, SrxTranslatorConfig config) {
-        tabs.addTab(getPathNameAndTime(path), new FieldComponent("/field_image.png", path, config));
+    private void displayField(BobPath bobPath, Path path) {
+        tabs.addTab(getPathNameAndTime(path), new FieldComponent("/field_image.png", bobPath, path));
     }
 }

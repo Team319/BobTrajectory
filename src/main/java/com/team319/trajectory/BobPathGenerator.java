@@ -61,7 +61,7 @@ public class BobPathGenerator extends PathGenerator {
 			System.exit(1);
 		} else {
 			/// SrxTrajectory t = importer.importSrxTrajectory(config.name);
-			PathViewer.showPath(chezyPath, bobPath.getConfig());
+			PathViewer.showPath(bobPath, chezyPath);
 		}
 	}
 

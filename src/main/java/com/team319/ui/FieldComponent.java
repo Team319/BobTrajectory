@@ -14,20 +14,23 @@ import javax.swing.JPanel;
 
 import com.team254.lib.trajectory.Path;
 import com.team254.lib.trajectory.Trajectory.Segment;
+import com.team319.trajectory.BobPath;
 import com.team319.trajectory.SrxTranslatorConfig;
 
 public class FieldComponent extends JPanel {
 
     private BufferedImage img;
     private Path path;
-   private  SrxTranslatorConfig config;
+    private  SrxTranslatorConfig config;
+    private BobPath bobPath;
 
     private double scale;
     private int fieldHeight;
 
-    public FieldComponent(String image, Path path, SrxTranslatorConfig config) {
+    public FieldComponent(String image, BobPath bobPath, Path path) {
+        this.bobPath = bobPath;
         this.path = path;
-        this.config = config;
+        this.config = bobPath.getConfig();
         try {
             img = ImageIO.read(getClass().getResourceAsStream(image));
         } catch (IOException e) {
@@ -35,24 +38,22 @@ public class FieldComponent extends JPanel {
         }
     }
 
+    @Override
     public void paintComponent(Graphics g) {
         super.paintComponent(g);
+        // Draw field
         g.drawImage(img, 0, 0, null);
 
+        // Draw initial and final robot positions
         drawRobot(path.getTrajectory().getSegment(0), g, Color.BLUE, 7);
         drawRobot(path.getTrajectory().getSegment(
-        path.getTrajectory().getNumSegments() - 1), g, Color.ORANGE, 7);
+            path.getTrajectory().getNumSegments() - 1), g, Color.ORANGE, 7);
 
-        g.setColor(Color.BLACK);
-        for (int i = 0; i < path.getTrajectory().getNumSegments(); i++) {
-            Segment segment = path.getTrajectory().getSegment(i);
-            drawPoint(segment, g, getColor(segment.vel, config.max_vel));
-            if (i % 50 == 0) {
-                drawRobot(segment, g, Color.GRAY, 1);
-            }
-        }
+        drawPath(g);
+        drawWaypoints(g);
     }
 
+    @Override
     public Dimension getPreferredSize() {
         if (img == null) {
             return new Dimension(100,100);
@@ -60,6 +61,24 @@ public class FieldComponent extends JPanel {
             scale = img.getHeight() / 27.0;
             fieldHeight = img.getHeight();
             return new Dimension(img.getWidth(), img.getHeight());
+        }
+    }
+
+    private void drawPath(Graphics g) {
+        for (int i = 0; i < path.getTrajectory().getNumSegments(); i++) {
+            Segment segment = path.getTrajectory().getSegment(i);
+            drawPoint(segment.x, segment.y, g, getColor(segment.vel, config.max_vel), 2);
+            if (i % 50 == 0) {
+                drawRobot(segment, g, Color.GRAY, 1);
+            }
+        }
+    }
+
+    private void drawWaypoints(Graphics g) {
+        for (int i = 0; i < bobPath.getWaypointSequence().getNumWaypoints(); i++) {
+            double x = bobPath.getWaypointSequence().getWaypoint(i).x;
+            double y = bobPath.getWaypointSequence().getWaypoint(i).y;
+            drawPoint(x,  y, g, Color.DARK_GRAY, 8);
         }
     }
 
@@ -79,9 +98,9 @@ public class FieldComponent extends JPanel {
         gc.translate(-x, -y);
     }
     
-    private void drawPoint(Segment segment, Graphics g, Color color) {
+    private void drawPoint(double x, double y, Graphics g, Color color, int thickness) {
         g.setColor(color);
-        g.fillOval((int)(segment.x * scale), fieldHeight - (int)(segment.y * scale), 2, 2);
+        g.fillOval((int)(x * scale - thickness / 2), fieldHeight - (int)(y * scale + thickness / 2), thickness, thickness);
 
     }
 

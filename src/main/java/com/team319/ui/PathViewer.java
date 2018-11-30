@@ -4,7 +4,6 @@ import javax.swing.SwingUtilities;
 
 import com.team254.lib.trajectory.Path;
 import com.team319.trajectory.BobPath;
-import com.team319.trajectory.SrxTranslatorConfig;
 
 public class PathViewer {
 

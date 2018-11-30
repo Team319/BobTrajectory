@@ -19,6 +19,7 @@ import com.team319.trajectory.SrxTranslatorConfig;
 
 public class FieldComponent extends JPanel {
 
+    private static final long serialVersionUID = 1L;
     private BufferedImage img;
     private Path path;
     private  SrxTranslatorConfig config;

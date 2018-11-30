@@ -11,6 +11,7 @@ import com.team319.trajectory.BobPath;
 
 public class Viewer extends JFrame {
 
+    private static final long serialVersionUID = 1L;
     JTabbedPane tabs;
 
     public Viewer() {

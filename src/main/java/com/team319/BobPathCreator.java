@@ -28,7 +28,8 @@ public class BobPathCreator extends AbstractBobPathCreator {
 	private BobPathCreator() {
 		config.max_acc = 8.0; // Maximum acceleration in FPS
 		config.max_vel = 10.0; // Maximum velocity in FPS
-		config.scale_factor = 1; // Used to adjust for a gear ratio and or distance tuning
+		config.wheel_dia_inches = 4.0;
+		config.scale_factor = 1.0; // Used to adjust for a gear ratio and or distance tuning
 		config.encoder_ticks_per_rev = 4096; // Count of ticks on your encoder
 		config.robotLength = 39; // Robot length in inches, used for drawing the robot
 		config.robotWidth = 33; // Robot width in inches, used for drawing the robot

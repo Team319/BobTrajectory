@@ -3,7 +3,6 @@ package com.team319.follower;
 import com.ctre.phoenix.motion.MotionProfileStatus;
 import com.ctre.phoenix.motion.SetValueMotionProfile;
 import com.ctre.phoenix.motion.TrajectoryPoint;
-import com.ctre.phoenix.motion.TrajectoryPoint.TrajectoryDuration;
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.FollowerType;
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
@@ -54,12 +53,13 @@ public class FollowArc extends Command {
 				/* for each point, fill our structure and pass it to API */
 				point.position = prof.points[lastPointSent][0] + startPosition;
 				point.velocity = prof.points[lastPointSent][1];
-				point.timeDur = TrajectoryDuration.Trajectory_Duration_10ms;
+				point.timeDur = 10;
 				point.auxiliaryPos = (flipped ? -1 : 1) * 10 * (prof.points[lastPointSent][3]);
 				point.profileSlotSelect0 = distancePidSlot;
 				point.profileSlotSelect1 = rotationPidSlot;
 				point.zeroPos = false;
 				point.isLastPoint = false;
+				point.useAuxPID = true;
 				if ((lastPointSent + 1) == prof.numPoints) {
 					point.isLastPoint = true; /** set this to true on the last point */
 				}

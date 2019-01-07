@@ -61,8 +61,23 @@ public class BobPathCreator extends AbstractBobPathCreator {
 		 // Add the next point to be an additional 5 feet forward and 5 feet to the left with max speed of 2 FPS,
 		 // it  will arrive at this locaton going 0 FPS 
 		 exampleArc.addWaypointRelative(5, 5, 0, 0, 2);
+
+		 BobPath flower = new BobPath(config, "Flower");
+		 flower.addWaypoint(10, 10, 0, 0, 0);
+		 flower.addWaypoint(12, 12, 45, 2, 2);
+		 flower.addWaypoint(14, 14, 90, 2, 2);
+		 flower.addWaypoint(12, 16, 135, 2, 2);
+		 flower.addWaypoint(10, 18, 180, 2, 2);
+		 flower.addWaypoint(8, 16, 225, 2, 2);
+		 flower.addWaypoint(6, 14, 270, 2, 2);
+		 flower.addWaypoint(8, 12, 315, 2, 2);
+		 flower.addWaypoint(10, 10, 0, 0, 2);
+
+		 BobPath imageCalibrator = new BobPath(config, "ImageCalibrator");
+		 imageCalibrator.addWaypoint(0, 10, 0, 0, 0);
+		 imageCalibrator.addWaypoint(27, 10, 0, 0, 10);
 		 
-		 return asList(exampleArc); // return asList(path1, path2, path3, ...);
+		 return asList(exampleArc, flower, imageCalibrator); // return asList(path1, path2, path3, ...);
 	}
 	
 	
@@ -84,6 +99,7 @@ public class BobPathCreator extends AbstractBobPathCreator {
 		BobPath turnScaling = new BobPath(config, "TurnScaling");
 		turnScaling.addWaypoint(new Waypoint(2, 13.5, 0, 0, 0));
 		turnScaling.addWaypointRelative(3, 3, 89.99, 0, 3);
+
 
 		BobPath speedTesting = new BobPath(config, "SpeedTesting");
 		speedTesting.addWaypoint(new Waypoint(2, 13.5, 0, 0, 0));

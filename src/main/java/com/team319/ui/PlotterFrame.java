@@ -1,6 +1,10 @@
 package com.team319.ui;
 
+import java.awt.Button;
+import java.awt.Component;
 import java.awt.FlowLayout;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
 import java.util.ArrayList;
@@ -21,18 +25,24 @@ public class PlotterFrame extends JFrame {
     }
 
     private static final long serialVersionUID = 1L;
-    private List<Plotter> paths = new ArrayList<>();
+    JTabbedPane tabs = new JTabbedPane();
 
     public PlotterFrame() {
         importPaths();
         setTitle("Paths");
         setLayout(new FlowLayout());
         setVisible(true);
-        JTabbedPane tabs = new JTabbedPane();
         tabs.setTabPlacement(JTabbedPane.LEFT);
         add(tabs);
+        Button newPathButton = new Button("New Path");
+        newPathButton.addActionListener(new CreateNewPath());
+        add(newPathButton);
+
+        Button deletePathButton = new Button("Delete Path");
+        deletePathButton.addActionListener(new DeletePath());
+        add(deletePathButton);
+
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        displayField(tabs);
         pack();
 
         this.addWindowListener(new WindowListener() {
@@ -65,20 +75,29 @@ public class PlotterFrame extends JFrame {
 
     private void importPaths() {
         for (BobPath path : PathImporter.importPaths()) {
-            paths.add(new Plotter(path, "/field_image.png"));
-        }
-        if (paths.isEmpty()) {
-            paths.add(new Plotter(new BobPath("TEST", new ArrayList<>(), false), "/field_image.png"));
-        }
-    }
-
-    private void displayField(JTabbedPane tabs) {
-        for (Plotter path : paths) {
-            tabs.addTab(path.getPathName(), path);
+            tabs.addTab(path.getName(), new Plotter(path, "/field_image.png"));
         }
     }
 
     private void exportPaths() {
-        PathExporter.exportPaths(paths.stream().map(p -> p.getPath()).collect(Collectors.toList()));
+        List<BobPath> paths = new ArrayList<>();
+        for (Component tab : tabs.getComponents()) {
+            paths.add(((Plotter) tab).getPath());        }
+        PathExporter.exportPaths(paths);
+    }
+
+    private class CreateNewPath implements ActionListener {
+		@Override
+		public void actionPerformed(ActionEvent e) {
+            Plotter newPath = new Plotter(new BobPath("TEST", new ArrayList<>(), false), "/field_image.png");
+            tabs.addTab(newPath.getPathName(), newPath);
+		}
+    }
+
+    private class DeletePath implements ActionListener {
+		@Override
+		public void actionPerformed(ActionEvent e) {
+              tabs.remove(tabs.getSelectedComponent());      
+		}
     }
 }

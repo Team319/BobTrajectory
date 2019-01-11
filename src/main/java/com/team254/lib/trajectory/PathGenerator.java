@@ -29,6 +29,8 @@ public class PathGenerator {
 		return new Path(name, generateFromPath(waypoints, config));
 	}
 
+	
+
 	static Trajectory generateFromPath(WaypointSequence path, TrajectoryGenerator.Config config) {
 		if (path.getNumWaypoints() < 2) {
 			return null;
@@ -40,11 +42,11 @@ public class PathGenerator {
 		double[] spline_lengths = new double[splines.length];
 		for (int i = 0; i < splines.length; ++i) {
 			splines[i] = new Spline();
-			if (!Spline.reticulateSplines(path.getWaypoint(i), path.getWaypoint(i + 1), splines[i],
-					Spline.QuinticHermite)) {
-				System.out.println("COULDN'T RETICULATE SPLINE!!");
-				return null;
-			}
+			// if (!Spline.reticulateSplines(path.getWaypoint(i), path.getWaypoint(i + 1), splines[i],
+			// 		Spline.QuinticHermite)) {
+			// 	System.out.println("COULDN'T RETICULATE SPLINE!!");
+			// 	return null;
+			// }
 			spline_lengths[i] = splines[i].calculateLength();
 		}
 

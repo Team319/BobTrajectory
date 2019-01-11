@@ -6,6 +6,27 @@
   "configurations": [
     {
       "type": "java",
+      "name": "CodeLens (Launch) - PlotterFrame",
+      "request": "launch",
+      "mainClass": "com.team319.ui.PlotterFrame",
+      "projectName": "BobTrajectory"
+    },
+    {
+      "type": "java",
+      "name": "CodeLens (Launch) - PlotterViewer",
+      "request": "launch",
+      "mainClass": "com.team319.ui.PlotterViewer",
+      "projectName": "BobTrajectory"
+    },
+    {
+      "type": "java",
+      "name": "CodeLens (Launch) - PathLoader",
+      "request": "launch",
+      "mainClass": "com.team319.PathLoader",
+      "projectName": "BobTrajectory"
+    },
+    {
+      "type": "java",
       "name": "CodeLens (Launch) - BobPathCreator",
       "request": "launch",
       "mainClass": "com.team319.BobPathCreator",

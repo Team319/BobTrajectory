@@ -21,6 +21,10 @@ public class SrxTrajectoryExporter {
 
 		StringBuilder sb = new StringBuilder();
 
+		sb.append("//WAYPOINTS:\r\n");
+		sb.append("//" + config.name + "\r\n");
+		sb.append(serializeWaypoints(waypoints));
+
 		// package and imports
 		sb.append("package frc.arcs;\r\n" + "\r\n"
 				+ "import com.team319.follower.SrxMotionProfile;\r\n"
@@ -28,10 +32,6 @@ public class SrxTrajectoryExporter {
 
 		// beginning of the class
 		sb.append("public class " + config.name + "Arc extends SrxTrajectory {");
-
-		sb.append("\r\n" + "	\r\n" + "	// WAYPOINTS:\r\n" + "	// (X,Y,degrees)\r\n");
-
-		sb.append(serializeWaypoints(waypoints));
 
 		sb.append("	\r\n" + "    public " + config.name + "Arc() {\r\n" + "		super();\r\n"
 				+ "		this.highGear = " + config.highGear + ";\r\n"
@@ -62,9 +62,10 @@ public class SrxTrajectoryExporter {
 		StringBuilder sb = new StringBuilder();
 
 		for (int i = 0; i < wps.getNumWaypoints(); i++) {
-			sb.append(String.format("	// (%.2f,%.2f,%.2f)\r\n", wps.getWaypoint(i).x, wps.getWaypoint(i).y,
-					Math.toDegrees(wps.getWaypoint(i).theta)));
+			sb.append(String.format("//%.2f,%.2f,%.2f,%.2f,%.2f\r\n", wps.getWaypoint(i).x, wps.getWaypoint(i).y,
+					Math.toDegrees(wps.getWaypoint(i).theta), wps.getWaypoint(i).endVelocity, wps.getWaypoint(i).maxVelocity));
 		}
+		sb.append("//END WAYPOINTS\n");
 		return sb.toString();
 	}
 

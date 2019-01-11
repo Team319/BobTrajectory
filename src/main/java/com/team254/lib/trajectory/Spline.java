@@ -1,6 +1,7 @@
 package com.team254.lib.trajectory;
 
 import com.team254.lib.util.ChezyMath;
+import com.team319.ui.DraggableWaypoint;
 
 /**
  * Do cubic spline interpolation between points.
@@ -56,9 +57,9 @@ public class Spline {
 		return Math.abs(x - y) < 1E-6;
 	}
 
-	public static boolean reticulateSplines(WaypointSequence.Waypoint start, WaypointSequence.Waypoint goal,
+	public static boolean reticulateSplines(DraggableWaypoint start, DraggableWaypoint goal,
 			Spline result, Type type) {
-		return reticulateSplines(start.x, start.y, start.theta, goal.x, goal.y, goal.theta, result, type);
+		return reticulateSplines(start.getX(), start.getY(), start.getHeading(), goal.getX(), goal.getY(), goal.getHeading(), result, type);
 	}
 
 	public static boolean reticulateSplines(double x0, double y0, double theta0, double x1, double y1, double theta1,

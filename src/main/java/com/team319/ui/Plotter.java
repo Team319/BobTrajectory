@@ -15,6 +15,7 @@ import javax.swing.JPanel;
 import com.team254.lib.trajectory.Spline;
 import com.team254.lib.trajectory.SplineGenerator;
 import com.team319.trajectory.BobPath;
+import com.team319.trajectory.RobotConfig;
 
 public class Plotter extends JPanel {
 
@@ -74,8 +75,8 @@ public class Plotter extends JPanel {
     }
 
     private void drawRobot(Graphics g, Color color, int thickness, int robotX, int robotY, double heading) {
-        double height = 3 * scale;
-	    double width = 3 * scale;
+        double height = RobotConfig.width * scale;
+	    double width = RobotConfig.length * scale;
 		double x = robotX;
         double y = robotY;
         int[] xPoints = {(int)width / 2 - 5, (int)(width / 2) - 15, (int)(width / 2) - 15};

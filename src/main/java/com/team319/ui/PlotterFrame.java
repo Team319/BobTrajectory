@@ -9,14 +9,16 @@ import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 import javax.swing.JFrame;
+import javax.swing.JOptionPane;
 import javax.swing.JTabbedPane;
 
 import com.team319.trajectory.BobPath;
-import com.team319.trajectory.PathExporter;
-import com.team319.trajectory.PathImporter;
+import com.team319.io.ConfigExporter;
+import com.team319.io.ConfigImporter;
+import com.team319.io.PathExporter;
+import com.team319.io.PathImporter;
 
 public class PlotterFrame extends JFrame {
 
@@ -29,11 +31,19 @@ public class PlotterFrame extends JFrame {
 
     public PlotterFrame() {
         importPaths();
+        ConfigImporter.importConfig();
         setTitle("Paths");
         setLayout(new FlowLayout());
         setVisible(true);
+        addWindowListener(new SaveHandler());
+        setupTabPanel();
+        pack();
+    }
+
+    private void setupTabPanel() {
         tabs.setTabPlacement(JTabbedPane.LEFT);
         add(tabs);
+
         Button newPathButton = new Button("New Path");
         newPathButton.addActionListener(new CreateNewPath());
         add(newPathButton);
@@ -41,36 +51,6 @@ public class PlotterFrame extends JFrame {
         Button deletePathButton = new Button("Delete Path");
         deletePathButton.addActionListener(new DeletePath());
         add(deletePathButton);
-
-        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        pack();
-
-        this.addWindowListener(new WindowListener() {
-
-            @Override
-            public void windowOpened(WindowEvent e) {}
-
-            @Override
-            public void windowClosing(WindowEvent e) {
-                exportPaths();
-                System.exit(0);
-            }
-
-            @Override
-            public void windowClosed(WindowEvent e) {}
-
-            @Override
-            public void windowIconified(WindowEvent e) {}
-
-            @Override
-            public void windowDeiconified(WindowEvent e) {}
-
-            @Override
-            public void windowActivated(WindowEvent e) {}
-
-            @Override
-            public void windowDeactivated(WindowEvent e) {}
-        });
     }
 
     private void importPaths() {
@@ -89,7 +69,8 @@ public class PlotterFrame extends JFrame {
     private class CreateNewPath implements ActionListener {
 		@Override
 		public void actionPerformed(ActionEvent e) {
-            Plotter newPath = new Plotter(new BobPath("TEST", new ArrayList<>(), false), "/field_image.png");
+            String name = JOptionPane.showInputDialog("New path name: ");
+            Plotter newPath = new Plotter(new BobPath(name, new ArrayList<>(), false), "/field_image.png");
             tabs.addTab(newPath.getPathName(), newPath);
 		}
     }
@@ -97,7 +78,41 @@ public class PlotterFrame extends JFrame {
     private class DeletePath implements ActionListener {
 		@Override
 		public void actionPerformed(ActionEvent e) {
+            if (JOptionPane.showConfirmDialog (
+                null, 
+                "Are you sure you want to delete this path?",
+                "Delete Path", JOptionPane.YES_NO_OPTION) == JOptionPane.NO_OPTION) {
+                    return;
+                }
               tabs.remove(tabs.getSelectedComponent());      
 		}
+    }
+
+    private class SaveHandler implements WindowListener {
+
+        @Override
+            public void windowOpened(WindowEvent e) {}
+
+            @Override
+            public void windowClosing(WindowEvent e) {
+                exportPaths();
+                ConfigExporter.exportConfig();
+                System.exit(0);
+            }
+
+            @Override
+            public void windowClosed(WindowEvent e) {}
+
+            @Override
+            public void windowIconified(WindowEvent e) {}
+
+            @Override
+            public void windowDeiconified(WindowEvent e) {}
+
+            @Override
+            public void windowActivated(WindowEvent e) {}
+
+            @Override
+            public void windowDeactivated(WindowEvent e) {}
     }
 }

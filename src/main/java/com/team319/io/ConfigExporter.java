@@ -5,28 +5,32 @@
 /* the project.                                                               */
 /*----------------------------------------------------------------------------*/
 
-package com.team319.trajectory;
+package com.team319.io;
 
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
 import java.util.List;
 
+import com.team319.trajectory.BobPath;
+import com.team319.trajectory.RobotConfig;
+
 /**
  * Add your docs here.
  */
-public class PathExporter {
+public class ConfigExporter {
 
-    public static void exportPaths(List<BobPath> paths) {
+    public static void exportConfig() {
         
         StringBuilder data = new StringBuilder();
 			
-        for (BobPath path : paths) {
-            data.append(path.toString());
-        }
+        data.append(RobotConfig.length).append(System.lineSeparator());
+        data.append(RobotConfig.width).append(System.lineSeparator());
+        data.append(RobotConfig.maxVelocity).append(System.lineSeparator());
+        data.append(RobotConfig.maxAcceleration).append(System.lineSeparator());
 
         try {
-            File file = new File( "src\\main\\java\\frc\\arcs\\Paths.txt");
+            File file = new File( "src\\main\\java\\frc\\arcs\\config.txt");
             file.getParentFile().mkdirs();
             // if file doesnt exists, then create it
             if (!file.exists()) {

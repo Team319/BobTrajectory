@@ -1,148 +1,64 @@
 package com.team319.follower;
 
-import com.ctre.phoenix.motion.MotionProfileStatus;
-import com.ctre.phoenix.motion.SetValueMotionProfile;
+import com.ctre.phoenix.motion.BufferedTrajectoryPointStream;
 import com.ctre.phoenix.motion.TrajectoryPoint;
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.FollowerType;
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
+import com.team319.follower.FollowsArc;
+import com.team319.follower.SrxMotionProfile;
+import com.team319.follower.SrxTrajectory;
 
-import edu.wpi.first.wpilibj.Notifier;
 import edu.wpi.first.wpilibj.command.Command;
 
 public class FollowArc extends Command {
 
-	private int distancePidSlot = 0;
-	private int rotationPidSlot = 1;
-	private int kMinPointsInTalon = 5;
-	private boolean isFinished = false;
-	private SrxTrajectory trajectoryToFollow = null;
-	private MotionProfileStatus status = new MotionProfileStatus();
-	private boolean hasPathStarted;
+	int distancePidSlot = 0;
+	int rotationPidSlot = 1;
+	SrxTrajectory trajectory;
+	boolean flipLeftAndRight;
+	boolean flipRobot;
+	BufferedTrajectoryPointStream buffer = new BufferedTrajectoryPointStream();
+	FollowsArc drivetrain;
 
-	/**
-	 * this is only either Disable, Enable, or Hold. Since we'd never want one side
-	 * to be enabled while the other is disabled, we'll use the same status for both
-	 * sides.
-	 */
-	private SetValueMotionProfile setValue = SetValueMotionProfile.Disable;
-
-	private class BufferLoader implements java.lang.Runnable {
-		private int lastPointSent = 0;
-		private TalonSRX talon;
-		private SrxMotionProfile prof;
-		private final boolean flipped;
-		private double startPosition = 0;
-
-		public BufferLoader(TalonSRX talon, SrxMotionProfile prof, boolean flipped, double startPosition) {
-			this.talon = talon;
-			this.prof = prof;
-			this.flipped = flipped;
-			this.startPosition = startPosition;
-		}
-
-		public void run() {
-			talon.processMotionProfileBuffer();
-
-			if (lastPointSent >= prof.numPoints) {
-				return;
-			}
-
-			if (!talon.isMotionProfileTopLevelBufferFull() && lastPointSent < prof.numPoints) {
-				TrajectoryPoint point = new TrajectoryPoint();
-				/* for each point, fill our structure and pass it to API */
-				point.position = prof.points[lastPointSent][0] + startPosition;
-				point.velocity = prof.points[lastPointSent][1];
-				point.timeDur = 10;
-				point.auxiliaryPos = (flipped ? -1 : 1) * 10 * (prof.points[lastPointSent][3]);
-				point.profileSlotSelect0 = distancePidSlot;
-				point.profileSlotSelect1 = rotationPidSlot;
-				point.zeroPos = false;
-				point.isLastPoint = false;
-				point.useAuxPID = true;
-				if ((lastPointSent + 1) == prof.numPoints) {
-					point.isLastPoint = true; /** set this to true on the last point */
-				}
-
-				talon.pushMotionProfileTrajectory(point);
-				lastPointSent++;
-				hasPathStarted = true;
-			}
-		}
+	public FollowArc(FollowsArc drivetrain, SrxTrajectory trajectory) {
+		this(drivetrain, trajectory, false, false);
 	}
 
-	// Runs the runnable
-	private Notifier buffer;
-	private FollowsArc drivetrain;
-	private TalonSRX rightTalon;
-	private TalonSRX leftTalon;
-
-	public FollowArc(FollowsArc drivetrain, SrxTrajectory trajectoryToFollow) {
-		this.drivetrain = drivetrain;
+	public FollowArc(FollowsArc drivetrain, SrxTrajectory trajectory, 
+			boolean flipLeftAndRight, boolean flipRobot) {
 		requires(drivetrain.getRequiredSubsystem());
-		this.trajectoryToFollow = trajectoryToFollow;
-
-		rightTalon = drivetrain.getRight();
-		leftTalon = drivetrain.getLeft();
+		this.drivetrain = drivetrain;
+		this.trajectory = trajectory;
+		this.flipLeftAndRight = flipLeftAndRight;
+		this.flipRobot = flipRobot;
 	}
 
-	// Called just before this Command runs the first time
 	protected void initialize() {
-		setUpTalon(leftTalon);
-		setUpTalon(rightTalon);
+		setUpTalon(drivetrain.getLeft());
+		setUpTalon(drivetrain.getRight());
+		
+		loadBuffer(trajectory, drivetrain.getDistance(), flipLeftAndRight, flipRobot);
 
-		setValue = SetValueMotionProfile.Disable;
-
-		rightTalon.set(ControlMode.MotionProfileArc, setValue.value);
-		leftTalon.follow(rightTalon, FollowerType.AuxOutput1);
-		buffer = new Notifier(
-				new BufferLoader(rightTalon, trajectoryToFollow.centerProfile, trajectoryToFollow.flipped,
-						drivetrain.getDistance()));
-
-		buffer.startPeriodic(.005);
+		drivetrain.getLeft().follow(drivetrain.getRight(), FollowerType.AuxOutput1);
+		drivetrain.getRight().startMotionProfile(buffer, 10, ControlMode.MotionProfileArc);
 	}
 
-	// Called repeatedly when this Command is scheduled to run
-	protected void execute() {
-		rightTalon.getMotionProfileStatus(status);
-
-		if (status.isUnderrun) {
-			// if either MP has underrun, stop both
-			setValue = SetValueMotionProfile.Disable;
-		} else if (status.btmBufferCnt > kMinPointsInTalon) {
-			// if we have enough points in the talon, go.
-			setValue = SetValueMotionProfile.Enable;
-		} else if (status.activePointValid && status.isLast) {
-			// if both profiles are at their last points, hold the last point
-			setValue = SetValueMotionProfile.Hold;
-		}
-
-		rightTalon.set(ControlMode.MotionProfileArc, setValue.value);
-	}
-
-	// Make this return true when this Command no longer needs to run execute()
 	protected boolean isFinished() {
-		if (!hasPathStarted) {
-			return false;
-		}
-		boolean leftComplete = status.activePointValid && status.isLast;
-		boolean trajectoryComplete = leftComplete;
-		return trajectoryComplete || isFinished;
+		return drivetrain.getRight().isMotionProfileFinished();
 	}
 
-	// Called once after isFinished returns true
 	protected void end() {
-		buffer.stop();
-		resetTalon(rightTalon, ControlMode.PercentOutput, 0);
-		resetTalon(leftTalon, ControlMode.PercentOutput, 0);
+		resetTalon(drivetrain.getRight(), ControlMode.PercentOutput, 0);
+		resetTalon(drivetrain.getLeft(), ControlMode.PercentOutput, 0);
 	}
 
 	// Called when another command which requires one or more of the same
 	// subsystems is scheduled to run
 	protected void interrupted() {
-		buffer.stop();
-		resetTalon(rightTalon, ControlMode.PercentOutput, 0);
-		resetTalon(leftTalon, ControlMode.PercentOutput, 0);
+		drivetrain.getRight().clearMotionProfileTrajectories();
+		resetTalon(drivetrain.getRight(), ControlMode.PercentOutput, 0);
+		resetTalon(drivetrain.getLeft(), ControlMode.PercentOutput, 0);
 	}
 
 	// set up the talon for motion profile control
@@ -159,5 +75,42 @@ public class FollowArc extends Command {
 		talon.clearMotionProfileHasUnderrun(10);
 		talon.changeMotionControlFramePeriod(10);
 		talon.set(controlMode, setValue);
+	}
+
+	private void loadBuffer(SrxTrajectory trajectory, double startPosition, boolean flipLeftAndRight, boolean flipRobot) {
+
+        TrajectoryPoint point = new TrajectoryPoint(); // temp for for loop, since unused params are initialized
+                                                       // automatically, you can alloc just one
+
+        /* clear the buffer, in case it was used elsewhere */
+        buffer.Clear();
+		SrxMotionProfile profile = trajectory.centerProfile;
+
+		double direction = flipRobot ? -1 : 1;
+		double flippedLeftAndRight = flipLeftAndRight ? -1 : 1;
+		double[][] path = profile.points;
+        /* Insert every point into buffer, no limit on size */
+        for (int i = 0; i < profile.numPoints; ++i) {
+            /* for each point, fill our structure and pass it to API */
+            point.timeDur = (int)path[i][2];
+
+            /* drive part */
+            point.position = direction * path[i][0] + startPosition;
+            point.velocity = direction * path[i][1]; 
+            point.arbFeedFwd = 0; 
+
+            /* turn part */
+            point.auxiliaryPos = flippedLeftAndRight * 10 * (path[i][3]);
+            point.auxiliaryVel = 0;
+            point.auxiliaryArbFeedFwd = 0;
+
+            point.profileSlotSelect0 = distancePidSlot;
+            point.profileSlotSelect1 = rotationPidSlot;
+            point.zeroPos = false;
+            point.isLastPoint = ((i + 1) == profile.numPoints);
+            point.useAuxPID = true;
+
+            buffer.Write(point);
+        }
 	}
 }

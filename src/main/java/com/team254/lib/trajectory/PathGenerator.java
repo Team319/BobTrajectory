@@ -1,5 +1,7 @@
 package com.team254.lib.trajectory;
 
+import com.team254.lib.trajectory.Trajectory.Segment;
+
 /**
  * Generate a smooth Trajectory from a Path.
  *
@@ -98,6 +100,28 @@ public class PathGenerator {
 			}
 		}
 
+		// Fix headings so they are continuously additive 
+		double lastUncorrectedHeading = traj.getSegment(0).heading;
+		double lastCorrectedHeading = traj.getSegment(0).heading;
+		for (int i = 1; i < traj.getNumSegments(); ++i) {
+			Segment currentSegment = traj.getSegment(i);
+			double uncorrectedHeading = currentSegment.heading;
+
+			double headingDelta = 0;
+			
+			if (lastUncorrectedHeading < 0 && uncorrectedHeading > 0  && lastUncorrectedHeading < -Math.PI / 2) {
+				headingDelta = -(2 * Math.PI - Math.abs(lastUncorrectedHeading) - Math.abs(uncorrectedHeading));
+			} else if (lastUncorrectedHeading > 0 && uncorrectedHeading < 0 && lastUncorrectedHeading > Math.PI / 2) {
+				headingDelta = 2 * Math.PI - Math.abs(lastUncorrectedHeading) - Math.abs(uncorrectedHeading);
+			} else {
+				headingDelta = lastUncorrectedHeading - uncorrectedHeading;
+			}
+
+			double correctedHeading = lastCorrectedHeading + headingDelta;
+			currentSegment.heading = correctedHeading;
+			lastUncorrectedHeading = uncorrectedHeading;
+			lastCorrectedHeading = correctedHeading;
+		}
 		return traj;
 	}	
 }

@@ -93,9 +93,9 @@ public class FieldComponent extends JPanel {
         gc.setPaint(color);
         gc.setStroke(new BasicStroke(thickness));
         gc.translate(x, y);
-        gc.rotate(segment.heading);
-        gc.draw(new RoundRectangle2D.Double(-width / 2 , -height / 2, width, height, 10, 10));
         gc.rotate(-segment.heading);
+        gc.draw(new RoundRectangle2D.Double(-width / 2 , -height / 2, width, height, 10, 10));
+        gc.rotate(segment.heading);
         gc.translate(-x, -y);
     }
     

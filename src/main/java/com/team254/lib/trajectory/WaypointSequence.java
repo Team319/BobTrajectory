@@ -29,6 +29,22 @@ public class WaypointSequence {
 			this.maxVelocity = tocopy.maxVelocity;
 		}
 
+		public Waypoint(Waypoint tocopy, double endVelocity, double maxVelocity) {
+			this.x = tocopy.x;
+			this.y = tocopy.y;
+			this.theta = tocopy.theta;
+			this.endVelocity = endVelocity;
+			this.maxVelocity = maxVelocity;
+		}
+
+		public Waypoint(double x, double y, double theta) {
+			this.x = x;
+			this.y = y;
+			this.theta = theta;
+			this.endVelocity = 0;
+			this.maxVelocity = 0;
+		}
+
 		public double x;
 		public double y;
 		public double theta;
@@ -74,13 +90,12 @@ public class WaypointSequence {
 
 		return inverted;
 	}
-	
+
 	public WaypointSequence reversed() {
 		WaypointSequence inverted = new WaypointSequence(waypoints_.length);
-		for(int i = waypoints_.length; i > 0; i--)
-		{
-			if (waypoints_[i-1] != null) {
-				inverted.addWaypoint(waypoints_[i-1]);
+		for (int i = waypoints_.length; i > 0; i--) {
+			if (waypoints_[i - 1] != null) {
+				inverted.addWaypoint(waypoints_[i - 1]);
 			}
 		}
 		return inverted;

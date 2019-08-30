@@ -23,7 +23,7 @@ public class TrajectoryExporter {
                 FilePrinter.write(path.getName() + ".right.csv", trajectory.right.toString());
                 FilePrinter.write(path.getName() + ".center.csv", trajectory.center.toString());
             } catch (Exception e) { 
-                System.out.println("Could not same trajectories for " + path.getName());
+                System.out.println("Could not save trajectories for " + path.getName());
             }
         }
     }

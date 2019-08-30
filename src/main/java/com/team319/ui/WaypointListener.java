@@ -1,49 +1,39 @@
-/*----------------------------------------------------------------------------*/
-/* Copyright (c) 2018 FIRST. All Rights Reserved.                             */
-/* Open Source Software - may be modified and shared by FRC teams. The code   */
-/* must be accompanied by the FIRST BSD license file in the root directory of */
-/* the project.                                                               */
-/*----------------------------------------------------------------------------*/
-
 package com.team319.ui;
 
-import java.awt.Color;
-import java.awt.Graphics;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.awt.event.MouseMotionAdapter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
 import javax.swing.JPanel;
 
-/**
- * Add your docs here.
- */
-public class WaypointListener {
+import com.team319.trajectory.RobotConfig;
 
-    private static final int RIGHT_CLICK = 3;
+public class WaypointListener {
 
     private Plotter panel;
     private List<DraggableWaypoint> waypoints = new ArrayList<>();
-    private Optional<DraggableWaypoint> currentlySelectedWaypoint = Optional.empty();
-    private boolean wasRotatorClicked = false;
+    private List<ClickableSpline> splines = new ArrayList<>();
 
     public WaypointListener(Plotter panel) {
         this.panel = panel;
         panel.addMouseListener(new WaypointCreator());
-        panel.addMouseMotionListener(new WaypointMover());
     }
 
-    private Optional<DraggableWaypoint> getClickedWaypoint(double x, double y) {
+    private Optional<DraggableWaypoint> getWaypointClicked(double x, double y) {
         for (DraggableWaypoint waypoint : waypoints) {
-            if (waypoint.wasClicked(x, y)) {
-                wasRotatorClicked = false;
+            if (waypoint.wasClicked(x, y) || waypoint.wasRotatorClicked(x, y)) {
                 return Optional.of(waypoint);
-            } else if (waypoint.wasRotatorClicked(x, y)) {
-                wasRotatorClicked = true;
-                return Optional.of(waypoint);
+            }
+        }
+        return Optional.empty();
+    }
+
+    private Optional<ClickableSpline> getSplineClicked(double x, double y) {
+        for (ClickableSpline spline : splines) {
+            if (spline.wasClicked(x, y)) {
+                return Optional.of(spline);
             }
         }
         return Optional.empty();
@@ -52,49 +42,54 @@ public class WaypointListener {
     private class WaypointCreator extends MouseAdapter {
 
         @Override
-        public void mouseReleased(MouseEvent e) {
-            if (e.getButton() == RIGHT_CLICK && currentlySelectedWaypoint.isPresent()) {
-                waypoints.remove(currentlySelectedWaypoint.get());
-                panel.repaint();
-            } else if (!currentlySelectedWaypoint.isPresent()) {
-                double lastWaypointHeading = waypoints.size() > 0 ? waypoints.get(waypoints.size() - 1).getHeading() : 0;
-                waypoints.add(new DraggableWaypoint(
-                    Plotter.convertFromPixel(e.getX()), 
-                    Plotter.convertFromPixel(e.getY()), 
-                    lastWaypointHeading, 
-                    0, 
-                    0));
-                panel.repaint();
-            }
-            currentlySelectedWaypoint = Optional.empty();
-        }
-
-        @Override
         public void mousePressed(MouseEvent e) {
-            currentlySelectedWaypoint = getClickedWaypoint(e.getX(), e.getY());
+            Optional<DraggableWaypoint> waypoint = getWaypointClicked(e.getX(), e.getY());
+            Optional<ClickableSpline> spline = getSplineClicked(e.getX(), e.getY());
+            if ((spline.isPresent() || waypoint.isPresent()) && e.getButton() != 3) {
+                return;
+            }
+            
+            if (waypoint.isPresent() && e.getButton() == 3) {
+                waypoints.remove(waypoint.get());
+                panel.removeMouseListener(waypoint.get());
+                panel.removeMouseMotionListener(waypoint.get());
+                updateVelocities();
+                return;
+            }
+            
+            DraggableWaypoint newWaypoint = new DraggableWaypoint(Plotter.convertFromPixel(e.getX()), Plotter.convertFromPixel(e.getY()), 0, 0, RobotConfig.maxVelocity, panel);
+            if (!waypoints.isEmpty()) {
+                newWaypoint.setBackwards(waypoints.get(0).isBackwards());
+            }
+            waypoints.add(newWaypoint);
+            updateVelocities();
+            panel.repaint();
         }
     }
 
-    private class WaypointMover extends MouseMotionAdapter {
-        
-        @Override
-        public void mouseDragged(MouseEvent e) {
-            if (!currentlySelectedWaypoint.isPresent()) {
-                return;
-            }
-
-            DraggableWaypoint waypoint = currentlySelectedWaypoint.get();
-            if (wasRotatorClicked) {
-                double newHeading = Math.atan2(
-                    Plotter.convertToPixel(waypoint.getY()) - e.getY(), 
-                    Plotter.convertToPixel(waypoint.getX()) - e.getX());
-                waypoint.setHeading(newHeading);
+    public void updateVelocities() {
+        for (int i = 0; i < waypoints.size(); i++) {
+            DraggableWaypoint waypoint = waypoints.get(i);
+            if (i == 0) {
+                waypoint.setCurrentVelocity(0);
+                waypoint.setFirst(true);
+                waypoint.setLast(false);
+            } else if (i == waypoints.size() - 1) {
+                waypoint.setCurrentVelocity(0);
+                waypoint.setFirst(false);
+                waypoint.setLast(true);
             } else {
-                waypoint.setXY(e.getX(), e.getY());
+                if (waypoint.getCurrentVelocity() == 0) {
+                    waypoint.setCurrentVelocity(RobotConfig.maxVelocity);
+                }
+                waypoint.setFirst(false);
+                waypoint.setLast(false);
             }
-
-            panel.repaint();
         }
+    }
+
+    public void updateDirections(boolean isBackwards) {
+        waypoints.stream().forEach(w -> w.setBackwards(isBackwards));
     }
 
     /**
@@ -122,17 +117,15 @@ public class WaypointListener {
      * @param waypoints the waypoints to set
      */
     public void setWaypoints(List<DraggableWaypoint> waypoints) {
-        if (waypoints == null) {
-            this.waypoints.clear();
-            return;
-        }
-        this.waypoints = waypoints;
+        this.waypoints.clear();
+        this.waypoints.addAll(waypoints);
+        updateVelocities();
     }
 
-    public void drawWaypoints(Graphics g) {
-        g.setColor(Color.ORANGE);
-        for (DraggableWaypoint waypoint : getWaypoints()) {
-            waypoint.draw(g);
-        }
+    /**
+     * @return the splines
+     */
+    public List<ClickableSpline> getSplines() {
+        return splines;
     }
 }

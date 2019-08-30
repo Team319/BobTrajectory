@@ -1,10 +1,3 @@
-/*----------------------------------------------------------------------------*/
-/* Copyright (c) 2018 FIRST. All Rights Reserved.                             */
-/* Open Source Software - may be modified and shared by FRC teams. The code   */
-/* must be accompanied by the FIRST BSD license file in the root directory of */
-/* the project.                                                               */
-/*----------------------------------------------------------------------------*/
-
 package com.team319.io;
 
 import java.io.BufferedReader;
@@ -14,16 +7,13 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.team319.trajectory.BobPath;
 import com.team319.ui.DraggableWaypoint;
+import com.team319.ui.Plotter;
 
-/**
- * Add your docs here.
- */
 public class PathImporter {
 
-    public static List<BobPath> importPaths() {
-        List<BobPath> paths = new ArrayList<>();
+    public static List<Plotter> importPaths() {
+        List<Plotter> paths = new ArrayList<>();
         File file = new File( "src\\main\\java\\frc\\arcs\\Paths.txt");
         if (!file.exists()) {
             return paths;
@@ -34,8 +24,10 @@ public class PathImporter {
             br.close();
             while (!data.isEmpty()) {
                 String name = data.remove(0);
-                List<DraggableWaypoint> waypoints = importWaypoints(data);
-                paths.add(new BobPath(name, waypoints, false));
+                boolean isBackwards = Boolean.valueOf(data.remove(0));
+                Plotter plotter = new Plotter(name);
+                paths.add(plotter);
+                importWaypoints(data, plotter, isBackwards);
             }
         } catch (Exception e) {
             System.out.println("There was an error importing the saved paths.");
@@ -54,27 +46,28 @@ public class PathImporter {
         return data;
     }
 
-    private static List<DraggableWaypoint> importWaypoints(List<String> data) {
-        List<DraggableWaypoint> waypoints = new ArrayList<>();
+    private static void importWaypoints(List<String> data, Plotter plotter, boolean isBackwards) {
         while (!data.isEmpty() && isNumeric(data.get(0))) {
-            waypoints.add(importWaypoint(data));
+            importWaypoint(data, plotter, isBackwards);
         }
-        return waypoints;
+        plotter.getWaypointListener().updateVelocities();
     }
 
-    private static DraggableWaypoint importWaypoint(List<String> data) {
+    private static void importWaypoint(List<String> data, Plotter plotter, boolean isBackwards) {
         double x = Double.parseDouble(data.remove(0));
         double y = Double.parseDouble(data.remove(0));
         double heading = Double.parseDouble(data.remove(0));
         double currentVelocity = Double.parseDouble(data.remove(0));
         double maxVelocity = Double.parseDouble(data.remove(0));
 
-        return new DraggableWaypoint(x, y, heading, currentVelocity, maxVelocity);
+        DraggableWaypoint waypoint = new DraggableWaypoint(x, y, heading, currentVelocity, maxVelocity, plotter);
+        waypoint.setBackwards(isBackwards);
+        plotter.getWaypointListener().getWaypoints().add(waypoint);
     }
 
     public static boolean isNumeric(String strNum) {
         try {
-            double d = Double.parseDouble(strNum);
+            Double.parseDouble(strNum);
         } catch (NumberFormatException | NullPointerException nfe) {
             return false;
         }

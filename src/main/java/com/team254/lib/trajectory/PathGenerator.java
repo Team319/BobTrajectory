@@ -1,74 +1,32 @@
 package com.team254.lib.trajectory;
 
+import java.util.List;
+
 import com.team254.lib.trajectory.Trajectory.Segment;
+import com.team319.trajectory.RobotConfig;
+import com.team319.ui.DraggableWaypoint;
 
-/**
- * Generate a smooth Trajectory from a Path.
- *
- * @author Art Kalb
- * @author Stephen Pinkerton
- * @author Jared341
- */
 public class PathGenerator {
-	/**
-	 * Generate a path for autonomous driving.
-	 * 
-	 * @param waypoints
-	 *            The waypoints to drive to (FOR THE "GO LEFT" CASE!!!!)
-	 * @param config
-	 *            Trajectory config.
-	 * @param wheelbase_width
-	 *            Wheelbase separation; units must be consistent with config and
-	 *            waypoints.
-	 * @param name
-	 *            The name of the new path. THIS MUST BE A VALID JAVA CLASS NAME
-	 * @return The path.
-	 */
-	public static Path makePath(WaypointSequence waypoints, TrajectoryGenerator.Config config, double wheelbase_width,
-			String name) {
-		return new Path(name, generateFromPath(waypoints, config));
-	}
 
-	
-
-	static Trajectory generateFromPath(WaypointSequence path, TrajectoryGenerator.Config config) {
-		if (path.getNumWaypoints() < 2) {
-			return null;
-		}
-
-		// Compute the total length of the path by creating splines for each pair
-		// of waypoints.
-		Spline[] splines = new Spline[path.getNumWaypoints() - 1];
-		double[] spline_lengths = new double[splines.length];
-		for (int i = 0; i < splines.length; ++i) {
-			splines[i] = new Spline();
-			// if (!Spline.reticulateSplines(path.getWaypoint(i), path.getWaypoint(i + 1), splines[i],
-			// 		Spline.QuinticHermite)) {
-			// 	System.out.println("COULDN'T RETICULATE SPLINE!!");
-			// 	return null;
-			// }
-			spline_lengths[i] = splines[i].calculateLength();
-		}
-
+	public static Trajectory generateTrajectory(List<DraggableWaypoint> waypoints) {
+		Spline[] splines = SplineGenerator.getSplines(waypoints);
 		// Generate a smooth trajectory over the total distance.
 		Trajectory traj = TrajectoryGenerator.generate(
-				config, 
 				0.0,
 				0.0, 
-				spline_lengths[0], 
-				path.getWaypoint(1).endVelocity, 
-				path.getWaypoint(1).maxVelocity);
-		double distance = spline_lengths[0];
-		for (int i = 2; i < path.num_waypoints_; ++i) {
-			distance += spline_lengths[i - 1];
+				splines[0].calculateLength(), 
+				waypoints.get(1).getCurrentVelocity(), 
+				waypoints.get(1).getMaxVelocity());
+		double distance = splines[0].calculateLength();
+		for (int i = 2; i < waypoints.size(); ++i) {
+			distance += splines[i - 1].calculateLength();
 			traj.append(
 					TrajectoryGenerator.generate(
-							config,
 							traj.getSegment(traj.getNumSegments() - 1).vel,
 							traj.getSegment(traj.getNumSegments() - 1).pos, 
 							distance, 
-							path.getWaypoint(i).endVelocity, 
-							path.getWaypoint(i).maxVelocity));
+							waypoints.get(i).getCurrentVelocity(), 
+							waypoints.get(i).getMaxVelocity()));
 		}
 
 		// Assign headings based on the splines.
@@ -81,7 +39,7 @@ public class PathGenerator {
 			boolean found_spline = false;
 			while (!found_spline) {
 				double cur_pos_relative = cur_pos - cur_spline_start_pos;
-				if (cur_pos_relative <= spline_lengths[cur_spline]) {
+				if (cur_pos_relative <= splines[cur_spline].calculateLength()) {
 					double percentage = splines[cur_spline].getPercentageForDistance(cur_pos_relative);
 					traj.getSegment(i).heading = splines[cur_spline].angleAt(percentage);
 					double[] coords = splines[cur_spline].getXandY(percentage);
@@ -89,7 +47,7 @@ public class PathGenerator {
 					traj.getSegment(i).y = coords[1];
 					found_spline = true;
 				} else if (cur_spline < splines.length - 1) {
-					length_of_splines_finished += spline_lengths[cur_spline];
+					length_of_splines_finished += splines[cur_spline].calculateLength();
 					cur_spline_start_pos = length_of_splines_finished;
 					++cur_spline;
 				} else {
@@ -102,11 +60,16 @@ public class PathGenerator {
 			}
 		}
 
+		correctHeading(traj);
+		return traj;
+	}	
+
+	private static void correctHeading(Trajectory trajectory) {
 		// Fix headings so they are continuously additive 
-		double lastUncorrectedHeading = traj.getSegment(0).heading;
-		double lastCorrectedHeading = traj.getSegment(0).heading;
-		for (int i = 1; i < traj.getNumSegments(); ++i) {
-			Segment currentSegment = traj.getSegment(i);
+		double lastUncorrectedHeading = trajectory.getSegment(0).heading;
+		double lastCorrectedHeading = trajectory.getSegment(0).heading;
+		for (int i = 1; i < trajectory.getNumSegments(); ++i) {
+			Segment currentSegment = trajectory.getSegment(i);
 			double uncorrectedHeading = currentSegment.heading;
 
 			double headingDelta = 0;
@@ -124,6 +87,51 @@ public class PathGenerator {
 			lastUncorrectedHeading = uncorrectedHeading;
 			lastCorrectedHeading = correctedHeading;
 		}
-		return traj;
-	}	
+	}
+
+	public static TrajectorySet makeLeftAndRightTrajectories(Trajectory input) {
+		Trajectory[] output = new Trajectory[2];
+		output[0] = input.copy();
+		output[1] = input.copy();
+		Trajectory left = output[0];
+		Trajectory right = output[1];
+
+		for (int i = 0; i < input.getNumSegments(); ++i) {
+		Trajectory.Segment current = input.getSegment(i);
+		double cos_angle = Math.cos(current.heading);
+		double sin_angle = Math.sin(current.heading);
+
+		Trajectory.Segment s_left = left.getSegment(i);
+		s_left.x = current.x - RobotConfig.wheelBase / 2 * sin_angle;
+		s_left.y = current.y + RobotConfig.wheelBase / 2 * cos_angle;
+		if (i > 0) {
+			// Get distance between current and last segment
+			double dist = Math.sqrt((s_left.x - left.getSegment(i - 1).x)
+					* (s_left.x - left.getSegment(i - 1).x)
+					+ (s_left.y - left.getSegment(i - 1).y)
+					* (s_left.y - left.getSegment(i - 1).y));
+			s_left.pos = left.getSegment(i - 1).pos + dist;
+			s_left.vel = dist / s_left.dt;
+			s_left.acc = (s_left.vel - left.getSegment(i - 1).vel) / s_left.dt;
+			s_left.jerk = (s_left.acc - left.getSegment(i - 1).acc) / s_left.dt;
+		}
+
+		Trajectory.Segment s_right = right.getSegment(i);
+		s_right.x = current.x + RobotConfig.wheelBase / 2 * sin_angle;
+		s_right.y = current.y - RobotConfig.wheelBase / 2 * cos_angle;
+		if (i > 0) {
+			// Get distance between current and last segment
+			double dist = Math.sqrt((s_right.x - right.getSegment(i - 1).x)
+					* (s_right.x - right.getSegment(i - 1).x)
+					+ (s_right.y - right.getSegment(i - 1).y)
+					* (s_right.y - right.getSegment(i - 1).y));
+			s_right.pos = right.getSegment(i - 1).pos + dist;
+			s_right.vel = dist / s_right.dt;
+			s_right.acc = (s_right.vel - right.getSegment(i - 1).vel) / s_right.dt;
+			s_right.jerk = (s_right.acc - right.getSegment(i - 1).acc) / s_right.dt;
+		}
+		}
+
+		return new TrajectorySet(output[0], input, output[1]);
+	}
 }

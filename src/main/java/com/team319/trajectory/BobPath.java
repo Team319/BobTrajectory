@@ -8,12 +8,10 @@ public class BobPath {
 
 	private String name;
 	private List<DraggableWaypoint> waypoints;
-	private boolean driveBackwards;
 
 	public BobPath(String name, List<DraggableWaypoint> waypoints, boolean driveBackwards) {
 		this.name = name;
 		this.waypoints = waypoints;
-		this.driveBackwards = driveBackwards;
 	}
 
 	/**
@@ -48,20 +46,17 @@ public class BobPath {
 	 * @return the driveBackwards
 	 */
 	public boolean isDriveBackwards() {
-		return driveBackwards;
-	}
-
-	/**
-	 * @param driveBackwards the driveBackwards to set
-	 */
-	public void setDriveBackwards(boolean driveBackwards) {
-		this.driveBackwards = driveBackwards;
+		if (waypoints.isEmpty()) {
+			return false;
+		}
+		return waypoints.get(0).isBackwards();
 	}
 
 	@Override
 	public String toString() {
 		StringBuilder pathString = new StringBuilder();
 		pathString.append(name).append("\n");
+		pathString.append(isDriveBackwards()).append("\n");
 		for (DraggableWaypoint waypoint : waypoints) {
 			pathString.append(waypoint.toString()).append("\n");
 		}

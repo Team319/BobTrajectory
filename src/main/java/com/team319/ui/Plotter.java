@@ -1,13 +1,13 @@
 package com.team319.ui;
 
-import java.awt.BasicStroke;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics;
-import java.awt.Graphics2D;
-import java.awt.geom.RoundRectangle2D;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
 import javax.imageio.ImageIO;
 import javax.swing.JPanel;
@@ -15,23 +15,24 @@ import javax.swing.JPanel;
 import com.team254.lib.trajectory.Spline;
 import com.team254.lib.trajectory.SplineGenerator;
 import com.team319.trajectory.BobPath;
-import com.team319.trajectory.RobotConfig;
 
 public class Plotter extends JPanel {
 
     private static final long serialVersionUID = 1L;
+    private static String fieldImage = "/field_image.png";
     private BufferedImage img;
     private static double scale;
     private int fieldHeight;
     private WaypointListener waypointListener;
     private String pathName;
 
-    public Plotter(BobPath path, String image) {
+    public Plotter(String pathName) {
         waypointListener = new WaypointListener(this);
         try {
-            this.pathName = path.getName();
-            waypointListener.setWaypoints(path.getWaypoints());
-            img = ImageIO.read(getClass().getResourceAsStream(image));
+            this.pathName = pathName;
+            img = ImageIO.read(getClass().getResourceAsStream(fieldImage));
+            scale = img.getHeight() / 27.0;
+            fieldHeight = img.getHeight();
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -42,55 +43,33 @@ public class Plotter extends JPanel {
         super.paintComponent(g);
         // Draw field
         g.drawImage(img, 0, 0, null);
-        drawWaypoints(g);
         if (waypointListener.getWaypoints().size() >= 2) {
             drawSplines(g);
         }
-    }
 
-    private void drawWaypoints(Graphics g) {
-        for (DraggableWaypoint waypoint : waypointListener.getWaypoints()) {
-            waypoint.draw(g);
-            drawRobot(g, Color.ORANGE, 2, 
-            Plotter.convertToPixel(waypoint.getX()), 
-            Plotter.convertToPixel(waypoint.getY()), 
-            waypoint.getHeading());
-        }
+        waypointListener.getWaypoints().stream().forEach(w -> w.draw(g));
     }
 
     private void drawSplines(Graphics g) {
-        g.setColor(Color.BLACK);
-        Spline[] splines = SplineGenerator.getSplines(waypointListener.getWaypoints());
-        for (Spline spline : splines) {
-           drawSpline(spline, g);
-       }
-    }
-
-    private void drawSpline(Spline spline, Graphics g) {
-        for (double i = 0; i <= 1; i += 0.005) {
-            double[] xy = spline.getXandY(i);
-            g.fillOval(
-                ((int)(xy[0] * scale)), ((int)(xy[1] * scale)), 2, 2);
+        g.setColor(Color.WHITE);
+        for (ClickableSpline spline :  waypointListener.getSplines()) {
+            removeMouseListener(spline);
         }
-    }
-
-    private void drawRobot(Graphics g, Color color, int thickness, int robotX, int robotY, double heading) {
-        double height = RobotConfig.width * scale;
-	    double width = RobotConfig.length * scale;
-		double x = robotX;
-        double y = robotY;
-        int[] xPoints = {(int)width / 2 - 5, (int)(width / 2) - 15, (int)(width / 2) - 15};
-        int[] yPoints = {0, 10, -10};
-	   
-        Graphics2D gc = (Graphics2D)g;	   
-        gc.setPaint(color);
-        gc.setStroke(new BasicStroke(thickness));
-        gc.translate(x, y);
-        gc.rotate(heading);
-        gc.draw(new RoundRectangle2D.Double(-width / 2 , -height / 2, width, height, 10, 10));
-        gc.fillPolygon(xPoints, yPoints, 3);
-        gc.rotate(-heading);
-        gc.translate(-x, -y);
+        
+        List<DraggableWaypoint> waypoints = new ArrayList<>(waypointListener.getWaypoints());
+        boolean isBackwards = waypoints.get(0).isBackwards();
+        if (isBackwards) {
+            Collections.reverse(waypoints);
+        }
+        Spline[] splines = SplineGenerator.getSplines(waypoints);
+        List<ClickableSpline> clickableSplines = new ArrayList<>();
+        for (int i = 0; i < splines.length; i++) {
+            ClickableSpline clickableSpline = new ClickableSpline(splines[i], this, waypoints.get(i+1));
+            clickableSpline.draw(g);
+            clickableSplines.add(clickableSpline);
+        }
+       waypointListener.getSplines().clear();
+       waypointListener.getSplines().addAll(clickableSplines);
     }
 
     @Override
@@ -98,8 +77,6 @@ public class Plotter extends JPanel {
         if (img == null) {
             return new Dimension(100,100);
         } else {
-            scale = img.getHeight() / 27.0;
-            fieldHeight = img.getHeight();
             return new Dimension(img.getWidth(), img.getHeight());
         }
     }
@@ -113,21 +90,8 @@ public class Plotter extends JPanel {
     }
 
     public BobPath getPath() {
-        return new BobPath(pathName, waypointListener.getWaypoints(), false);
-    }
-
-    /**
-     * @return the img
-     */
-    public BufferedImage getImg() {
-        return img;
-    }
-
-    /**
-     * @param img the img to set
-     */
-    public void setImg(BufferedImage img) {
-        this.img = img;
+        boolean isBackwards = waypointListener.getWaypoints().isEmpty() ? false : waypointListener.getWaypoints().get(0).isBackwards();
+        return new BobPath(pathName, waypointListener.getWaypoints(), isBackwards);
     }
 
     /**

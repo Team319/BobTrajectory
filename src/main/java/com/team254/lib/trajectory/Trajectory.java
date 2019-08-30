@@ -1,5 +1,10 @@
 package com.team254.lib.trajectory;
 
+import java.math.BigDecimal;
+import java.math.RoundingMode;
+
+import com.team319.trajectory.RobotConfig;
+
 /**
  * Implementation of a Trajectory using arrays as the underlying storage
  * mechanism.
@@ -7,19 +12,6 @@ package com.team254.lib.trajectory;
  * @author Jared341
  */
 public class Trajectory {
-
-	/*
-	public static class Pair {
-		public Pair(Trajectory left, Trajectory center, Trajectory right) {
-			this.left = left;
-			this.center = center;
-			this.right = right;
-		}
-
-		public Trajectory left;
-		public Trajectory center;
-		public Trajectory right;
-	}*/
 
 	public static class Segment {
 
@@ -81,10 +73,6 @@ public class Trajectory {
 			segments_[i] = segments_[segments_.length - i - 1];
 			segments_[segments_.length - i - 1] = temp;
 		}
-	}
-
-	public void setInvertedY(boolean inverted) {
-		inverted_y_ = inverted;
 	}
 
 	public int getNumSegments() {
@@ -153,15 +141,17 @@ public class Trajectory {
 	}
 
 	public String toString() {
-		String str = "Segment\tPos\tVel\tAcc\tJerk\tHeading\n";
+		String str = "dt,x,y,position,velocity,acceleration,jerk,heading\n";
 		for (int i = 0; i < getNumSegments(); ++i) {
 			Trajectory.Segment segment = getSegment(i);
-			str += i + "\t";
-			str += segment.pos + "\t";
-			str += segment.vel + "\t";
-			str += segment.acc + "\t";
-			str += segment.jerk + "\t";
-			str += segment.heading + "\t";
+			str += RobotConfig.dt + ",";
+			str += new BigDecimal(segment.x).setScale(4, RoundingMode.HALF_UP) + ",";
+			str += new BigDecimal(segment.y).setScale(4, RoundingMode.HALF_UP) + ",";
+			str += new BigDecimal(segment.pos).setScale(4, RoundingMode.HALF_UP) + ",";
+			str += new BigDecimal(segment.vel).setScale(4, RoundingMode.HALF_UP) + ",";
+			str += new BigDecimal(segment.acc).setScale(4, RoundingMode.HALF_UP) + ",";
+			str += new BigDecimal(segment.jerk).setScale(4, RoundingMode.HALF_UP) + ",";
+			str += new BigDecimal(Math.toDegrees(segment.heading)).setScale(4, RoundingMode.HALF_UP);
 			str += "\n";
 		}
 

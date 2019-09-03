@@ -37,6 +37,9 @@ public class TrajectoryExporter {
     }
 
     private static void prepareTrajectory(TrajectorySet trajectorySet, boolean isBackwards) {
+        if (!isBackwards) {
+            return;
+        }
         List<Segment> center = Arrays.asList(trajectorySet.center.getSegments());
         List<Segment> left = Arrays.asList(trajectorySet.left.getSegments());
         List<Segment> right = Arrays.asList(trajectorySet.right.getSegments());

@@ -99,6 +99,8 @@ public class PlotterFrame extends JFrame {
             String name = JOptionPane.showInputDialog("New path name: ");
             Plotter newPath = new Plotter(name);
             tabs.addTab(newPath.getPathName(), newPath);
+            tabs.repaint();
+            pack();
 		}
     }
 
@@ -111,7 +113,8 @@ public class PlotterFrame extends JFrame {
                 "Delete Path", JOptionPane.YES_NO_OPTION, JOptionPane.PLAIN_MESSAGE) == JOptionPane.NO_OPTION) {
                     return;
             }
-            tabs.remove(tabs.getSelectedComponent());      
+            tabs.remove(tabs.getSelectedComponent());   
+            pack();   
 		}
     }
 

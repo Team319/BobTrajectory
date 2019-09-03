@@ -61,15 +61,17 @@ public class Plotter extends JPanel {
         if (isBackwards) {
             Collections.reverse(waypoints);
         }
-        Spline[] splines = SplineGenerator.getSplines(waypoints);
-        List<ClickableSpline> clickableSplines = new ArrayList<>();
-        for (int i = 0; i < splines.length; i++) {
-            ClickableSpline clickableSpline = new ClickableSpline(splines[i], this, waypoints.get(i+1));
-            clickableSpline.draw(g);
-            clickableSplines.add(clickableSpline);
-        }
-       waypointListener.getSplines().clear();
-       waypointListener.getSplines().addAll(clickableSplines);
+        try {
+            Spline[] splines = SplineGenerator.getSplines(waypoints);
+            List<ClickableSpline> clickableSplines = new ArrayList<>();
+            for (int i = 0; i < splines.length; i++) {
+                ClickableSpline clickableSpline = new ClickableSpline(splines[i], this, waypoints.get(i+1));
+                clickableSpline.draw(g);
+                clickableSplines.add(clickableSpline);
+            }
+        waypointListener.getSplines().clear();
+        waypointListener.getSplines().addAll(clickableSplines);
+        } catch (Exception e) { }
     }
 
     @Override

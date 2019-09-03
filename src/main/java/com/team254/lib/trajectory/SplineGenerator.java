@@ -22,7 +22,7 @@ public class SplineGenerator {
 		for (int i = 0; i < splines.length; ++i) {
 			splines[i] = new Spline();
 			if (!Spline.reticulateSplines(waypoints.get(i), waypoints.get(i + 1), splines[i],
-					Spline.CubicHermite)) {
+					Spline.QuinticHermite)) {
 				System.out.println("COULDN'T RETICULATE SPLINE!!");
 				return null;
 			}

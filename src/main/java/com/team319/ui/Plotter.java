@@ -6,7 +6,6 @@ import java.awt.Graphics;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 import javax.imageio.ImageIO;
@@ -57,15 +56,11 @@ public class Plotter extends JPanel {
         }
         
         List<DraggableWaypoint> waypoints = new ArrayList<>(waypointListener.getWaypoints());
-        boolean isBackwards = waypoints.get(0).isBackwards();
-        if (isBackwards) {
-            Collections.reverse(waypoints);
-        }
         try {
             Spline[] splines = SplineGenerator.getSplines(waypoints);
             List<ClickableSpline> clickableSplines = new ArrayList<>();
             for (int i = 0; i < splines.length; i++) {
-                ClickableSpline clickableSpline = new ClickableSpline(splines[i], this, waypoints.get(i+1));
+                ClickableSpline clickableSpline = new ClickableSpline(splines[i], this, waypoints.get(i), waypoints.get(i+1));
                 clickableSpline.draw(g);
                 clickableSplines.add(clickableSpline);
             }
@@ -92,8 +87,7 @@ public class Plotter extends JPanel {
     }
 
     public BobPath getPath() {
-        boolean isBackwards = waypointListener.getWaypoints().isEmpty() ? false : waypointListener.getWaypoints().get(0).isBackwards();
-        return new BobPath(pathName, waypointListener.getWaypoints(), isBackwards);
+        return new BobPath(pathName, waypointListener.getWaypoints());
     }
 
     /**

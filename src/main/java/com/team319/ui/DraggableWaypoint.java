@@ -19,17 +19,13 @@ public class DraggableWaypoint implements MouseListener, MouseMotionListener {
 
     static final int WAYPOINT_DIAMETER = 20;
     private static final int BUFFER_WIDTH = 10;
-    private static final int TAIL_LENGTH = 50;
     private static final Color PURPLE = new Color(148, 0, 211);
-    private static final Color GREEN = new Color(102, 204, 0);
-    private static final Color RED = new Color(204, 0, 0);
 
     private double x;
     private double y;
     private double heading;
     private double maxVelocity;
     private double currentVelocity;
-    private boolean isBackwards;
 
     private boolean highlighted;
     private boolean selected;
@@ -78,8 +74,8 @@ public class DraggableWaypoint implements MouseListener, MouseMotionListener {
 
         drawHighlight(gc);
         drawPoint(gc);
-        drawTail(gc);
         drawRobot(gc);
+        drawTail(gc);
     }
 
     private void drawHighlight(Graphics2D gc) {
@@ -104,8 +100,8 @@ public class DraggableWaypoint implements MouseListener, MouseMotionListener {
         int y2 = getTailY(y);
         int x2 = getTailX(x);
         gc.setColor(Color.BLACK);
-        gc.fillOval(x2 - (WAYPOINT_DIAMETER / 4), y2 - (WAYPOINT_DIAMETER / 4), WAYPOINT_DIAMETER / 2, WAYPOINT_DIAMETER / 2);
-        gc.drawLine(x, y, x2, y2);
+        gc.fillOval(x2 - (WAYPOINT_DIAMETER / 3), y2 - (WAYPOINT_DIAMETER / 3), (int)(WAYPOINT_DIAMETER / 1.5), (int)(WAYPOINT_DIAMETER / 1.5));
+        // gc.drawLine(x, y, x2, y2);
     }
 
     private void drawRobot(Graphics2D gc) {
@@ -113,32 +109,21 @@ public class DraggableWaypoint implements MouseListener, MouseMotionListener {
 	    double width = Plotter.convertToPixel(RobotConfig.length);
 		int x = Plotter.convertToPixel(getX());
         int y = Plotter.convertToPixel(getY());
-        int[] xPoints = { 5, -3, -3};
-        int[] backwardsXPoints = { -5, 3, 3};
-        int[] yPoints = {0, 5, -5};
        
         gc.setColor(Color.ORANGE);
         gc.translate(x, y);
         gc.rotate(heading);
         gc.draw(new RoundRectangle2D.Double(-width / 2 , -height / 2, width, height, 10, 10));
-        if (isBackwards) {
-            gc.setColor(RED);
-            gc.fillPolygon(backwardsXPoints, yPoints, 3);
-        } else {
-            gc.setColor(GREEN);
-            gc.fillPolygon(xPoints, yPoints, 3);
-        }
-        gc.fillPolygon(isBackwards ? backwardsXPoints : xPoints, yPoints, 3);
         gc.rotate(-heading);
         gc.translate(-x, -y);
     }
 
     private int getTailX(int x) {
-        return (int)(x + TAIL_LENGTH * Math.cos(heading));
+        return (int)(x + Plotter.convertToPixel(RobotConfig.length / 2) * Math.cos(heading));
     }
 
     private int getTailY(int y) {
-        return (int)(y + TAIL_LENGTH * Math.sin(heading));
+        return (int)(y + Plotter.convertToPixel(RobotConfig.length / 2) * Math.sin(heading));
     }
 
     /**
@@ -225,20 +210,6 @@ public class DraggableWaypoint implements MouseListener, MouseMotionListener {
         this.isLast = isLast;
     }
 
-    /**
-     * @return the isBackwards
-     */
-    public boolean isBackwards() {
-        return isBackwards;
-    }
-
-    /**
-     * @param isBackwards the isBackwards to set
-     */
-    public void setBackwards(boolean isBackwards) {
-        this.isBackwards = isBackwards;
-    }
-
     @Override
     public String toString() {
         return new StringBuilder()
@@ -284,8 +255,6 @@ public class DraggableWaypoint implements MouseListener, MouseMotionListener {
         y = waypointConfiguration.getWaypointY();
         heading = waypointConfiguration.getWaypointHeading();
         currentVelocity = waypointConfiguration.getCurentVelocity();
-        isBackwards = waypointConfiguration.isBackwards();
-        parentPanel.getWaypointListener().updateDirections(isBackwards);
     }
     
     @Override

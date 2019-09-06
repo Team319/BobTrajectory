@@ -19,17 +19,19 @@ public class ClickableSpline implements MouseListener{
     private double clickableX;
     private double clickableY;
     private DraggableWaypoint endPoint;
+    private DraggableWaypoint startPoint;
 
     private boolean highlighted;
 
     private Plotter parentPanel;
 
-    public ClickableSpline(Spline spline, Plotter parentPanel, DraggableWaypoint endPoint) {
+    public ClickableSpline(Spline spline, Plotter parentPanel, DraggableWaypoint startPoint, DraggableWaypoint endPoint) {
         this.spline = spline;
         this.parentPanel = parentPanel;
         this.clickableX = spline.getXandY(0.5)[0];
         this.clickableY = spline.getXandY(0.5)[1];
         this.endPoint = endPoint;
+        this.startPoint = startPoint;
         parentPanel.addMouseListener(this);
     }
 
@@ -87,6 +89,8 @@ public class ClickableSpline implements MouseListener{
 
         if (result == JOptionPane.OK_OPTION) {
             endPoint.setMaxVelocity(splineConfiguration.getMaxVelocity());
+            endPoint.setCurrentVelocity(Math.min(splineConfiguration.getMaxVelocity(), endPoint.getCurrentVelocity()));
+            startPoint.setCurrentVelocity(Math.min(splineConfiguration.getMaxVelocity(), startPoint.getCurrentVelocity()));
         }
 
         parentPanel.repaint();

@@ -39,7 +39,7 @@ public class PlotterFrame extends JFrame {
         ConfigImporter.importConfig();
         Dimension dim = Toolkit.getDefaultToolkit().getScreenSize();
         setLocation(dim.width/2-755/2, dim.height/2-730/2);
-        setTitle("Paths");
+        setTitle("BobTrajectory");
         setVisible(true);
         addWindowListener(new SaveHandler());
         setLayout(new BorderLayout());

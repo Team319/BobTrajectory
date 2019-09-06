@@ -9,7 +9,7 @@ public class BobPath {
 	private String name;
 	private List<DraggableWaypoint> waypoints;
 
-	public BobPath(String name, List<DraggableWaypoint> waypoints, boolean driveBackwards) {
+	public BobPath(String name, List<DraggableWaypoint> waypoints) {
 		this.name = name;
 		this.waypoints = waypoints;
 	}
@@ -42,21 +42,10 @@ public class BobPath {
 		this.waypoints = waypoints;
 	}
 
-	/**
-	 * @return the driveBackwards
-	 */
-	public boolean isDriveBackwards() {
-		if (waypoints.isEmpty()) {
-			return false;
-		}
-		return waypoints.get(0).isBackwards();
-	}
-
 	@Override
 	public String toString() {
 		StringBuilder pathString = new StringBuilder();
 		pathString.append(name).append("\n");
-		pathString.append(isDriveBackwards()).append("\n");
 		for (DraggableWaypoint waypoint : waypoints) {
 			pathString.append(waypoint.toString()).append("\n");
 		}

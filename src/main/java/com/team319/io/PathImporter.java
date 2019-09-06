@@ -14,7 +14,7 @@ public class PathImporter {
 
     public static List<Plotter> importPaths() {
         List<Plotter> paths = new ArrayList<>();
-        File file = new File( "src\\main\\java\\frc\\arcs\\Paths.txt");
+        File file = new File( "src\\main\\deploy\\paths\\Paths.txt");
         if (!file.exists()) {
             return paths;
         }
@@ -24,10 +24,9 @@ public class PathImporter {
             br.close();
             while (!data.isEmpty()) {
                 String name = data.remove(0);
-                boolean isBackwards = Boolean.valueOf(data.remove(0));
                 Plotter plotter = new Plotter(name);
                 paths.add(plotter);
-                importWaypoints(data, plotter, isBackwards);
+                importWaypoints(data, plotter);
             }
         } catch (Exception e) {
             System.out.println("There was an error importing the saved paths.");
@@ -46,14 +45,14 @@ public class PathImporter {
         return data;
     }
 
-    private static void importWaypoints(List<String> data, Plotter plotter, boolean isBackwards) {
+    private static void importWaypoints(List<String> data, Plotter plotter) {
         while (!data.isEmpty() && isNumeric(data.get(0))) {
-            importWaypoint(data, plotter, isBackwards);
+            importWaypoint(data, plotter);
         }
         plotter.getWaypointListener().updateVelocities();
     }
 
-    private static void importWaypoint(List<String> data, Plotter plotter, boolean isBackwards) {
+    private static void importWaypoint(List<String> data, Plotter plotter) {
         double x = Double.parseDouble(data.remove(0));
         double y = Double.parseDouble(data.remove(0));
         double heading = Double.parseDouble(data.remove(0));
@@ -61,7 +60,6 @@ public class PathImporter {
         double maxVelocity = Double.parseDouble(data.remove(0));
 
         DraggableWaypoint waypoint = new DraggableWaypoint(x, y, heading, currentVelocity, maxVelocity, plotter);
-        waypoint.setBackwards(isBackwards);
         plotter.getWaypointListener().getWaypoints().add(waypoint);
     }
 

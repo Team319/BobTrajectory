@@ -2,7 +2,6 @@ package com.team319.ui;
 
 import java.awt.GridLayout;
 
-import javax.swing.JCheckBox;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
@@ -14,7 +13,6 @@ public class WaypointPanel extends JPanel {
     private JTextField y = new JTextField();
     private JTextField heading = new JTextField();
     private JTextField currentVelocity = new JTextField();
-    private JCheckBox isBackwards = new JCheckBox();
     private boolean isFirst;
     private boolean isLast;
 
@@ -23,7 +21,6 @@ public class WaypointPanel extends JPanel {
         y.setText("" + waypoint.getY());
         heading.setText("" + Math.toDegrees(waypoint.getHeading()));
         currentVelocity.setText("" + waypoint.getCurrentVelocity());
-        isBackwards.setSelected(waypoint.isBackwards());
         isFirst = waypoint.isFirst();
         isLast = waypoint.isLast();
         setupWindowLayout();
@@ -42,10 +39,6 @@ public class WaypointPanel extends JPanel {
             add(new JLabel("Current Velocity:"));
             add(currentVelocity);
             layout.setRows(4);
-        } else if (isFirst) {
-            add(new JLabel("Backwards:"));
-            add(isBackwards);
-            layout.setRows(4);
         }
     }
 
@@ -63,9 +56,5 @@ public class WaypointPanel extends JPanel {
 
     public double getCurentVelocity() {
         return Double.valueOf(currentVelocity.getText());
-    }
-
-    public boolean isBackwards() {
-        return isBackwards.isSelected();
     }
 }

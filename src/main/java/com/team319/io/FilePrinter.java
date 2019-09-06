@@ -8,7 +8,7 @@ public class FilePrinter {
 
     public static void write(String fileName, String data) {
         try {
-            File file = new File( "src\\main\\java\\frc\\arcs\\" + fileName);
+            File file = new File( "src\\main\\deploy\\paths\\" + fileName);
             file.getParentFile().mkdirs();
             // if file doesnt exists, then create it
             if (!file.exists()) {

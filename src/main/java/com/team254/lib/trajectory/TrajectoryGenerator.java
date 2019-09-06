@@ -1,82 +1,49 @@
 package com.team254.lib.trajectory;
 
-/**
- * Factory class for creating Trajectories.
- *
- * @author Jared341
- */
+import com.team319.trajectory.RobotConfig;
+
 public class TrajectoryGenerator {
 
-	///// INNER CLASSES /////
-	public static class Config {
+	public static Trajectory generate(double startVelocity, double startDistance, double finalDistance, double finalVelocity, double maxVelocity) {
+		Trajectory trajectory = new Trajectory();
+		double currentVelocity = startVelocity;
+		double currentDistance = startDistance;
+		double dt = RobotConfig.dt;
 
-		public double dt;
-		public double max_vel;
-		public double max_acc;
-		public double max_jerk;
-	}
+		// Add ramp up points
+		while(isEnoughDistanceRemainingToRampDown(currentVelocity, finalVelocity, finalDistance - currentDistance)) {
+			currentVelocity += RobotConfig.maxAcceleration * dt;
+			currentVelocity = Math.min(maxVelocity, currentVelocity);
+			currentDistance += currentVelocity * dt;
 
-	public static Trajectory generate(Config config, double start_vel, double start_pos,
-			double goal_pos, double goal_vel, double maxVelocity) {
-		Trajectory traj;
-//		double adjusted_max_vel = maxVelocity;
-		double distanceAtMaxVelocity = ((goal_vel * goal_vel) - (start_vel * start_vel)) / 
-				(2 * config.max_acc * config.max_acc)  + (goal_pos - start_pos) / 2;
-//		double maxPossibleVelocity = config.max_acc / 2 * Math.sqrt(distanceAtMaxVelocity + (start_vel * start_vel) / (config.max_acc * config.max_acc));
-		double maxPossibleVelocity = start_vel + Math.sqrt(2 * config.max_acc * distanceAtMaxVelocity);
-		double adjusted_max_vel = Math.min(maxVelocity, maxPossibleVelocity);
-		//		}
-		double t_rampup = (adjusted_max_vel - start_vel) / config.max_acc;
-		double x_rampup = (adjusted_max_vel + start_vel) / 2.0 * t_rampup;
-		if (x_rampup > goal_pos - start_pos) {
-			System.out.println("CAN'T REACH FINAL VELOCITY");
-		}
-		double t_rampdown = (adjusted_max_vel - goal_vel) / config.max_acc;
-		double x_rampdown = (adjusted_max_vel + goal_vel) / 2.0 * t_rampdown;
-		double x_cruise = goal_pos - start_pos - x_rampdown - x_rampup;
-		double t_cruise = x_cruise / adjusted_max_vel;
-
-		int time = (int) ((t_rampup + t_rampdown + t_cruise) / config.dt);
-		double impulse = (t_rampup + t_cruise) / config.dt;
-		traj = generateValues(config.dt, start_vel, start_pos, adjusted_max_vel, config.max_acc, impulse, time, goal_pos);
-
-		return traj;
-	}
-
-	private static Trajectory generateValues(double dt, double start_vel, double start_pos,
-			double max_vel, double max_accel, double total_impulse, int time, double goalPosition) {
-		if (time <= 0) {
-			return null;
-		}
-
-		Trajectory traj = new Trajectory(time);
-		double currentPosition = start_pos;
-		double currentVelocity = start_vel;
-		double currentAcceleration = 0;
-		for (int i = 0; i < time; i++) {
-			Trajectory.Segment current = new Trajectory.Segment();
-			current.pos = currentPosition;
+			Segment current = new Segment();
+			current.pos = currentDistance;
 			current.vel = currentVelocity;
-			current.acc = currentAcceleration;
+			current.acc = RobotConfig.maxAcceleration;
 			current.dt = dt;
 
-			traj.setSegment(i, current);
-
-			if (i >= total_impulse) {
-				currentVelocity -= max_accel * dt;
-				currentAcceleration = -max_accel;
-			} else {
-				currentVelocity += max_accel * dt;
-				currentAcceleration = max_accel;
-			}
-
-			if (currentVelocity >= max_vel) {
-				currentVelocity = max_vel;
-				currentAcceleration = 0;
-			}
-			currentPosition += currentVelocity * dt;
+			trajectory.getSegments().add(current);
 		}
-//		System.out.println("Missing distance: " + (goalPosition - currentPosition));
-		return traj;
+
+		// Add ramp down points
+		while(currentVelocity > finalVelocity) {
+			currentVelocity -= RobotConfig.maxAcceleration * dt;
+			currentDistance += currentVelocity * dt;
+
+			Segment current = new Segment();
+			current.pos = Math.min(currentDistance, finalDistance);
+			current.vel = Math.min(currentVelocity, finalVelocity);
+			current.acc = -RobotConfig.maxAcceleration;
+			current.dt = dt;
+
+			trajectory.getSegments().add(current);
+		}
+		return trajectory;
+	}
+
+	private static boolean isEnoughDistanceRemainingToRampDown(double currentVelocity, double finalVelocity, double distanceRemaining) {
+		double timeToDecellerate = (currentVelocity - finalVelocity) / RobotConfig.maxAcceleration;
+		double distanceToDecellerate = (currentVelocity + finalVelocity) / 2.0 * timeToDecellerate;
+		return distanceToDecellerate < distanceRemaining;
 	}
 }

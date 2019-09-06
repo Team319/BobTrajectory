@@ -1,94 +1,54 @@
 package com.team319.trajectory;
 
-import com.team254.lib.trajectory.WaypointSequence;
-import com.team254.lib.trajectory.WaypointSequence.Waypoint;
+import java.util.List;
+
+import com.team319.ui.DraggableWaypoint;
 
 public class BobPath {
-	private SrxTranslatorConfig config;
-	private WaypointSequence waypointSequence;
 
-	public BobPath(SrxTranslatorConfig config) {
-		this(config, config.name);
+	private String name;
+	private List<DraggableWaypoint> waypoints;
+
+	public BobPath(String name, List<DraggableWaypoint> waypoints) {
+		this.name = name;
+		this.waypoints = waypoints;
 	}
 
-	public BobPath(SrxTranslatorConfig config, String name) {
-		this(config, name, false);
+	/**
+	 * @return the name
+	 */
+	public String getName() {
+		return name;
 	}
 
-	public BobPath(SrxTranslatorConfig config, String name, boolean driveBackwards) {
-		this.config = new SrxTranslatorConfig(config);
-		this.config.name = name;
-		this.waypointSequence = new WaypointSequence(10);
-		this.config.direction = driveBackwards ? -1 : 1;
+	/**
+	 * @param name the name to set
+	 */
+	public void setName(String name) {
+		this.name = name;
 	}
 
-	public BobPath(BobPath toCopy) {
-		config = toCopy.config;
-		waypointSequence = toCopy.waypointSequence;
+	/**
+	 * @return the waypoints
+	 */
+	public List<DraggableWaypoint> getWaypoints() {
+		return waypoints;
 	}
 
-	public boolean isExportEnabled() {
-		return this.isExportEnabled();
+	/**
+	 * @param waypoints the waypoints to set
+	 */
+	public void setWaypoints(List<DraggableWaypoint> waypoints) {
+		this.waypoints = waypoints;
 	}
 
-	public void setWaypointSequence(WaypointSequence wps) {
-		waypointSequence = wps;
-	}
-
-	public WaypointSequence getWaypointSequence() {
-		return waypointSequence;
-	}
-
-	public void addWaypoint(Waypoint wp) {
-		if (wp.maxVelocity == 0.0 && waypointSequence.getNumWaypoints() > 0) {
-			getLastWaypoint().endVelocity = config.max_vel;
+	@Override
+	public String toString() {
+		StringBuilder pathString = new StringBuilder();
+		pathString.append(name).append("\n");
+		for (DraggableWaypoint waypoint : waypoints) {
+			pathString.append(waypoint.toString()).append("\n");
 		}
-		this.waypointSequence.addWaypoint(new Waypoint(wp, 0, config.max_vel));
-	}
-
-	public void addWaypointRadians(double x, double y, double theta_rad, double endVelocity, double maxVelocity) {
-		this.waypointSequence.addWaypoint(new Waypoint(x, y, theta_rad, endVelocity, maxVelocity));
-	}
-
-	public void addWaypoint(double x, double y, double theta_deg, double endVelocity, double maxVelocity) {
-		this.waypointSequence.addWaypoint(new Waypoint(x, y, Math.toRadians(theta_deg), endVelocity, maxVelocity));
-	}
-
-	public void addWaypoint(double x, double y, double theta_deg) {
-		if (waypointSequence.getNumWaypoints() > 0) {
-			getLastWaypoint().endVelocity = config.max_vel;
-		}
-		addWaypoint(new Waypoint(x, y, Math.toRadians(theta_deg), 0, config.max_vel));
-	}
-
-	public void addWaypoint(Waypoint wp, double endVelocity, double maxVelocity) {
-		this.waypointSequence.addWaypoint(new Waypoint(wp, endVelocity, maxVelocity));
-	}
-
-	public void addWaypointRelative(double x, double y, double theta_deg) {
-		if (waypointSequence.getNumWaypoints() > 1) {
-			getLastWaypoint().endVelocity = config.max_vel;
-		}
-		addWaypointRelative(x, y, theta_deg, 0, config.max_vel);
-	}
-
-	public void addWaypointRelative(double x, double y, double theta_deg, double endVelocity, double maxVelocity) {
-		Waypoint lastWaypoint = getLastWaypoint();
-		Waypoint newWaypoint = new Waypoint(lastWaypoint.x + x, lastWaypoint.y + y,
-				lastWaypoint.theta + Math.toRadians(theta_deg), endVelocity, maxVelocity);
-		this.waypointSequence.addWaypoint(newWaypoint);
-	}
-
-	public Waypoint getLastWaypoint() {
-		Waypoint lastWaypoint = this.waypointSequence.getWaypoint(this.waypointSequence.getNumWaypoints() - 1);
-		return lastWaypoint;
-	}
-
-	public void setConfig(SrxTranslatorConfig c) {
-		this.config = c;
-	}
-
-	public SrxTranslatorConfig getConfig() {
-		return this.config;
+		return pathString.toString();
 	}
 }

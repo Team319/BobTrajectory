@@ -83,7 +83,7 @@ public class PathGenerator {
 				headingDelta = lastUncorrectedHeading - uncorrectedHeading;
 			}
 
-			double correctedHeading = lastCorrectedHeading + headingDelta;
+			double correctedHeading = lastCorrectedHeading - headingDelta;
 			currentSegment.heading = correctedHeading;
 			lastUncorrectedHeading = uncorrectedHeading;
 			lastCorrectedHeading = correctedHeading;

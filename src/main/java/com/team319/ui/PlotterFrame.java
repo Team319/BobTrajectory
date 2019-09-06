@@ -5,11 +5,13 @@ import java.awt.Color;
 import java.awt.Component;
 import java.awt.ComponentOrientation;
 import java.awt.Dimension;
+import java.awt.Image;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
+import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -17,6 +19,7 @@ import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 
+import com.google.common.base.Strings;
 import com.team319.io.ConfigExporter;
 import com.team319.io.ConfigImporter;
 import com.team319.io.PathExporter;
@@ -35,6 +38,8 @@ public class PlotterFrame extends JFrame {
     FieldTabs tabs = new FieldTabs();
 
     public PlotterFrame() {
+        Image icon = new BufferedImage(1, 1, BufferedImage.TYPE_INT_ARGB_PRE);
+        setIconImage(icon);
         importPaths();
         ConfigImporter.importConfig();
         Dimension dim = Toolkit.getDefaultToolkit().getScreenSize();
@@ -96,7 +101,10 @@ public class PlotterFrame extends JFrame {
     private class CreateNewPath implements ActionListener {
 		@Override
 		public void actionPerformed(ActionEvent e) {
-            String name = JOptionPane.showInputDialog("New path name: ");
+            String name = JOptionPane.showInputDialog(PlotterFrame.this, "New path name: ", "New Path", JOptionPane.PLAIN_MESSAGE);
+            if (Strings.isNullOrEmpty(name)) {
+                return;
+            }
             Plotter newPath = new Plotter(name);
             tabs.addTab(newPath.getPathName(), newPath);
             tabs.repaint();
@@ -110,7 +118,7 @@ public class PlotterFrame extends JFrame {
             if (JOptionPane.showConfirmDialog (
                 null, 
                 "Are you sure you want to delete this path?",
-                "Delete Path", JOptionPane.YES_NO_OPTION, JOptionPane.PLAIN_MESSAGE) == JOptionPane.NO_OPTION) {
+                "Delete Path", JOptionPane.YES_NO_OPTION, JOptionPane.PLAIN_MESSAGE) != JOptionPane.YES_OPTION) {
                     return;
             }
             tabs.remove(tabs.getSelectedComponent());   

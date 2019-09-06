@@ -1,6 +1,8 @@
 package com.team319.ui;
 
 import java.awt.GridLayout;
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 
 import javax.swing.JLabel;
 import javax.swing.JPanel;
@@ -17,13 +19,18 @@ public class WaypointPanel extends JPanel {
     private boolean isLast;
 
     public WaypointPanel(DraggableWaypoint waypoint) {
-        x.setText("" + waypoint.getX());
-        y.setText("" + waypoint.getY());
-        heading.setText("" + Math.toDegrees(waypoint.getHeading()));
-        currentVelocity.setText("" + waypoint.getCurrentVelocity());
+        x.setText("" + roundTo2(waypoint.getX()));
+        y.setText("" + roundTo2(waypoint.getY()));
+        heading.setText("" + roundTo2(Math.toDegrees(-waypoint.getHeading())));
+        currentVelocity.setText("" + roundTo2(waypoint.getCurrentVelocity()));
         isFirst = waypoint.isFirst();
         isLast = waypoint.isLast();
         setupWindowLayout();
+    }
+
+    private double roundTo2(double value) {
+        BigDecimal rounded = new BigDecimal(Double.toString(value));
+        return rounded.setScale(2, RoundingMode.HALF_UP).doubleValue();
     }
 
     private void setupWindowLayout() {
@@ -51,7 +58,7 @@ public class WaypointPanel extends JPanel {
     }
 
     public double getWaypointHeading() {
-        return Math.toRadians(Double.valueOf(heading.getText()));
+        return Math.toRadians(-Double.valueOf(heading.getText()));
     }
 
     public double getCurentVelocity() {

@@ -78,7 +78,7 @@ public class Trajectory {
 			.append(new BigDecimal(segment.vel).setScale(4, RoundingMode.HALF_UP)).append(",")
 			.append(new BigDecimal(segment.acc).setScale(4, RoundingMode.HALF_UP)).append(",")
 			.append(new BigDecimal(segment.jerk).setScale(4, RoundingMode.HALF_UP)).append(",")
-			.append(new BigDecimal(-Math.toDegrees(segment.heading)).setScale(4, RoundingMode.HALF_UP))
+			.append(new BigDecimal(segment.heading).setScale(4, RoundingMode.HALF_UP))
 			.append("\n");
 		}
 

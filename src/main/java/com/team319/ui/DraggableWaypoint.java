@@ -39,7 +39,7 @@ public class DraggableWaypoint implements MouseListener, MouseMotionListener {
     public DraggableWaypoint(double x, double y, double heading, double currentVelocity, double maxVelocity, Plotter parentPanel) {
         this.x = roundTo2(x);
         this.y = roundTo2(y);
-        this.heading = roundTo2(heading);
+        this.heading = heading;
         this.currentVelocity = currentVelocity;
         this.maxVelocity = maxVelocity;
         this.parentPanel = parentPanel;
@@ -269,7 +269,7 @@ public class DraggableWaypoint implements MouseListener, MouseMotionListener {
             double newHeading = Math.atan2(
                 e.getY() - Plotter.convertToPixel(getY()), 
                 e.getX() - Plotter.convertToPixel(getX()));
-            setHeading(roundTo2(newHeading));
+            setHeading(newHeading);
         } else {
             x = roundTo2(Plotter.convertFromPixel(e.getX()));
             y = roundTo2(Plotter.convertFromPixel(e.getY()));

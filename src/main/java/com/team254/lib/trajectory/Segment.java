@@ -4,8 +4,7 @@ public class Segment {
 
     public double pos, vel, acc, jerk, heading, dt, x, y;
 
-    public Segment() {
-    }
+    public Segment() { }
 
     public Segment(double pos, double vel, double acc, double jerk, double heading, double dt, double x, double y) {
         this.pos = pos;

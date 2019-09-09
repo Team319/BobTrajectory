@@ -28,16 +28,16 @@ import com.team319.io.TrajectoryExporter;
 import com.team319.trajectory.BobPath;
 import com.team319.trajectory.RobotConfig;
 
-public class PlotterFrame extends JFrame {
+public class BobTrajectoryApp extends JFrame {
 
     public static void main(String... args) {
-        new PlotterFrame();
+        new BobTrajectoryApp();
     }
 
     private static final long serialVersionUID = 1L;
     FieldTabs tabs = new FieldTabs();
 
-    public PlotterFrame() {
+    public BobTrajectoryApp() {
         Image icon = new BufferedImage(1, 1, BufferedImage.TYPE_INT_ARGB_PRE);
         setIconImage(icon);
         importPaths();
@@ -101,7 +101,7 @@ public class PlotterFrame extends JFrame {
     private class CreateNewPath implements ActionListener {
 		@Override
 		public void actionPerformed(ActionEvent e) {
-            String name = JOptionPane.showInputDialog(PlotterFrame.this, "New path name: ", "New Path", JOptionPane.PLAIN_MESSAGE);
+            String name = JOptionPane.showInputDialog(BobTrajectoryApp.this, "New path name: ", "New Path", JOptionPane.PLAIN_MESSAGE);
             if (Strings.isNullOrEmpty(name)) {
                 return;
             }

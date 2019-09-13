@@ -6,9 +6,9 @@ import java.io.FileWriter;
 
 public class FilePrinter {
 
-    public static void write(String fileName, String data) {
+    public static void write(String fileLocation, String fileName, String data) {
         try {
-            File file = new File( "src\\main\\deploy\\paths\\" + fileName);
+            File file = new File(fileLocation + fileName);
             file.getParentFile().mkdirs();
             // if file doesnt exists, then create it
             if (!file.exists()) {

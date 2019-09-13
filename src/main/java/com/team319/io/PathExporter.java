@@ -13,6 +13,6 @@ public class PathExporter {
         for (BobPath path : paths) {
             data.append(path.toString());
         }
-        FilePrinter.write("Paths.txt", data.toString());
+        FilePrinter.write("src\\main\\frc\\paths\\", "Paths.txt", data.toString());
     }
 }

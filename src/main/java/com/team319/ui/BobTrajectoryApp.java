@@ -146,6 +146,7 @@ public class BobTrajectoryApp extends JFrame {
         RobotConfig.wheelBase = configuration.getWheelBase();
         RobotConfig.maxAcceleration = configuration.getMaxAcceleration();
         RobotConfig.maxVelocity = configuration.getMaxVelocity();
+        RobotConfig.exportType = configuration.getExportType();
     }
 
     private class SaveHandler implements WindowListener {

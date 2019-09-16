@@ -15,4 +15,8 @@ public abstract class Path {
     public double getValue(int index, SegmentValue value) {
         return getPath()[index][value.ordinal()];
     }
+
+    public int getSegmentCount() {
+        return getPath().length;
+    }
 }

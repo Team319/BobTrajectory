@@ -14,7 +14,7 @@ public class PathImporter {
 
     public static List<Plotter> importPaths() {
         List<Plotter> paths = new ArrayList<>();
-        File file = new File( "src\\main\\frc\\paths\\Paths.txt");
+        File file = new File( "src\\main\\java\\frc\\paths\\Paths.txt");
         if (!file.exists()) {
             return paths;
         }

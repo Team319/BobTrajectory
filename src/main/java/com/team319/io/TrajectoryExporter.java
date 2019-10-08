@@ -37,6 +37,6 @@ public class TrajectoryExporter {
     }
 
     private static void exportToClass(String pathName, TrajectorySet set) {
-        FilePrinter.write("src\\main\\frc\\paths\\", pathName + ".java", ClassExporter.createClass(set, pathName));
+        FilePrinter.write("src\\main\\java\\frc\\paths\\", pathName + ".java", ClassExporter.createClass(set, pathName));
     }
 }

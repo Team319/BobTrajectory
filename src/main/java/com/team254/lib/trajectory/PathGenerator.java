@@ -98,39 +98,39 @@ public class PathGenerator {
 		Trajectory right = output[1];
 
 		for (int i = 0; i < input.getNumSegments(); ++i) {
-		Segment current = input.getSegments().get(i);
-		double cos_angle = Math.cos(current.heading);
-		double sin_angle = Math.sin(current.heading);
+			Segment current = input.getSegments().get(i);
+			double cos_angle = Math.cos(current.heading);
+			double sin_angle = Math.sin(current.heading);
 
-		Segment s_left = left.getSegments().get(i);
-		s_left.x = current.x - RobotConfig.wheelBase / 2 * sin_angle;
-		s_left.y = current.y + RobotConfig.wheelBase / 2 * cos_angle;
-		if (i > 0) {
-			// Get distance between current and last segment
-			double dist = Math.sqrt((s_left.x - left.getSegments().get(i - 1).x)
-					* (s_left.x - left.getSegments().get(i - 1).x)
-					+ (s_left.y - left.getSegments().get(i - 1).y)
-					* (s_left.y - left.getSegments().get(i - 1).y));
-			s_left.pos = left.getSegments().get(i - 1).pos + dist;
-			s_left.vel = dist / s_left.dt;
-			s_left.acc = (s_left.vel - left.getSegments().get(i - 1).vel) / s_left.dt;
-			s_left.jerk = (s_left.acc - left.getSegments().get(i - 1).acc) / s_left.dt;
-		}
+			Segment s_left = left.getSegments().get(i);
+			s_left.x = current.x - RobotConfig.wheelBase / 2 * sin_angle;
+			s_left.y = current.y + RobotConfig.wheelBase / 2 * cos_angle;
+			if (i > 0) {
+				// Get distance between current and last segment
+				double dist = Math.sqrt((s_left.x - left.getSegments().get(i - 1).x)
+						* (s_left.x - left.getSegments().get(i - 1).x)
+						+ (s_left.y - left.getSegments().get(i - 1).y)
+						* (s_left.y - left.getSegments().get(i - 1).y));
+				s_left.pos = left.getSegments().get(i - 1).pos + dist;
+				s_left.vel = dist / s_left.dt;
+				s_left.acc = (s_left.vel - left.getSegments().get(i - 1).vel) / s_left.dt;
+				s_left.jerk = (s_left.acc - left.getSegments().get(i - 1).acc) / s_left.dt;
+			}
 
-		Segment s_right = right.getSegments().get(i);
-		s_right.x = current.x + RobotConfig.wheelBase / 2 * sin_angle;
-		s_right.y = current.y - RobotConfig.wheelBase / 2 * cos_angle;
-		if (i > 0) {
-			// Get distance between current and last segment
-			double dist = Math.sqrt((s_right.x - right.getSegments().get(i - 1).x)
-					* (s_right.x - right.getSegments().get(i - 1).x)
-					+ (s_right.y - right.getSegments().get(i - 1).y)
-					* (s_right.y - right.getSegments().get(i - 1).y));
-			s_right.pos = right.getSegments().get(i - 1).pos + dist;
-			s_right.vel = dist / s_right.dt;
-			s_right.acc = (s_right.vel - right.getSegments().get(i - 1).vel) / s_right.dt;
-			s_right.jerk = (s_right.acc - right.getSegments().get(i - 1).acc) / s_right.dt;
-		}
+			Segment s_right = right.getSegments().get(i);
+			s_right.x = current.x + RobotConfig.wheelBase / 2 * sin_angle;
+			s_right.y = current.y - RobotConfig.wheelBase / 2 * cos_angle;
+			if (i > 0) {
+				// Get distance between current and last segment
+				double dist = Math.sqrt((s_right.x - right.getSegments().get(i - 1).x)
+						* (s_right.x - right.getSegments().get(i - 1).x)
+						+ (s_right.y - right.getSegments().get(i - 1).y)
+						* (s_right.y - right.getSegments().get(i - 1).y));
+				s_right.pos = right.getSegments().get(i - 1).pos + dist;
+				s_right.vel = dist / s_right.dt;
+				s_right.acc = (s_right.vel - right.getSegments().get(i - 1).vel) / s_right.dt;
+				s_right.jerk = (s_right.acc - right.getSegments().get(i - 1).acc) / s_right.dt;
+			}
 		}
 
 		return new TrajectorySet(output[0], input, output[1]);

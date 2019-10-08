@@ -16,16 +16,6 @@ public class ClassExporter {
 
 		// beginning of the class
 		.append("public class ").append(name).append(" extends Path {").append(NEW_LINE)
-        .append("    public ").append(name).append("() {").append(NEW_LINE)
-        .append("		super();").append(NEW_LINE)
-        .append("		centerProfile = new SrxMotionProfile(centerPoints.length, centerPoints);").append(NEW_LINE)
-        .append("	}").append(NEW_LINE).append(NEW_LINE)
-
-        .append("	public ").append(name).append("(boolean flipped) {").append(NEW_LINE)
-        .append("       super();").append(NEW_LINE)
-        .append("		this.flipped = flipped;").append(NEW_LINE)
-        .append("		centerProfile = new SrxMotionProfile(centerPoints.length, centerPoints);").append(NEW_LINE)
-        .append("	}").append(NEW_LINE).append(NEW_LINE)
 
         .append("   // dt,x,y,left.pos,left.vel,left.acc,left.jerk,center.pos,center.vel,center.acc,center.jerk,right.pos,right.vel,right.acc,right.jerk,heading").append(NEW_LINE)
 		.append("	private static final double[][] points = {").append(NEW_LINE)

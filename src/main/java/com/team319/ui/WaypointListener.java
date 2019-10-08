@@ -59,7 +59,7 @@ public class WaypointListener {
 
             double heading = waypoints.isEmpty() ? 0 : waypoints.get(waypoints.size() - 1).getHeading();
             
-            DraggableWaypoint newWaypoint = new DraggableWaypoint(Plotter.convertFromPixel(e.getX()), Plotter.convertFromPixel(e.getY()), heading, 0, RobotConfig.maxVelocity, panel);
+            DraggableWaypoint newWaypoint = new DraggableWaypoint(Plotter.convertXFromPixel(e.getX()), Plotter.convertYFromPixel(e.getY()), heading, 0, RobotConfig.maxVelocity, panel);
             waypoints.add(newWaypoint);
             updateVelocities();
             panel.repaint();

@@ -19,18 +19,18 @@ public class WaypointPanel extends JPanel {
     private boolean isLast;
 
     public WaypointPanel(DraggableWaypoint waypoint) {
-        x.setText("" + roundTo2(waypoint.getX()));
-        y.setText("" + roundTo2(waypoint.getY()));
-        heading.setText("" + roundTo2(Math.toDegrees(-waypoint.getHeading())));
-        currentVelocity.setText("" + roundTo2(waypoint.getCurrentVelocity()));
+        x.setText("" + roundTo4(waypoint.getX()));
+        y.setText("" + roundTo4(waypoint.getY()));
+        heading.setText("" + roundTo4(Math.toDegrees(waypoint.getHeading())));
+        currentVelocity.setText("" + roundTo4(waypoint.getCurrentVelocity()));
         isFirst = waypoint.isFirst();
         isLast = waypoint.isLast();
         setupWindowLayout();
     }
 
-    private double roundTo2(double value) {
+    private double roundTo4(double value) {
         BigDecimal rounded = new BigDecimal(Double.toString(value));
-        return rounded.setScale(2, RoundingMode.HALF_UP).doubleValue();
+        return rounded.setScale(4, RoundingMode.HALF_DOWN).doubleValue();
     }
 
     private void setupWindowLayout() {
@@ -58,7 +58,7 @@ public class WaypointPanel extends JPanel {
     }
 
     public double getWaypointHeading() {
-        return Math.toRadians(-Double.valueOf(heading.getText()));
+        return Math.toRadians(Double.valueOf(heading.getText()));
     }
 
     public double getCurentVelocity() {

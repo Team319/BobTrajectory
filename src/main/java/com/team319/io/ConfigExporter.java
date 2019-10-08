@@ -15,6 +15,6 @@ public class ConfigExporter {
         data.append(RobotConfig.maxAcceleration).append(System.lineSeparator());
         data.append(RobotConfig.exportType).append(System.lineSeparator());
 
-        FilePrinter.write("src\\main\\frc\\paths\\", "config.txt", data.toString());
+        FilePrinter.write("src\\main\\java\\frc\\paths\\", "config.txt", data.toString());
     }
 }

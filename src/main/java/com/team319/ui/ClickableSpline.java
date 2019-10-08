@@ -47,8 +47,8 @@ public class ClickableSpline implements MouseListener{
             return;
         }
 
-        int x = Plotter.convertToPixel(clickableX);
-        int y = Plotter.convertToPixel(clickableY);
+        int x = Plotter.convertXToPixel(clickableX);
+        int y = Plotter.convertYToPixel(clickableY);
         gc.setColor(PURPLE);
         gc.fillOval(x - (DIAMETER), y - (DIAMETER), DIAMETER * 2, DIAMETER * 2);
     }
@@ -57,20 +57,20 @@ public class ClickableSpline implements MouseListener{
         for (double i = 0; i <= 1; i += 0.005) {
             double[] xy = spline.getXandY(i);
                 gc.fillOval(
-                    Plotter.convertToPixel(xy[0]) - 2, Plotter.convertToPixel(xy[1]) - 2, 4, 4);
+                    Plotter.convertXToPixel(xy[0]) - 2, Plotter.convertYToPixel(xy[1]) - 2, 4, 4);
         }
     }
 
     private void drawClickable(Graphics2D gc) {
         gc.fillOval(
-            Plotter.convertToPixel(clickableX) - DIAMETER/2, Plotter.convertToPixel(clickableY) - DIAMETER/2, DIAMETER, DIAMETER);
+            Plotter.convertXToPixel(clickableX) - DIAMETER/2, Plotter.convertYToPixel(clickableY) - DIAMETER/2, DIAMETER, DIAMETER);
     }
 
     public boolean wasClicked(double x, double y) {
         double y1 = y;
-        double y2 = Plotter.convertToPixel(clickableY);
+        double y2 = Plotter.convertYToPixel(clickableY);
         double x1 = x;
-        double x2 = Plotter.convertToPixel(clickableX);
+        double x2 = Plotter.convertXToPixel(clickableX);
 		return Math.sqrt((y2 - y1) * (y2 - y1) + (x2 - x1) * (x2 - x1)) < (DIAMETER + BUFFER_WIDTH) / 2;
     }
 

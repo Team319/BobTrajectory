@@ -78,12 +78,20 @@ public class Plotter extends JPanel {
         }
     }
 
-    public static int convertToPixel(double value) {
+    public static int convertXToPixel(double value) {
         return (int)(value * scale);
     }
 
-    public static double convertFromPixel(double pixel) {
+    public static double convertXFromPixel(double pixel) {
         return pixel / scale;
+    }
+
+    public static int convertYToPixel(double value) {
+        return (int)((13.5 - value) * scale);
+    }
+
+    public static double convertYFromPixel(double pixel) {
+        return (27 - pixel / scale) - 13.5;
     }
 
     public BobPath getPath() {

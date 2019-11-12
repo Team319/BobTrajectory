@@ -14,10 +14,12 @@ import java.awt.event.WindowListener;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 import java.util.List;
+import java.io.File;
 
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.swing.JFileChooser;
 
 import com.google.common.base.Strings;
 import com.team319.io.ConfigExporter;
@@ -35,13 +37,15 @@ public class BobTrajectoryApp extends JFrame {
     }
 
     private static final long serialVersionUID = 1L;
+
     FieldTabs tabs = new FieldTabs();
+    JPanel buttons = new JPanel();
 
     public BobTrajectoryApp() {
         Image icon = new BufferedImage(1, 1, BufferedImage.TYPE_INT_ARGB_PRE);
         setIconImage(icon);
         importPaths();
-        ConfigImporter.importConfig();
+        ConfigImporter.importConfig(null);
         Dimension dim = Toolkit.getDefaultToolkit().getScreenSize();
         setLocation(dim.width/2-755/2, dim.height/2-730/2);
         setTitle("BobTrajectory");
@@ -69,12 +73,20 @@ public class BobTrajectoryApp extends JFrame {
         configurationButton.addActionListener(new OpenConfiguration());
         // configurationButton.setBounds(130, 635, 50, 50);
 
-        JPanel buttons = new JPanel();
+        SaveButton saveButton = new SaveButton();
+        saveButton.addActionListener(new SavePath());
+        saveButton.setEnabled(false);
+
+        OpenButton openButton = new OpenButton();
+        openButton.addActionListener(new OpenPath());
+
         buttons.setBackground(new Color(50, 50, 50));
         buttons.setComponentOrientation(ComponentOrientation.LEFT_TO_RIGHT);
         buttons.add(newPathButton);
         buttons.add(deletePathButton);
         buttons.add(configurationButton);
+        buttons.add(saveButton);
+        buttons.add(openButton);
 
         add(tabs);
         add(buttons, BorderLayout.SOUTH);
@@ -82,6 +94,12 @@ public class BobTrajectoryApp extends JFrame {
 
     private void importPaths() {
         for (Plotter path : PathImporter.importPaths()) {
+            tabs.addTab(path.getPathName(), path);
+        }
+    }
+
+    private void importPaths(File file) {
+        for (Plotter path: PathImporter.importPaths(file)) {
             tabs.addTab(path.getPathName(), path);
         }
     }
@@ -98,6 +116,18 @@ public class BobTrajectoryApp extends JFrame {
         TrajectoryExporter.exportTrajectory(paths);
     }
 
+    private void exportPath(BobPath path, File file) {
+            PathExporter.exportPath(path, file);
+            TrajectoryExporter.exportTrajectory(path, file);
+     }
+
+     private void enableSaveButton() {
+        Component c = buttons.getComponent(3); // If there's a better way to get a particular button, like find by name, that'd be better
+        if (c instanceof SaveButton) {
+            c.setEnabled(true);
+        }
+     }
+
     private class CreateNewPath implements ActionListener {
 		@Override
 		public void actionPerformed(ActionEvent e) {
@@ -105,6 +135,8 @@ public class BobTrajectoryApp extends JFrame {
             if (Strings.isNullOrEmpty(name)) {
                 return;
             }
+
+            enableSaveButton();
             Plotter newPath = new Plotter(name);
             tabs.addTab(newPath.getPathName(), newPath);
             tabs.repaint();
@@ -121,7 +153,14 @@ public class BobTrajectoryApp extends JFrame {
                 "Delete Path", JOptionPane.YES_NO_OPTION, JOptionPane.PLAIN_MESSAGE) != JOptionPane.YES_OPTION) {
                     return;
             }
-            tabs.remove(tabs.getSelectedComponent());   
+            tabs.remove(tabs.getSelectedComponent());
+            if (0 == tabs.getTabCount()) {
+                Component c = buttons.getComponent(3);
+                if (c instanceof SaveButton) {
+                    // System.out.println("Disable SaveButton");
+                    c.setEnabled(false);
+                }    
+            }
             pack();   
 		}
     }
@@ -138,6 +177,54 @@ public class BobTrajectoryApp extends JFrame {
                 tabs.repaint();
             }      
 		}
+    }
+
+    private class SavePath implements ActionListener {
+		@Override
+		public void actionPerformed(ActionEvent e) {
+            JFileChooser fc = new JFileChooser();
+            fc.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
+            fc.setAcceptAllFileFilterUsed(false);
+            int saveResult = fc.showSaveDialog(null);
+            if (JFileChooser.APPROVE_OPTION == saveResult) {
+                Component c = tabs.getSelectedComponent();    
+                if (c instanceof Plotter) {
+                    BobPath path = ((Plotter)c).getPath();        
+                    /*
+                        The FileChooser SaveDialog is a bit wonky. If you create a folder, you are placed in the folder,
+                        but the selected file remains the parent folder. So if you use the selected file,
+                        you'll end up creating a new folder inside the folder you just created!
+                        
+                        Get around this by doing some finagling. IF the selected file's name is the same as its grandparent,
+                        then assume the user created a new folder and the selected file points to the folder the new folder was
+                        created in. *whew*
+                    */
+                    File file = fc.getSelectedFile();
+                    if (!file.exists()) {
+                        if (file.getParentFile().getParentFile().getName().equals(file.getName())) {
+                            file = file.getParentFile();
+                        }
+                    }
+                    exportPath(path, file);
+                    ConfigExporter.exportConfig(file);
+                }
+            }      
+		}
+    }
+
+    private class OpenPath implements ActionListener {
+        @Override
+		public void actionPerformed(ActionEvent e) {
+            JFileChooser fc = new JFileChooser();
+            int openResult = fc.showOpenDialog(null);
+            if (JFileChooser.APPROVE_OPTION == openResult) {
+                importPaths(fc.getSelectedFile());
+                ConfigImporter.importConfig(fc.getSelectedFile().getParentFile()); // Get the directory the Path file is in
+                enableSaveButton();
+                tabs.repaint();
+                pack();    
+            }
+        }
     }
 
     private void updateConfig(ConfigurationPanel configuration) {

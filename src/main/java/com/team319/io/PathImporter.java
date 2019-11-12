@@ -13,8 +13,12 @@ import com.team319.ui.Plotter;
 public class PathImporter {
 
     public static List<Plotter> importPaths() {
+        File file = new File( "src/main/java/frc/paths/Paths.txt");
+        return importPaths(file);
+    }
+
+    public static List<Plotter> importPaths(File file) {
         List<Plotter> paths = new ArrayList<>();
-        File file = new File( "src\\main\\java\\frc\\paths\\Paths.txt");
         if (!file.exists()) {
             return paths;
         }

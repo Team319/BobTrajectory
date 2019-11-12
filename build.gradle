@@ -9,6 +9,7 @@
 plugins {
     // Apply the java-library plugin to add support for Java Library
     id 'java-library'
+    id 'application'
 }
 
 repositories {
@@ -26,4 +27,8 @@ dependencies {
 
     // Use JUnit test framework
     testImplementation 'junit:junit:4.12'
+}
+
+application {
+    mainClassName = 'com.team319.ui.BobTrajectoryApp'
 }

@@ -59,7 +59,7 @@ public class Spline {
 
 	public static boolean reticulateSplines(DraggableWaypoint start, DraggableWaypoint goal,
 			Spline result, Type type) {
-		return reticulateSplines(start.getX(), start.getY(), start.getHeading(), goal.getX(), goal.getY(), goal.getHeading(), result, type);
+		return reticulateSplines(start.getX(), start.getY(), -start.getHeading(), goal.getX(), goal.getY(), -goal.getHeading(), result, type);
 	}
 
 	public static boolean reticulateSplines(double x0, double y0, double theta0, double x1, double y1, double theta1,

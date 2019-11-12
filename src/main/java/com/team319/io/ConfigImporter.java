@@ -12,8 +12,16 @@ import com.team319.trajectory.RobotConfig;
 
 public class ConfigImporter {
 
-    public static void importConfig() {
-        File file = new File( "src\\main\\java\\frc\\paths\\config.txt");
+    /**
+     * 
+     * @param file - The directory where the config file is found
+     */
+    public static void importConfig(File file) {
+        if (null == file){
+            file = new File( "src/main/java/frc/paths/config.txt");
+        } else {
+            file = new File(file, "config.txt");
+        }
         if (!file.exists()) {
             return;
         }

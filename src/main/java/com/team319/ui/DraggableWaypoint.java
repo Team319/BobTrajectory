@@ -112,18 +112,18 @@ public class DraggableWaypoint implements MouseListener, MouseMotionListener {
        
         gc.setColor(Color.ORANGE);
         gc.translate(x, y);
-        gc.rotate(heading);
-        gc.draw(new RoundRectangle2D.Double(-width / 2 , -height / 2, width, height, 10, 10));
         gc.rotate(-heading);
+        gc.draw(new RoundRectangle2D.Double(-width / 2 , -height / 2, width, height, 10, 10));
+        gc.rotate(heading);
         gc.translate(-x, -y);
     }
 
     private int getTailX(int x) {
-        return (int)(x + Plotter.convertXToPixel(RobotConfig.length / 2) * Math.cos(heading));
+        return (int)(x + Plotter.convertXToPixel(RobotConfig.length / 2) * Math.cos(-heading));
     }
 
     private int getTailY(int y) {
-        return (int)(y + Plotter.convertXToPixel(RobotConfig.length / 2) * Math.sin(heading));
+        return (int)(y + Plotter.convertXToPixel(RobotConfig.length / 2) * Math.sin(-heading));
     }
 
     /**
@@ -269,7 +269,7 @@ public class DraggableWaypoint implements MouseListener, MouseMotionListener {
             double newHeading = Math.atan2(
                 e.getY() - Plotter.convertYToPixel(getY()), 
                 e.getX() - Plotter.convertXToPixel(getX()));
-            setHeading(newHeading);
+            setHeading(-newHeading);
         } else {
             x = roundTo2(Plotter.convertXFromPixel(e.getX()));
             y = roundTo2(Plotter.convertYFromPixel(e.getY()));

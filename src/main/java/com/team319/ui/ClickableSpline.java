@@ -10,7 +10,7 @@ import javax.swing.JOptionPane;
 
 import com.team254.lib.trajectory.Spline;
 
-public class ClickableSpline implements MouseListener{
+public class ClickableSpline implements MouseListener {
     private static final int DIAMETER = 20;
     private static final int BUFFER_WIDTH = 10;
     private static final Color PURPLE = new Color(148, 0, 211);
@@ -25,7 +25,8 @@ public class ClickableSpline implements MouseListener{
 
     private Plotter parentPanel;
 
-    public ClickableSpline(Spline spline, Plotter parentPanel, DraggableWaypoint startPoint, DraggableWaypoint endPoint) {
+    public ClickableSpline(Spline spline, Plotter parentPanel, DraggableWaypoint startPoint,
+            DraggableWaypoint endPoint) {
         this.spline = spline;
         this.parentPanel = parentPanel;
         this.clickableX = spline.getXandY(0.5)[0];
@@ -56,14 +57,13 @@ public class ClickableSpline implements MouseListener{
     private void drawSpline(Graphics2D gc) {
         for (double i = 0; i <= 1; i += 0.005) {
             double[] xy = spline.getXandY(i);
-                gc.fillOval(
-                    Plotter.convertXToPixel(xy[0]) - 2, Plotter.convertYToPixel(xy[1]) - 2, 4, 4);
+            gc.fillOval(Plotter.convertXToPixel(xy[0]) - 2, Plotter.convertYToPixel(xy[1]) - 2, 4, 4);
         }
     }
 
     private void drawClickable(Graphics2D gc) {
-        gc.fillOval(
-            Plotter.convertXToPixel(clickableX) - DIAMETER/2, Plotter.convertYToPixel(clickableY) - DIAMETER/2, DIAMETER, DIAMETER);
+        gc.fillOval(Plotter.convertXToPixel(clickableX) - DIAMETER / 2,
+                Plotter.convertYToPixel(clickableY) - DIAMETER / 2, DIAMETER, DIAMETER);
     }
 
     public boolean wasClicked(double x, double y) {
@@ -71,37 +71,42 @@ public class ClickableSpline implements MouseListener{
         double y2 = Plotter.convertYToPixel(clickableY);
         double x1 = x;
         double x2 = Plotter.convertXToPixel(clickableX);
-		return Math.sqrt((y2 - y1) * (y2 - y1) + (x2 - x1) * (x2 - x1)) < (DIAMETER + BUFFER_WIDTH) / 2;
+        return Math.sqrt((y2 - y1) * (y2 - y1) + (x2 - x1) * (x2 - x1)) < (DIAMETER + BUFFER_WIDTH) / 2;
     }
 
     @Override
-    public void mouseReleased(MouseEvent e) { }
+    public void mouseReleased(MouseEvent e) {
+    }
 
     @Override
-    public void mouseClicked(MouseEvent e) { 
+    public void mouseClicked(MouseEvent e) {
         if (!wasClicked(e.getX(), e.getY())) {
             return;
         }
 
-        SplinePanel splineConfiguration = new SplinePanel(endPoint);
-        int result = JOptionPane.showConfirmDialog(null, splineConfiguration, 
-        "Path Configuration", JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE);
+        PathPanel splineConfiguration = new PathPanel(endPoint);
+        int result = JOptionPane.showConfirmDialog(null, splineConfiguration, "Path Configuration",
+                JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE);
 
         if (result == JOptionPane.OK_OPTION) {
             endPoint.setMaxVelocity(splineConfiguration.getMaxVelocity());
             endPoint.setCurrentVelocity(Math.min(splineConfiguration.getMaxVelocity(), endPoint.getCurrentVelocity()));
-            startPoint.setCurrentVelocity(Math.min(splineConfiguration.getMaxVelocity(), startPoint.getCurrentVelocity()));
+            startPoint.setCurrentVelocity(
+                    Math.min(splineConfiguration.getMaxVelocity(), startPoint.getCurrentVelocity()));
         }
 
         parentPanel.repaint();
     }
 
     @Override
-    public void mouseEntered(MouseEvent e) { }
+    public void mouseEntered(MouseEvent e) {
+    }
 
     @Override
-    public void mouseExited(MouseEvent e) { }
+    public void mouseExited(MouseEvent e) {
+    }
 
     @Override
-    public void mousePressed(MouseEvent e) { }
+    public void mousePressed(MouseEvent e) {
+    }
 }

@@ -15,6 +15,7 @@ public class WaypointListener {
     private Plotter panel;
     private List<DraggableWaypoint> waypoints = new ArrayList<>();
     private List<ClickableSpline> splines = new ArrayList<>();
+    private List<ClickableSegmentedCurve> segCurves = new ArrayList<>();
 
     public WaypointListener(Plotter panel) {
         this.panel = panel;
@@ -38,7 +39,16 @@ public class WaypointListener {
         }
         return Optional.empty();
     }
-    
+
+    private Optional<ClickableSegmentedCurve> getSegmentedCurveClicked(double x, double y) {
+        for (ClickableSegmentedCurve s : segCurves) {
+            if (s.wasClicked(x, y)) {
+                return Optional.of(s);
+            }
+        }
+        return Optional.empty();
+    }
+
     private class WaypointCreator extends MouseAdapter {
 
         @Override
@@ -48,7 +58,7 @@ public class WaypointListener {
             if ((spline.isPresent() || waypoint.isPresent()) && e.getButton() != 3) {
                 return;
             }
-            
+
             if (waypoint.isPresent() && e.getButton() == 3) {
                 waypoints.remove(waypoint.get());
                 panel.removeMouseListener(waypoint.get());
@@ -58,8 +68,9 @@ public class WaypointListener {
             }
 
             double heading = waypoints.isEmpty() ? 0 : waypoints.get(waypoints.size() - 1).getHeading();
-            
-            DraggableWaypoint newWaypoint = new DraggableWaypoint(Plotter.convertXFromPixel(e.getX()), Plotter.convertYFromPixel(e.getY()), heading, 0, RobotConfig.maxVelocity, panel);
+
+            DraggableWaypoint newWaypoint = new DraggableWaypoint(Plotter.convertXFromPixel(e.getX()),
+                    Plotter.convertYFromPixel(e.getY()), heading, 0, RobotConfig.maxVelocity, panel);
             waypoints.add(newWaypoint);
             updateVelocities();
             panel.repaint();
@@ -122,5 +133,12 @@ public class WaypointListener {
      */
     public List<ClickableSpline> getSplines() {
         return splines;
+    }
+
+    /**
+     * @return the segCurves
+     */
+    public List<ClickableSegmentedCurve> getSegmentedCurves() {
+        return segCurves;
     }
 }

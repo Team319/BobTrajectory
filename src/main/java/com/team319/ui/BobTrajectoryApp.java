@@ -21,7 +21,6 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JFileChooser;
 
-import com.google.common.base.Strings;
 import com.team319.io.ConfigExporter;
 import com.team319.io.ConfigImporter;
 import com.team319.io.PathExporter;
@@ -47,7 +46,7 @@ public class BobTrajectoryApp extends JFrame {
         importPaths();
         ConfigImporter.importConfig(null);
         Dimension dim = Toolkit.getDefaultToolkit().getScreenSize();
-        setLocation(dim.width/2-755/2, dim.height/2-730/2);
+        setLocation(dim.width / 2 - 755 / 2, dim.height / 2 - 730 / 2);
         setTitle("BobTrajectory");
         setVisible(true);
         addWindowListener(new SaveHandler());
@@ -99,7 +98,7 @@ public class BobTrajectoryApp extends JFrame {
     }
 
     private void importPaths(File file) {
-        for (Plotter path: PathImporter.importPaths(file)) {
+        for (Plotter path : PathImporter.importPaths(file)) {
             tabs.addTab(path.getPathName(), path);
         }
     }
@@ -117,41 +116,41 @@ public class BobTrajectoryApp extends JFrame {
     }
 
     private void exportPath(BobPath path, File file) {
-            PathExporter.exportPath(path, file);
-            TrajectoryExporter.exportTrajectory(path, file);
-     }
+        PathExporter.exportPath(path, file);
+        TrajectoryExporter.exportTrajectory(path, file);
+    }
 
-     private void enableSaveButton() {
-        Component c = buttons.getComponent(3); // If there's a better way to get a particular button, like find by name, that'd be better
+    private void enableSaveButton() {
+        Component c = buttons.getComponent(3); // If there's a better way to get a particular button, like find by name,
+                                               // that'd be better
         if (c instanceof SaveButton) {
             c.setEnabled(true);
         }
-     }
+    }
 
     private class CreateNewPath implements ActionListener {
-		@Override
-		public void actionPerformed(ActionEvent e) {
-            String name = JOptionPane.showInputDialog(BobTrajectoryApp.this, "New path name: ", "New Path", JOptionPane.PLAIN_MESSAGE);
-            if (Strings.isNullOrEmpty(name)) {
+        @Override
+        public void actionPerformed(ActionEvent e) {
+            String name = JOptionPane.showInputDialog(BobTrajectoryApp.this, "New path name: ", "New Path",
+                    JOptionPane.PLAIN_MESSAGE);
+            if (name == null || name.isEmpty()) {
                 return;
             }
 
             enableSaveButton();
-            Plotter newPath = new Plotter(name);
+            Plotter newPath = new Plotter(name, RobotConfig.generationStrategy);
             tabs.addTab(newPath.getPathName(), newPath);
             tabs.repaint();
             pack();
-		}
+        }
     }
 
     private class DeletePath implements ActionListener {
-		@Override
-		public void actionPerformed(ActionEvent e) {
-            if (JOptionPane.showConfirmDialog (
-                null, 
-                "Are you sure you want to delete this path?",
-                "Delete Path", JOptionPane.YES_NO_OPTION, JOptionPane.PLAIN_MESSAGE) != JOptionPane.YES_OPTION) {
-                    return;
+        @Override
+        public void actionPerformed(ActionEvent e) {
+            if (JOptionPane.showConfirmDialog(null, "Are you sure you want to delete this path?", "Delete Path",
+                    JOptionPane.YES_NO_OPTION, JOptionPane.PLAIN_MESSAGE) != JOptionPane.YES_OPTION) {
+                return;
             }
             tabs.remove(tabs.getSelectedComponent());
             if (0 == tabs.getTabCount()) {
@@ -159,46 +158,47 @@ public class BobTrajectoryApp extends JFrame {
                 if (c instanceof SaveButton) {
                     // System.out.println("Disable SaveButton");
                     c.setEnabled(false);
-                }    
+                }
             }
-            pack();   
-		}
+            pack();
+        }
     }
 
     private class OpenConfiguration implements ActionListener {
-		@Override
-		public void actionPerformed(ActionEvent e) {
+        @Override
+        public void actionPerformed(ActionEvent e) {
             ConfigurationPanel configuration = new ConfigurationPanel();
-            int result = JOptionPane.showConfirmDialog(null, configuration, 
-            "Configuration", JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE);
+            int result = JOptionPane.showConfirmDialog(null, configuration, "Configuration",
+                    JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE);
 
             if (result == JOptionPane.OK_OPTION) {
                 updateConfig(configuration);
                 tabs.repaint();
-            }      
-		}
+            }
+        }
     }
 
     private class SavePath implements ActionListener {
-		@Override
-		public void actionPerformed(ActionEvent e) {
+        @Override
+        public void actionPerformed(ActionEvent e) {
             JFileChooser fc = new JFileChooser();
             fc.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
             fc.setAcceptAllFileFilterUsed(false);
             int saveResult = fc.showSaveDialog(null);
             if (JFileChooser.APPROVE_OPTION == saveResult) {
-                Component c = tabs.getSelectedComponent();    
+                Component c = tabs.getSelectedComponent();
                 if (c instanceof Plotter) {
-                    BobPath path = ((Plotter)c).getPath();        
+                    BobPath path = ((Plotter) c).getPath();
                     /*
-                        The FileChooser SaveDialog is a bit wonky. If you create a folder, you are placed in the folder,
-                        but the selected file remains the parent folder. So if you use the selected file,
-                        you'll end up creating a new folder inside the folder you just created!
-                        
-                        Get around this by doing some finagling. IF the selected file's name is the same as its grandparent,
-                        then assume the user created a new folder and the selected file points to the folder the new folder was
-                        created in. *whew*
-                    */
+                     * The FileChooser SaveDialog is a bit wonky. If you create a folder, you are
+                     * placed in the folder, but the selected file remains the parent folder. So if
+                     * you use the selected file, you'll end up creating a new folder inside the
+                     * folder you just created!
+                     * 
+                     * Get around this by doing some finagling. IF the selected file's name is the
+                     * same as its grandparent, then assume the user created a new folder and the
+                     * selected file points to the folder the new folder was created in. *whew*
+                     */
                     File file = fc.getSelectedFile();
                     if (!file.exists()) {
                         if (file.getParentFile().getParentFile().getName().equals(file.getName())) {
@@ -208,21 +208,22 @@ public class BobTrajectoryApp extends JFrame {
                     exportPath(path, file);
                     ConfigExporter.exportConfig(file);
                 }
-            }      
-		}
+            }
+        }
     }
 
     private class OpenPath implements ActionListener {
         @Override
-		public void actionPerformed(ActionEvent e) {
+        public void actionPerformed(ActionEvent e) {
             JFileChooser fc = new JFileChooser();
             int openResult = fc.showOpenDialog(null);
             if (JFileChooser.APPROVE_OPTION == openResult) {
                 importPaths(fc.getSelectedFile());
-                ConfigImporter.importConfig(fc.getSelectedFile().getParentFile()); // Get the directory the Path file is in
+                ConfigImporter.importConfig(fc.getSelectedFile().getParentFile()); // Get the directory the Path file is
+                                                                                   // in
                 enableSaveButton();
                 tabs.repaint();
-                pack();    
+                pack();
             }
         }
     }
@@ -239,33 +240,37 @@ public class BobTrajectoryApp extends JFrame {
     private class SaveHandler implements WindowListener {
 
         @Override
-            public void windowOpened(WindowEvent e) {}
+        public void windowOpened(WindowEvent e) {
+        }
 
-            @Override
-            public void windowClosing(WindowEvent e) {
-                if (JOptionPane.showConfirmDialog (
-                            null, 
-                            "Do you want to save the paths and config?",
-                            "Save", JOptionPane.YES_NO_OPTION, JOptionPane.PLAIN_MESSAGE) == JOptionPane.YES_OPTION) {
-                    exportPaths();
-                    ConfigExporter.exportConfig();
-                }
-                System.exit(0);
+        @Override
+        public void windowClosing(WindowEvent e) {
+            if (JOptionPane.showConfirmDialog(null, "Do you want to save the paths and config?", "Save",
+                    JOptionPane.YES_NO_OPTION, JOptionPane.PLAIN_MESSAGE) == JOptionPane.YES_OPTION) {
+                exportPaths();
+                ConfigExporter.exportConfig();
             }
+            System.exit(0);
+        }
 
-            @Override
-            public void windowClosed(WindowEvent e) {}
+        @Override
+        public void windowClosed(WindowEvent e) {
+        }
 
-            @Override
-            public void windowIconified(WindowEvent e) {}
+        @Override
+        public void windowIconified(WindowEvent e) {
+        }
 
-            @Override
-            public void windowDeiconified(WindowEvent e) {}
+        @Override
+        public void windowDeiconified(WindowEvent e) {
+        }
 
-            @Override
-            public void windowActivated(WindowEvent e) {}
+        @Override
+        public void windowActivated(WindowEvent e) {
+        }
 
-            @Override
-            public void windowDeactivated(WindowEvent e) {}
+        @Override
+        public void windowDeactivated(WindowEvent e) {
+        }
     }
 }

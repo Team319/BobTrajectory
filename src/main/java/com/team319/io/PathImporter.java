@@ -7,13 +7,14 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.team319.trajectory.RobotConfig;
 import com.team319.ui.DraggableWaypoint;
 import com.team319.ui.Plotter;
 
 public class PathImporter {
 
     public static List<Plotter> importPaths() {
-        File file = new File( "src/main/java/frc/paths/Paths.txt");
+        File file = new File("src/main/java/frc/paths/Paths.txt");
         return importPaths(file);
     }
 
@@ -28,7 +29,7 @@ public class PathImporter {
             br.close();
             while (!data.isEmpty()) {
                 String name = data.remove(0);
-                Plotter plotter = new Plotter(name);
+                Plotter plotter = new Plotter(name, RobotConfig.generationStrategy);
                 paths.add(plotter);
                 importWaypoints(data, plotter);
             }

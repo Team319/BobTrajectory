@@ -8,4 +8,5 @@ public class RobotConfig {
 	public static double maxAcceleration = 7; // in f/s2
 	public static double dt = 0.02;
 	public static ExportType exportType = ExportType.CLASS;
+	public static GenerationStrategy generationStrategy = GenerationStrategy.SEGMENTED_CURVE;
 }

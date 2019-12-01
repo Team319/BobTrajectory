@@ -57,14 +57,14 @@ public class Spline {
 		return Math.abs(x - y) < 1E-6;
 	}
 
-	public static boolean reticulateSplines(DraggableWaypoint start, DraggableWaypoint goal,
-			Spline result, Type type) {
-		return reticulateSplines(start.getX(), start.getY(), start.getHeading(), goal.getX(), goal.getY(), goal.getHeading(), result, type);
+	public static boolean reticulateSplines(DraggableWaypoint start, DraggableWaypoint goal, Spline result, Type type) {
+		return reticulateSplines(start.getX(), start.getY(), start.getHeading(), goal.getX(), goal.getY(),
+				goal.getHeading(), result, type);
 	}
 
 	public static boolean reticulateSplines(double x0, double y0, double theta0, double x1, double y1, double theta1,
 			Spline result, Type type) {
-//		System.out.println("Reticulating splines...");
+		// System.out.println("Reticulating splines...");
 		result.type_ = type;
 
 		// Transform x to the origin
@@ -210,7 +210,8 @@ public class Spline {
 	public double angleAt(double percentage) {
 		double derivative = derivativeAt(percentage);
 		double angle = Math.atan(derivative) + theta_offset_;
-		//double angle = ChezyMath.boundAngle0to2PiRadians(Math.atan(derivative) + theta_offset_);
+		// double angle = ChezyMath.boundAngle0to2PiRadians(Math.atan(derivative) +
+		// theta_offset_);
 		return angle;
 	}
 

@@ -10,28 +10,20 @@ public class PathGenerator {
 	public static Trajectory generateTrajectory(List<DraggableWaypoint> waypoints) {
 		Spline[] splines = SplineGenerator.getSplines(waypoints);
 		// Generate a smooth trajectory over the total distance.
-		Trajectory traj = TrajectoryGenerator.generate(
-				0.0,
-				0.0, 
-				splines[0].calculateLength(), 
-				waypoints.get(1).getCurrentVelocity(), 
-				waypoints.get(1).getMaxVelocity());
+		Trajectory traj = TrajectoryGenerator.generate(0.0, 0.0, splines[0].calculateLength(),
+				waypoints.get(1).getCurrentVelocity(), waypoints.get(1).getMaxVelocity());
 		double distance = splines[0].calculateLength();
 		for (int i = 2; i < waypoints.size(); ++i) {
 			distance += splines[i - 1].calculateLength();
-			traj.append(
-					TrajectoryGenerator.generate(
-							traj.getSegments().get(traj.getNumSegments() - 1).vel,
-							traj.getSegments().get(traj.getNumSegments() - 1).pos, 
-							distance, 
-							waypoints.get(i).getCurrentVelocity(), 
-							waypoints.get(i).getMaxVelocity()));
+			traj.append(TrajectoryGenerator.generate(traj.getSegments().get(traj.getNumSegments() - 1).vel,
+					traj.getSegments().get(traj.getNumSegments() - 1).pos, distance,
+					waypoints.get(i).getCurrentVelocity(), waypoints.get(i).getMaxVelocity()));
 		}
 
 		assignHeadings(traj, splines);
 		correctHeading(traj);
 		return traj;
-	}	
+	}
 
 	private static void assignHeadings(Trajectory traj, Spline[] splines) {
 		// Assign headings based on the splines.
@@ -67,15 +59,15 @@ public class PathGenerator {
 	}
 
 	private static void correctHeading(Trajectory trajectory) {
-		// Fix headings so they are continuously additive 
+		// Fix headings so they are continuously additive
 		double lastUncorrectedHeading = trajectory.getSegments().get(0).heading;
 		double lastCorrectedHeading = lastUncorrectedHeading;
 		for (int i = 1; i < trajectory.getNumSegments(); ++i) {
 			Segment currentSegment = trajectory.getSegments().get(i);
 			double uncorrectedHeading = currentSegment.heading;
 			double headingDelta = 0;
-			
-			if (lastUncorrectedHeading < 0 && uncorrectedHeading > 0  && lastUncorrectedHeading < -Math.PI / 2) {
+
+			if (lastUncorrectedHeading < 0 && uncorrectedHeading > 0 && lastUncorrectedHeading < -Math.PI / 2) {
 				headingDelta = -(2 * Math.PI - Math.abs(lastUncorrectedHeading) - Math.abs(uncorrectedHeading));
 			} else if (lastUncorrectedHeading > 0 && uncorrectedHeading < 0 && lastUncorrectedHeading > Math.PI / 2) {
 				headingDelta = 2 * Math.PI - Math.abs(lastUncorrectedHeading) - Math.abs(uncorrectedHeading);
@@ -109,8 +101,7 @@ public class PathGenerator {
 				// Get distance between current and last segment
 				double dist = Math.sqrt((s_left.x - left.getSegments().get(i - 1).x)
 						* (s_left.x - left.getSegments().get(i - 1).x)
-						+ (s_left.y - left.getSegments().get(i - 1).y)
-						* (s_left.y - left.getSegments().get(i - 1).y));
+						+ (s_left.y - left.getSegments().get(i - 1).y) * (s_left.y - left.getSegments().get(i - 1).y));
 				s_left.pos = left.getSegments().get(i - 1).pos + dist;
 				s_left.vel = dist / s_left.dt;
 				s_left.acc = (s_left.vel - left.getSegments().get(i - 1).vel) / s_left.dt;
@@ -122,10 +113,10 @@ public class PathGenerator {
 			s_right.y = current.y - RobotConfig.wheelBase / 2 * cos_angle;
 			if (i > 0) {
 				// Get distance between current and last segment
-				double dist = Math.sqrt((s_right.x - right.getSegments().get(i - 1).x)
-						* (s_right.x - right.getSegments().get(i - 1).x)
-						+ (s_right.y - right.getSegments().get(i - 1).y)
-						* (s_right.y - right.getSegments().get(i - 1).y));
+				double dist = Math.sqrt(
+						(s_right.x - right.getSegments().get(i - 1).x) * (s_right.x - right.getSegments().get(i - 1).x)
+								+ (s_right.y - right.getSegments().get(i - 1).y)
+										* (s_right.y - right.getSegments().get(i - 1).y));
 				s_right.pos = right.getSegments().get(i - 1).pos + dist;
 				s_right.vel = dist / s_right.dt;
 				s_right.acc = (s_right.vel - right.getSegments().get(i - 1).vel) / s_right.dt;

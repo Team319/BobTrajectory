@@ -59,19 +59,15 @@ public class BobTrajectoryApp extends JFrame {
     }
 
     private void setupTabPanel() {
-        // setContentPane(tabs);
         getContentPane().setBackground(new Color(50, 50, 50));
         NewPathButton newPathButton = new NewPathButton();
         newPathButton.addActionListener(new CreateNewPath());
-        // newPathButton.setBounds(0, -50, 50, 50);
 
         DeletePathButton deletePathButton = new DeletePathButton();
         deletePathButton.addActionListener(new DeletePath());
-        // deletePathButton.setBounds(70, 635, 50, 50);
 
         ConfigurationButton configurationButton = new ConfigurationButton();
         configurationButton.addActionListener(new OpenConfiguration());
-        // configurationButton.setBounds(130, 635, 50, 50);
 
         SaveButton saveButton = new SaveButton();
         saveButton.addActionListener(new SavePath());

@@ -18,7 +18,7 @@ import com.team319.trajectory.BobPath;
 public class Plotter extends JPanel {
 
     private static final long serialVersionUID = 1L;
-    private static String fieldImage = "/field_image.png";
+    private static String fieldImage = "/field_image_2020_large.png";
     private BufferedImage img;
     private static double scale;
     private int fieldHeight;

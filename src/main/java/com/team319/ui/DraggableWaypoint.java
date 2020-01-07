@@ -19,7 +19,9 @@ public class DraggableWaypoint implements MouseListener, MouseMotionListener {
 
     static final int WAYPOINT_DIAMETER = 20;
     private static final int BUFFER_WIDTH = 10;
-    private static final Color PURPLE = new Color(148, 0, 211);
+    private static final Color PURPLE = new Color(102, 46, 145);
+    private static final Color YELLOW = new Color(253, 184, 19);
+    private static final Color BLACK = new Color(25, 25, 25);
 
     private double x;
     private double y;
@@ -90,7 +92,7 @@ public class DraggableWaypoint implements MouseListener, MouseMotionListener {
     private void drawPoint(Graphics2D gc) {
         int x = Plotter.convertXToPixel(getX());
         int y = Plotter.convertYToPixel(getY());
-        gc.setColor(Color.BLACK);
+        gc.setColor(BLACK);
         gc.fillOval(x - (WAYPOINT_DIAMETER / 2), y - (WAYPOINT_DIAMETER / 2), WAYPOINT_DIAMETER, WAYPOINT_DIAMETER);
     }
 
@@ -99,7 +101,7 @@ public class DraggableWaypoint implements MouseListener, MouseMotionListener {
         int y = Plotter.convertYToPixel(getY());
         int y2 = getTailY(y);
         int x2 = getTailX(x);
-        gc.setColor(Color.BLACK);
+        gc.setColor(BLACK);
         gc.fillOval(x2 - (WAYPOINT_DIAMETER / 3), y2 - (WAYPOINT_DIAMETER / 3), (int)(WAYPOINT_DIAMETER / 1.5), (int)(WAYPOINT_DIAMETER / 1.5));
         // gc.drawLine(x, y, x2, y2);
     }
@@ -110,7 +112,7 @@ public class DraggableWaypoint implements MouseListener, MouseMotionListener {
 		int x = Plotter.convertXToPixel(getX());
         int y = Plotter.convertYToPixel(getY());
        
-        gc.setColor(Color.ORANGE);
+        gc.setColor(YELLOW);
         gc.translate(x, y);
         gc.rotate(-heading);
         gc.draw(new RoundRectangle2D.Double(-width / 2 , -height / 2, width, height, 10, 10));

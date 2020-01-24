@@ -35,6 +35,16 @@ public class ConfigImporter {
             RobotConfig.maxVelocity = Double.parseDouble(data.get(3));
             RobotConfig.maxAcceleration = Double.parseDouble(data.get(4));
             RobotConfig.exportType = ExportType.valueOf(data.get(5));
+            RobotConfig.pathPackage = data.get(6);
+            RobotConfig.pathLocation = data.get(7);
+
+            if (RobotConfig.pathPackage == null || RobotConfig.pathPackage.isEmpty()) {
+                RobotConfig.pathPackage = "frc.paths";
+            }
+
+            if (RobotConfig.pathLocation == null || RobotConfig.pathLocation.isEmpty()) {
+                RobotConfig.pathLocation = "src/main/java/frc/paths/";
+            }
         } catch (Exception e) {
             System.out.println("There was an error importing the saved paths.");
             e.printStackTrace();

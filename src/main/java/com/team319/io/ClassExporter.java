@@ -2,6 +2,7 @@ package com.team319.io;
 
 import com.team254.lib.trajectory.Segment;
 import com.team254.lib.trajectory.TrajectorySet;
+import com.team319.trajectory.RobotConfig;
 
 public class ClassExporter {
 
@@ -11,7 +12,7 @@ public class ClassExporter {
 		return new StringBuilder()
 
 		// package and imports
-        .append("package frc.paths;").append(NEW_LINE).append(NEW_LINE)
+        .append("package " + RobotConfig.pathPackage + ";").append(NEW_LINE).append(NEW_LINE)
 		.append("import com.team319.trajectory.Path;").append(NEW_LINE).append(NEW_LINE)
 
 		// beginning of the class

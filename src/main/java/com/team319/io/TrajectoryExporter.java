@@ -11,7 +11,6 @@ import com.team319.trajectory.RobotConfig;
 
 public class TrajectoryExporter {
     private static final String defaultPathPath = "src/main/deploy/paths/";
-    private static final String defaultClassPath = "src/main/java/frc/paths/";
 
     /**
      * 
@@ -35,7 +34,7 @@ public class TrajectoryExporter {
             switch (RobotConfig.exportType) {
                 case CLASS:
                     if (null == file) {
-                        exportToClass(defaultClassPath, path.getName(), trajectorySet);
+                        exportToClass(RobotConfig.pathLocation, path.getName(), trajectorySet);
                     } else {
                         exportToClass(file.getAbsolutePath() + "/", path.getName(), trajectorySet);                    
                     }

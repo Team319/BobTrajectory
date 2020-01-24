@@ -3,11 +3,12 @@ package com.team319.io;
 import java.util.List;
 
 import com.team319.trajectory.BobPath;
+import com.team319.trajectory.RobotConfig;
+
 import java.io.File;
 
 public class PathExporter {
 
-    private static final String defaultPath = "src/main/java/frc/paths/";
     public static void exportPaths(List<BobPath> paths) {
         
         StringBuilder data = new StringBuilder();
@@ -15,7 +16,9 @@ public class PathExporter {
         for (BobPath path : paths) {
             data.append(path.toString());
         }
-        FilePrinter.write(defaultPath, "Paths.txt", data.toString());
+        
+        String path = new File(RobotConfig.pathLocation).getAbsolutePath();
+        FilePrinter.write(path, "/Paths.txt", data.toString());
     }
 
     public static void exportPath(BobPath path, File file) {

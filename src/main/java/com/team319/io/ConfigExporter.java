@@ -5,8 +5,22 @@ import java.io.File;
 
 public class ConfigExporter {
 
+    private static File parentFolder;
+
+    /**
+     * Allows overriding of config file location
+     * @param folder
+     */
+    public static void setConfigFolder(File folder) {
+        parentFolder = folder;
+    }
+
     public static void exportConfig() {
-        exportConfig(new File("src/main/java/frc/paths"));
+        if(parentFolder != null){
+            exportConfig(parentFolder);
+        } else {
+            exportConfig(new File("src/main/java/frc/paths"));
+        }
     }
 
     /**

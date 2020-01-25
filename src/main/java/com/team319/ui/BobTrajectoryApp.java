@@ -44,8 +44,8 @@ public class BobTrajectoryApp extends JFrame {
     public BobTrajectoryApp() {
         Image icon = new BufferedImage(1, 1, BufferedImage.TYPE_INT_ARGB_PRE);
         setIconImage(icon);
+        ConfigImporter.importConfig(null, false);
         importPaths();
-        ConfigImporter.importConfig(null);
         Dimension dim = Toolkit.getDefaultToolkit().getScreenSize();
         setLocation(dim.width/2-755/2, dim.height/2-730/2);
         setTitle("BobTrajectory");

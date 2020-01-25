@@ -24,6 +24,7 @@ public class PathImporter {
             return paths;
         }
         try {
+            System.out.println("Importing paths from " + file.getAbsolutePath());
             BufferedReader br = new BufferedReader(new FileReader(file));
             List<String> data = collectLines(br);
             br.close();

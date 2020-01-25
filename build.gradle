@@ -32,3 +32,13 @@ dependencies {
 application {
     mainClassName = 'com.team319.ui.BobTrajectoryApp'
 }
+
+task tmpJar(type: Jar) {
+    manifest {
+        attributes 'Implementation-Title': 'Gradle Jar File Example',
+                'Implementation-Version': 'tmp-0.0',
+                'Main-Class': 'com.team319.ui.BobTrajectoryApp'
+    }
+    from { configurations.compile.collect { it.isDirectory() ? it : zipTree(it) } }
+    with jar
+}

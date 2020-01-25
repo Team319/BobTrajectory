@@ -12,20 +12,38 @@ import com.team319.trajectory.RobotConfig;
 
 public class ConfigImporter {
 
+    private static boolean IS_IMPORTED = false;
+
+    /**
+     * Import the configuration file, with the option to forcefully override any existing in-memory configuration
+     * @param file
+     * @param override
+     */
+    public static void importConfig(File file, boolean override) {
+        if ( IS_IMPORTED && !override) {
+            System.out.println("Skipping import");
+            return;
+        }
+        importConfig(file);
+    }
+
     /**
      * 
      * @param file - The directory where the config file is found
      */
     public static void importConfig(File file) {
+        System.out.println("Passed config file " + file.getAbsolutePath());
         if (null == file){
             file = new File( "src/main/java/frc/paths/config.txt");
         } else {
             file = new File(file, "config.txt");
         }
+        System.out.println("Looking for config file " + file.getAbsolutePath());
         if (!file.exists()) {
             return;
         }
         try {
+            System.out.println("Importing config from " + file.getAbsolutePath());
             BufferedReader br = new BufferedReader(new FileReader(file));
             List<String> data = collectLines(br);
             br.close();
@@ -45,6 +63,7 @@ public class ConfigImporter {
             if (RobotConfig.pathLocation == null || RobotConfig.pathLocation.isEmpty()) {
                 RobotConfig.pathLocation = "src/main/java/frc/paths/";
             }
+            IS_IMPORTED = true;
         } catch (Exception e) {
             System.out.println("There was an error importing the saved paths.");
             e.printStackTrace();

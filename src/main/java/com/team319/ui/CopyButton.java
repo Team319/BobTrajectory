@@ -1,16 +1,9 @@
 package com.team319.ui;
 
-import java.awt.BasicStroke;
-import java.awt.Color;
-import java.awt.Dimension;
-import java.awt.Font;
-import java.awt.Graphics;
-import java.awt.Graphics2D;
-import java.awt.Stroke;
+import javax.swing.*;
+import java.awt.*;
 
-import javax.swing.JButton;
-
-public class ConfigurationButton extends JButton {
+public class CopyButton extends JButton {
 
     private static final long serialVersionUID = 1L;
     private Color color = new Color(32, 32, 32);
@@ -18,11 +11,11 @@ public class ConfigurationButton extends JButton {
     private Stroke stroke = new BasicStroke(5);
     private Font font = new Font("times", Font.PLAIN, 40);
 
-    public ConfigurationButton() {
+    public CopyButton() {
         super();
         enableInputMethods(true);
         setContentAreaFilled(false);
-        setToolTipText("Open the configuration panel");
+        this.setToolTipText("Copy the current path to a new tab");
     }
 
     @Override
@@ -37,7 +30,7 @@ public class ConfigurationButton extends JButton {
         gc.setColor(Color.WHITE);
         gc.setStroke(stroke);
         gc.setFont(font);
-        gc.drawString("C", 12, 40);
+        gc.drawString(Character.toString((char)9112), 12, 40);
     }
 
     @Override
@@ -47,4 +40,5 @@ public class ConfigurationButton extends JButton {
 
     @Override
     public void paintBorder(Graphics g) { }
+
 }

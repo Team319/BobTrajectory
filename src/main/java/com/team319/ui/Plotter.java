@@ -37,6 +37,11 @@ public class Plotter extends JPanel {
         }
     }
 
+    public Plotter(String pathName, List<DraggableWaypoint> waypoints) {
+        this(pathName);
+        waypointListener.setWaypoints(waypoints);
+    }
+
     @Override
     public void paintComponent(Graphics g) {
         super.paintComponent(g);

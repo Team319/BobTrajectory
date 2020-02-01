@@ -28,6 +28,7 @@ import com.team319.io.PathExporter;
 import com.team319.io.PathImporter;
 import com.team319.io.TrajectoryExporter;
 import com.team319.trajectory.BobPath;
+import com.team319.trajectory.ExportType;
 import com.team319.trajectory.RobotConfig;
 
 public class BobTrajectoryApp extends JFrame {
@@ -40,6 +41,12 @@ public class BobTrajectoryApp extends JFrame {
 
     FieldTabs tabs = new FieldTabs();
     JPanel buttons = new JPanel();
+    ConfigurationButton configurationButton = new ConfigurationButton();
+    NewPathButton newPathButton = new NewPathButton();
+    CopyButton copyPathButton = new CopyButton();
+    SaveButton saveButton = new SaveButton();
+    OpenButton openButton = new OpenButton();
+    DeletePathButton deletePathButton = new DeletePathButton();
 
     public BobTrajectoryApp() {
         Image icon = new BufferedImage(1, 1, BufferedImage.TYPE_INT_ARGB_PRE);
@@ -60,26 +67,20 @@ public class BobTrajectoryApp extends JFrame {
 
     private void setupTabPanel() {
         getContentPane().setBackground(new Color(50, 50, 50));
-        NewPathButton newPathButton = new NewPathButton();
         newPathButton.addActionListener(new CreateNewPath());
-
-        DeletePathButton deletePathButton = new DeletePathButton();
         deletePathButton.addActionListener(new DeletePath());
-
-        ConfigurationButton configurationButton = new ConfigurationButton();
+        copyPathButton.addActionListener(new CopyPath());
+        copyPathButton.setEnabled(tabs.getComponents() != null && tabs.getComponents().length > 0);
         configurationButton.addActionListener(new OpenConfiguration());
-
-        SaveButton saveButton = new SaveButton();
         saveButton.addActionListener(new SavePath());
         saveButton.setEnabled(false);
-
-        OpenButton openButton = new OpenButton();
         openButton.addActionListener(new OpenPath());
 
         buttons.setBackground(new Color(50, 50, 50));
         buttons.setComponentOrientation(ComponentOrientation.LEFT_TO_RIGHT);
         buttons.add(newPathButton);
         buttons.add(deletePathButton);
+        buttons.add(copyPathButton);
         buttons.add(configurationButton);
         buttons.add(saveButton);
         buttons.add(openButton);
@@ -118,10 +119,8 @@ public class BobTrajectoryApp extends JFrame {
      }
 
      private void enableSaveButton() {
-        Component c = buttons.getComponent(3); // If there's a better way to get a particular button, like find by name, that'd be better
-        if (c instanceof SaveButton) {
-            c.setEnabled(true);
-        }
+         saveButton.setEnabled(true);
+         copyPathButton.setEnabled(true);
      }
 
     private class CreateNewPath implements ActionListener {
@@ -131,13 +130,45 @@ public class BobTrajectoryApp extends JFrame {
             if (Strings.isNullOrEmpty(name)) {
                 return;
             }
-
+            if(RobotConfig.exportType == ExportType.CLASS) {
+                name = cleanPathName(name);
+            }
             enableSaveButton();
             Plotter newPath = new Plotter(name);
             tabs.addTab(newPath.getPathName(), newPath);
             tabs.repaint();
             pack();
 		}
+    }
+
+    /**
+     * Should act like a "new" path, but copies the current-active path.
+     */
+    private class CopyPath implements ActionListener {
+        @Override
+        public void actionPerformed(ActionEvent e) {
+            String name = JOptionPane.showInputDialog(BobTrajectoryApp.this, "New path name: ", "New Path", JOptionPane.PLAIN_MESSAGE);
+            if (Strings.isNullOrEmpty(name)) {
+                return;
+            }
+
+            if(RobotConfig.exportType == ExportType.CLASS) {
+                name = cleanPathName(name);
+            }
+
+            Plotter currentPath = (Plotter)tabs.getSelectedComponent();
+            Plotter newPath = new Plotter(name);
+
+            List<DraggableWaypoint> copywaypoints = new ArrayList<>();
+            for(DraggableWaypoint waypoint : currentPath.getPath().getWaypoints()){
+                copywaypoints.add(new DraggableWaypoint(waypoint, newPath));
+            }
+            newPath.getWaypointListener().setWaypoints(copywaypoints);
+
+            tabs.addTab(newPath.getPathName(), newPath);
+            tabs.repaint();
+            pack();
+        }
     }
 
     private class DeletePath implements ActionListener {
@@ -263,5 +294,12 @@ public class BobTrajectoryApp extends JFrame {
 
             @Override
             public void windowDeactivated(WindowEvent e) {}
+    }
+
+    /**
+     * Removes all characters from a path which would cause a Java class-based generated path to not compile.
+     */
+    public static String cleanPathName(String path) {
+        return path.trim().replaceAll("[\\\\/:;*?\"= <>|-]", "");
     }
 }

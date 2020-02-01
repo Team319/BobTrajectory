@@ -39,11 +39,25 @@ public class DraggableWaypoint implements MouseListener, MouseMotionListener {
     private Plotter parentPanel;
 
     public DraggableWaypoint(double x, double y, double heading, double currentVelocity, double maxVelocity, Plotter parentPanel) {
+        this(parentPanel);
         this.x = roundTo2(x);
         this.y = roundTo2(y);
         this.heading = heading;
         this.currentVelocity = currentVelocity;
         this.maxVelocity = maxVelocity;
+    }
+
+    public DraggableWaypoint(DraggableWaypoint copy, Plotter parentPanel) {
+        this(parentPanel);
+        this.x = copy.x;
+        this.y = copy.y;
+        this.heading = copy.heading;
+        this.currentVelocity = copy.currentVelocity;
+        this.maxVelocity = copy.maxVelocity;
+        this.parentPanel = parentPanel;
+    }
+
+    private DraggableWaypoint(Plotter parentPanel) {
         this.parentPanel = parentPanel;
         parentPanel.addMouseListener(this);
         parentPanel.addMouseMotionListener(this);

@@ -1,5 +1,5 @@
 # BobTrajectory
-A library for generating paths using 254's 2014 code and following them via Talon SRX Motion Profile Arc Mode.  Brought to you by teams 319 and 2363.
+A library for generating paths using a modified version 254's 2014 code through a GUI.  Brought to you by teams 319 and 2363.
 
 ## Setup
 1. Add the following to your build.gradle, This allows you to pull the dependencies needed from a github repository:

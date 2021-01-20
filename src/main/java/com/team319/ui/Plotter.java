@@ -18,19 +18,21 @@ import com.team319.trajectory.BobPath;
 public class Plotter extends JPanel {
 
     private static final long serialVersionUID = 1L;
-    private static String fieldImage = "/field_image_2020_large.png";
+    private static String fieldImage = "/2021_at_home.png";
     private BufferedImage img;
     private static double scale;
     private int fieldHeight;
     private WaypointListener waypointListener;
     private String pathName;
 
+    private static final double FIELD_HEIGHT = 15.0;
+
     public Plotter(String pathName) {
         waypointListener = new WaypointListener(this);
         try {
             this.pathName = pathName;
             img = ImageIO.read(getClass().getResourceAsStream(fieldImage));
-            scale = img.getHeight() / 27.0;
+            scale = img.getHeight() / FIELD_HEIGHT;
             fieldHeight = img.getHeight();
         } catch (IOException e) {
             e.printStackTrace();
@@ -87,11 +89,11 @@ public class Plotter extends JPanel {
     }
 
     public static int convertYToPixel(double value) {
-        return (int)((13.5 - value) * scale);
+        return (int)((FIELD_HEIGHT/2 - value) * scale);
     }
 
     public static double convertYFromPixel(double pixel) {
-        return (27 - pixel / scale) - 13.5;
+        return (FIELD_HEIGHT - pixel / scale) - FIELD_HEIGHT/2;
     }
 
     public BobPath getPath() {

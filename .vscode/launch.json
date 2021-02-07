@@ -1,0 +1,48 @@
+{
+  // Use IntelliSense to learn about possible attributes.
+  // Hover to view descriptions of existing attributes.
+  // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "type": "java",
+      "name": "CodeLens (Launch) - PlotterFrame",
+      "request": "launch",
+      "mainClass": "com.team319.ui.PlotterFrame",
+      "projectName": "BobTrajectory"
+    },
+    {
+      "type": "java",
+      "name": "CodeLens (Launch) - PlotterViewer",
+      "request": "launch",
+      "mainClass": "com.team319.ui.PlotterViewer",
+      "projectName": "BobTrajectory"
+    },
+    {
+      "type": "java",
+      "name": "CodeLens (Launch) - PathLoader",
+      "request": "launch",
+      "mainClass": "com.team319.PathLoader",
+      "projectName": "BobTrajectory"
+    },
+    {
+      "type": "java",
+      "name": "CodeLens (Launch) - BobPathCreator",
+      "request": "launch",
+      "mainClass": "com.team319.BobPathCreator",
+      "projectName": "BobTrajectory"
+    },
+    {
+      "type": "wpilib",
+      "name": "WPILib Desktop Debug",
+      "request": "launch",
+      "desktop": true
+    },
+    {
+      "type": "wpilib",
+      "name": "WPILib roboRIO Debug",
+      "request": "launch",
+      "desktop": false
+    }
+  ]
+}

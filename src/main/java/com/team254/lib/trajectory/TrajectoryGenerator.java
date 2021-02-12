@@ -27,7 +27,7 @@ public class TrajectoryGenerator {
 
 
 		// Add ramp down points
-		while(currentVelocity > finalVelocity) {
+		while(currentVelocity > (finalVelocity + RobotConfig.maxAcceleration * dt)) {
 			currentVelocity -= RobotConfig.maxAcceleration * dt;
 			currentDistance += currentVelocity * dt;
 
@@ -39,6 +39,15 @@ public class TrajectoryGenerator {
 
 			trajectory.getSegments().add(current);
 		}
+
+		// Add final segment
+		Segment current = new Segment();
+		current.pos = finalDistance;
+		current.vel = finalVelocity;
+		current.acc = -RobotConfig.maxAcceleration;
+		current.dt = dt;
+		trajectory.getSegments().add(current);
+
 		return trajectory;
 	}
 

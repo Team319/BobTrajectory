@@ -8,14 +8,14 @@ import java.awt.event.MouseListener;
 
 import javax.swing.JOptionPane;
 
-import com.team254.lib.trajectory.Spline;
+import com.team2363.QuinticHermiteSpline;
 
 public class ClickableSpline implements MouseListener{
     private static final int DIAMETER = 20;
     private static final int BUFFER_WIDTH = 10;
     private static final Color PURPLE = new Color(148, 0, 211);
 
-    private Spline spline;
+    private QuinticHermiteSpline spline;
     private double clickableX;
     private double clickableY;
     private DraggableWaypoint endPoint;
@@ -25,11 +25,11 @@ public class ClickableSpline implements MouseListener{
 
     private Plotter parentPanel;
 
-    public ClickableSpline(Spline spline, Plotter parentPanel, DraggableWaypoint startPoint, DraggableWaypoint endPoint) {
+    public ClickableSpline(QuinticHermiteSpline spline, Plotter parentPanel, DraggableWaypoint startPoint, DraggableWaypoint endPoint) {
         this.spline = spline;
         this.parentPanel = parentPanel;
-        this.clickableX = spline.getXandY(0.5)[0];
-        this.clickableY = spline.getXandY(0.5)[1];
+        this.clickableX = spline.xpos(0.5);
+        this.clickableY = spline.ypos(0.5);
         this.endPoint = endPoint;
         this.startPoint = startPoint;
         parentPanel.addMouseListener(this);
@@ -55,9 +55,8 @@ public class ClickableSpline implements MouseListener{
 
     private void drawSpline(Graphics2D gc) {
         for (double i = 0; i <= 1; i += 0.005) {
-            double[] xy = spline.getXandY(i);
-                gc.fillOval(
-                    Plotter.convertXToPixel(xy[0]) - 2, Plotter.convertYToPixel(xy[1]) - 2, 4, 4);
+            gc.fillOval(
+                Plotter.convertXToPixel(spline.xpos(i)) - 2, Plotter.convertYToPixel(spline.ypos(i)) - 2, 4, 4);
         }
     }
 

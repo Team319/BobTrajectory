@@ -11,6 +11,8 @@ import java.util.List;
 import javax.imageio.ImageIO;
 import javax.swing.JPanel;
 
+import com.team2363.HelixSplineGenerator;
+import com.team2363.QuinticHermiteSpline;
 import com.team254.lib.trajectory.Spline;
 import com.team254.lib.trajectory.SplineGenerator;
 import com.team319.trajectory.BobPath;
@@ -59,7 +61,7 @@ public class Plotter extends JPanel {
         
         List<DraggableWaypoint> waypoints = new ArrayList<>(waypointListener.getWaypoints());
         try {
-            Spline[] splines = SplineGenerator.getSplines(waypoints);
+            QuinticHermiteSpline[] splines = HelixSplineGenerator.getSplines(waypoints);
             List<ClickableSpline> clickableSplines = new ArrayList<>();
             for (int i = 0; i < splines.length; i++) {
                 ClickableSpline clickableSpline = new ClickableSpline(splines[i], this, waypoints.get(i), waypoints.get(i+1));

@@ -75,10 +75,10 @@ public class QuinticHermiteSpline {
 		double integral = 0;
         double integrand, last_integrand = Math.sqrt(dx(0) * dx(0) + dy(0) * dy(0)) / kNumSamples;
         
-		for (double i = 1 / kNumSamples; i <= kNumSamples; i += 1 / kNumSamples) {
+		for (double i = 1; i <= kNumSamples; ++i) {
             double t = i / kNumSamples;
 			integrand = Math.sqrt(dx(t) * dx(t) + dy(t) * dy(t)) / kNumSamples;
-			integral += (integrand + last_integrand) / (2 * kNumSamples);
+			integral += (integrand + last_integrand) / 2;
 			last_integrand = integrand;
         }
         
@@ -93,7 +93,7 @@ public class QuinticHermiteSpline {
         double t = 0;
         double integrand, last_integrand = Math.sqrt(dx(0) * dx(0) + dy(0) * dy(0)) / kNumSamples;
         
-		for (double i = 1 / kNumSamples; i <= kNumSamples; i += 1 / kNumSamples) {
+		for (double i = 1; i <= kNumSamples; ++i) {
             t = i / kNumSamples;
 			integrand = Math.sqrt(dx(t) * dx(t) + dy(t) * dy(t)) / kNumSamples;
             integral += (integrand + last_integrand) / 2;

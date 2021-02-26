@@ -41,35 +41,71 @@ public class QuinticHermiteSpline {
         fy = y0;
     }
 
-    public double xpos(double s) {
-        return ax * s * s * s * s * s + bx * s * s * s * s + cx * s * s * s + dx * s * s + ex * s + fx;
+    public double x(double t) {
+        return ax * t * t * t * t * t + bx * t * t * t * t + cx * t * t * t + dx * t * t + ex * t + fx;
     }
 
-    public double ypos(double s) {
-        return ay * s * s * s * s * s + by * s * s * s * s + cy * s * s * s + dy * s * s + ey * s + fy;
+    public double y(double t) {
+        return ay * t * t * t * t * t + by * t * t * t * t + cy * t * t * t + dy * t * t + ey * t + fy;
     }
 
-    public double dx(double s) {
-        return 5 * ax * s * s * s * s + 4 * bx * s * s * s + 3 * cx * s * s + 2 * dx * s + ex;
+    public double getRotation(double t) {
+        return Math.atan2(dy(t), dx(t));
     }
 
-    public double dy(double s) {
-        return 5 * ay * s * s * s * s + 4 * by * s * s * s + 3 * cy * s * s + 2 * dy * s + ey;
+    private double dx(double t) {
+        return 5 * ax * t * t * t * t + 4 * bx * t * t * t + 3 * cx * t * t + 2 * dx * t + ex;
     }
 
-    public double ddx(double s) {
-        return 20 * ax * s * s * s + 12 * bx * s * s + 6 * cx * s + 2 * dx;
+    private double dy(double t) {
+        return 5 * ay * t * t * t * t + 4 * by * t * t * t + 3 * cy * t * t + 2 * dy * t + ey;
     }
 
-    public double ddy(double s) {
-        return 20 * ay * s * s * s + 12 * by * s * s + 6 * cy * s + 2 * dy;
+    private double ddx(double t) {
+        return 20 * ax * t * t * t + 12 * bx * t * t + 6 * cx * t + 2 * dx;
     }
 
-    public double getAngle(double s) {
-        return Math.atan2(dy(s), dx(s));
+    private double ddy(double t) {
+        return 20 * ay * t * t * t + 12 * by * t * t + 6 * cy * t + 2 * dy;
     }
 
-    public double getCurvature(double s) {
-        return Math.atan2(dy(s), dx(s));
+    public double calculateLength() {
+
+        final int kNumSamples = 100000;
+		double integral = 0;
+        double integrand, last_integrand = Math.sqrt(dx(0) * dx(0) + dy(0) * dy(0)) / kNumSamples;
+        
+		for (double i = 1 / kNumSamples; i <= kNumSamples; i += 1 / kNumSamples) {
+            double t = i / kNumSamples;
+			integrand = Math.sqrt(dx(t) * dx(t) + dy(t) * dy(t)) / kNumSamples;
+			integral += (integrand + last_integrand) / (2 * kNumSamples);
+			last_integrand = integrand;
+        }
+        
+		return integral;
     }
+    
+    public double parametrizeSpline(double distance) {
+
+        final int kNumSamples = 100000;
+        double integral = 0;
+        double last_integral = 0;
+        double t = 0;
+        double integrand, last_integrand = Math.sqrt(dx(0) * dx(0) + dy(0) * dy(0)) / kNumSamples;
+        
+		for (double i = 1 / kNumSamples; i <= kNumSamples; i += 1 / kNumSamples) {
+            t = i / kNumSamples;
+			integrand = Math.sqrt(dx(t) * dx(t) + dy(t) * dy(t)) / kNumSamples;
+            integral += (integrand + last_integrand) / 2;
+            if (integral > distance) break;
+            last_integrand = integrand;
+            last_integral = integral;
+        }
+        
+        if (integral != last_integral) {
+            return t + ((distance - last_integral) / (integral - last_integral) - 1) / kNumSamples;
+        }
+
+		return t;
+	}
 }

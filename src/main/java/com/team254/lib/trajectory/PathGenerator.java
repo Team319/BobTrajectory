@@ -2,13 +2,15 @@ package com.team254.lib.trajectory;
 
 import java.util.List;
 
+import com.team2363.HelixSplineGenerator;
+import com.team2363.QuinticHermiteSpline;
 import com.team319.trajectory.RobotConfig;
 import com.team319.ui.DraggableWaypoint;
 
 public class PathGenerator {
 
 	public static Trajectory generateTrajectory(List<DraggableWaypoint> waypoints) {
-		Spline[] splines = SplineGenerator.getSplines(waypoints);
+		QuinticHermiteSpline[] splines = HelixSplineGenerator.getSplines(waypoints);
 		// Generate a smooth trajectory over the total distance.
 		Trajectory traj = TrajectoryGenerator.generate(
 				0.0,
@@ -33,7 +35,7 @@ public class PathGenerator {
 		return traj;
 	}	
 
-	private static void assignHeadings(Trajectory traj, Spline[] splines) {
+	private static void assignHeadings(Trajectory traj, QuinticHermiteSpline[] splines) {
 		// Assign headings based on the splines.
 		int cur_spline = 0;
 		double cur_spline_start_pos = 0;
@@ -45,21 +47,19 @@ public class PathGenerator {
 			while (!found_spline) {
 				double cur_pos_relative = cur_pos - cur_spline_start_pos;
 				if (cur_pos_relative <= splines[cur_spline].calculateLength()) {
-					double percentage = splines[cur_spline].getPercentageForDistance(cur_pos_relative);
-					traj.getSegments().get(i).heading = splines[cur_spline].angleAt(percentage);
-					double[] coords = splines[cur_spline].getXandY(percentage);
-					traj.getSegments().get(i).x = coords[0];
-					traj.getSegments().get(i).y = coords[1];
+					double t = splines[cur_spline].parametrizeSpline(cur_pos_relative);
+					traj.getSegments().get(i).heading = splines[cur_spline].getRotation(t);
+					traj.getSegments().get(i).x = splines[cur_spline].x(t);
+					traj.getSegments().get(i).y = splines[cur_spline].y(t);
 					found_spline = true;
 				} else if (cur_spline < splines.length - 1) {
 					length_of_splines_finished += splines[cur_spline].calculateLength();
 					cur_spline_start_pos = length_of_splines_finished;
 					++cur_spline;
 				} else {
-					traj.getSegments().get(i).heading = splines[splines.length - 1].angleAt(1.0);
-					double[] coords = splines[splines.length - 1].getXandY(1.0);
-					traj.getSegments().get(i).x = coords[0];
-					traj.getSegments().get(i).y = coords[1];
+					traj.getSegments().get(i).heading = splines[splines.length - 1].getRotation(1.0);
+					traj.getSegments().get(i).x = splines[splines.length - 1].x(1.0);
+					traj.getSegments().get(i).y = splines[splines.length - 1].y(1.0);
 					found_spline = true;
 				}
 			}

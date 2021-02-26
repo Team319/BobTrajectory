@@ -28,8 +28,8 @@ public class ClickableSpline implements MouseListener{
     public ClickableSpline(QuinticHermiteSpline spline, Plotter parentPanel, DraggableWaypoint startPoint, DraggableWaypoint endPoint) {
         this.spline = spline;
         this.parentPanel = parentPanel;
-        this.clickableX = spline.xpos(0.5);
-        this.clickableY = spline.ypos(0.5);
+        this.clickableX = spline.x(0.5);
+        this.clickableY = spline.y(0.5);
         this.endPoint = endPoint;
         this.startPoint = startPoint;
         parentPanel.addMouseListener(this);
@@ -56,7 +56,7 @@ public class ClickableSpline implements MouseListener{
     private void drawSpline(Graphics2D gc) {
         for (double i = 0; i <= 1; i += 0.005) {
             gc.fillOval(
-                Plotter.convertXToPixel(spline.xpos(i)) - 2, Plotter.convertYToPixel(spline.ypos(i)) - 2, 4, 4);
+                Plotter.convertXToPixel(spline.x(i)) - 2, Plotter.convertYToPixel(spline.y(i)) - 2, 4, 4);
         }
     }
 

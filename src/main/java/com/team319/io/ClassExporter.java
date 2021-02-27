@@ -11,7 +11,7 @@ public class ClassExporter {
 		return new StringBuilder()
 
 		// package and imports
-        .append("package frc.paths;").append(NEW_LINE).append(NEW_LINE)
+        .append("package com.paths;").append(NEW_LINE).append(NEW_LINE)
 		.append("import com.team319.trajectory.Path;").append(NEW_LINE).append(NEW_LINE)
 
 		// beginning of the class

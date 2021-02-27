@@ -1,50 +1,75 @@
 package com.team254.lib.trajectory;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import com.team319.trajectory.RobotConfig;
 
 public class TrajectoryGenerator {
 
-	public static Trajectory generate(double startVelocity, double startDistance, double finalDistance, double finalVelocity, double maxVelocity) {
-		Trajectory trajectory = new Trajectory();
-		double currentVelocity = startVelocity;
-		double currentDistance = startDistance;
+	public static Trajectory generate(double startVelocity, double startPosition, double finalPosition, double finalVelocity, double maxVelocity) {
 		double dt = RobotConfig.dt;
-
+		
+		List<Segment> segments = new ArrayList<>();
+		double currentVelocity = startVelocity;
+		double currentPosition = startPosition;
+		
+		double nextVelocity = startVelocity + RobotConfig.maxAcceleration * dt;
+		double nextPosition = startPosition + (startVelocity + nextVelocity) / 2 * dt;
+		
 		// Add ramp up points
-		while(isEnoughDistanceRemainingToRampDown(currentVelocity, finalVelocity, finalDistance - currentDistance)) {
-			currentVelocity += RobotConfig.maxAcceleration * dt;
-			currentVelocity = Math.min(maxVelocity, currentVelocity);
-			currentDistance += currentVelocity * dt;
-
+		while(isEnoughDistanceRemainingToRampDown(nextVelocity, finalVelocity, finalPosition - nextPosition)) {
+			currentVelocity = nextVelocity;
+			currentPosition = nextPosition;
+	
 			Segment current = new Segment();
-			current.pos = currentDistance;
+			current.pos = currentPosition;
 			current.vel = currentVelocity;
 			current.acc = RobotConfig.maxAcceleration;
 			current.dt = dt;
 
-			trajectory.getSegments().add(current);
-		}
+			segments.add(current);
 
+			nextVelocity = currentVelocity + RobotConfig.maxAcceleration * dt;
+			nextVelocity = Math.min(maxVelocity, nextVelocity);
+			nextPosition = currentPosition +  (currentVelocity + nextVelocity) / 2 * dt;
+		} 
 
-		// Add ramp down points
-		while(currentVelocity > finalVelocity) {
-			currentVelocity -= RobotConfig.maxAcceleration * dt;
-			currentDistance += currentVelocity * dt;
+		double remainingDistance = finalPosition - currentPosition;
+		double rampDownAcceleration = (finalVelocity * finalVelocity - currentVelocity * currentVelocity) / 2.0 / remainingDistance;
 
+		nextVelocity = currentVelocity + rampDownAcceleration * dt;
+		nextPosition = currentPosition +  (currentVelocity + nextVelocity) / 2 * dt;
+
+		// add ramp down points
+		while(rampDownAcceleration != 0 && nextVelocity >= finalVelocity) {
+			currentVelocity = nextVelocity;
+			currentPosition = nextPosition;
+	
 			Segment current = new Segment();
-			current.pos = Math.min(currentDistance, finalDistance);
+			current.pos = currentPosition;
 			current.vel = currentVelocity;
-			current.acc = -RobotConfig.maxAcceleration;
+			current.acc = rampDownAcceleration;
 			current.dt = dt;
 
-			trajectory.getSegments().add(current);
-		}
+			segments.add(current);
+
+			nextVelocity = currentVelocity + rampDownAcceleration * dt;
+			nextPosition = currentPosition + (currentVelocity + nextVelocity) / 2 * dt;
+		} 
+
+		Trajectory trajectory = new Trajectory();
+		trajectory.getSegments().addAll(segments);
 		return trajectory;
 	}
 
 	private static boolean isEnoughDistanceRemainingToRampDown(double currentVelocity, double finalVelocity, double distanceRemaining) {
-		double timeToDecellerate = (currentVelocity - finalVelocity) / RobotConfig.maxAcceleration;
-		double distanceToDecellerate = (currentVelocity + finalVelocity) / 2.0 * timeToDecellerate;
+		double distanceToDecellerate = getRampDownDistanceNeeded(currentVelocity, finalVelocity);
 		return distanceToDecellerate < distanceRemaining;
+	}
+
+	private static double getRampDownDistanceNeeded(double currentVelocity, double finalVelocity) {
+		double timeToDecellerate = (currentVelocity - finalVelocity) / RobotConfig.maxAcceleration;
+		return (currentVelocity + finalVelocity) / 2.0 * timeToDecellerate;
 	}
 }

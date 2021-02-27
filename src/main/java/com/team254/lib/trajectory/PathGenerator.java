@@ -2,15 +2,16 @@ package com.team254.lib.trajectory;
 
 import java.util.List;
 
-import com.team2363.HelixSplineGenerator;
-import com.team2363.QuinticHermiteSpline;
+import com.team2363.geometry.Pose2d;
+import com.team2363.spline.Spline;
+import com.team2363.spline.SplineGenerator;
 import com.team319.trajectory.RobotConfig;
 import com.team319.ui.DraggableWaypoint;
 
 public class PathGenerator {
 
 	public static Trajectory generateTrajectory(List<DraggableWaypoint> waypoints) {
-		QuinticHermiteSpline[] splines = HelixSplineGenerator.getSplines(waypoints);
+		Spline[] splines = SplineGenerator.getSplines(waypoints);
 		// Generate a smooth trajectory over the total distance.
 		Trajectory traj = TrajectoryGenerator.generate(
 				0.0,
@@ -35,34 +36,25 @@ public class PathGenerator {
 		return traj;
 	}	
 
-	private static void assignHeadings(Trajectory traj, QuinticHermiteSpline[] splines) {
+	private static void assignHeadings(Trajectory traj, Spline[] splines) {
 		// Assign headings based on the splines.
 		int cur_spline = 0;
-		double cur_spline_start_pos = 0;
-		double length_of_splines_finished = 0;
-		for (int i = 0; i < traj.getNumSegments(); ++i) {
-			double cur_pos = traj.getSegments().get(i).pos;
+		double start_pos = 0;
+		double splineLength = splines[0].calculateLength();
+		for (Segment segment : traj.getSegments()) {
 
-			boolean found_spline = false;
-			while (!found_spline) {
-				double cur_pos_relative = cur_pos - cur_spline_start_pos;
-				if (cur_pos_relative <= splines[cur_spline].calculateLength()) {
-					double t = splines[cur_spline].parametrizeSpline(cur_pos_relative);
-					traj.getSegments().get(i).heading = splines[cur_spline].getRotation(t);
-					traj.getSegments().get(i).x = splines[cur_spline].x(t);
-					traj.getSegments().get(i).y = splines[cur_spline].y(t);
-					found_spline = true;
-				} else if (cur_spline < splines.length - 1) {
-					length_of_splines_finished += splines[cur_spline].calculateLength();
-					cur_spline_start_pos = length_of_splines_finished;
-					++cur_spline;
-				} else {
-					traj.getSegments().get(i).heading = splines[splines.length - 1].getRotation(1.0);
-					traj.getSegments().get(i).x = splines[splines.length - 1].x(1.0);
-					traj.getSegments().get(i).y = splines[splines.length - 1].y(1.0);
-					found_spline = true;
-				}
+			if (segment.pos - start_pos > splineLength && cur_spline < splines.length - 1) {
+				start_pos += splineLength;
+				splineLength = splines[cur_spline + 1].calculateLength();
+				cur_spline++;
 			}
+
+			double input = Math.min(1, splines[cur_spline].calculateInput(segment.pos - start_pos));
+			Pose2d pose = splines[cur_spline].getPoint(input);
+
+			segment.x = pose.x();
+			segment.y = pose.y();
+			segment.heading = pose.getRotation();
 		}
 	}
 
@@ -83,56 +75,43 @@ public class PathGenerator {
 				headingDelta = lastUncorrectedHeading - uncorrectedHeading;
 			}
 
-			double correctedHeading = lastCorrectedHeading - headingDelta;
-			currentSegment.heading = correctedHeading;
+			currentSegment.heading = lastCorrectedHeading - headingDelta;
 			lastUncorrectedHeading = uncorrectedHeading;
-			lastCorrectedHeading = correctedHeading;
+			lastCorrectedHeading = currentSegment.heading;
 		}
 	}
 
 	public static TrajectorySet makeLeftAndRightTrajectories(Trajectory input) {
-		Trajectory[] output = new Trajectory[2];
-		output[0] = input.copy();
-		output[1] = input.copy();
-		Trajectory left = output[0];
-		Trajectory right = output[1];
+		Trajectory left = input.copy();
+		Trajectory right = input.copy();
 
 		for (int i = 0; i < input.getNumSegments(); ++i) {
-			Segment current = input.getSegments().get(i);
-			double cos_angle = Math.cos(current.heading);
-			double sin_angle = Math.sin(current.heading);
+			Segment currentCenter = input.getSegments().get(i);
+			double cos_angle = Math.cos(currentCenter.heading);
+			double sin_angle = Math.sin(currentCenter.heading);
 
-			Segment s_left = left.getSegments().get(i);
-			s_left.x = current.x - RobotConfig.wheelBase / 2 * sin_angle;
-			s_left.y = current.y + RobotConfig.wheelBase / 2 * cos_angle;
-			if (i > 0) {
-				// Get distance between current and last segment
-				double dist = Math.sqrt((s_left.x - left.getSegments().get(i - 1).x)
-						* (s_left.x - left.getSegments().get(i - 1).x)
-						+ (s_left.y - left.getSegments().get(i - 1).y)
-						* (s_left.y - left.getSegments().get(i - 1).y));
-				s_left.pos = left.getSegments().get(i - 1).pos + dist;
-				s_left.vel = dist / s_left.dt;
-				s_left.acc = (s_left.vel - left.getSegments().get(i - 1).vel) / s_left.dt;
-				s_left.jerk = (s_left.acc - left.getSegments().get(i - 1).acc) / s_left.dt;
-			}
+			Segment currentLeft = right.getSegments().get(i);
+			currentLeft.x = currentCenter.x + RobotConfig.wheelBase / 2 * sin_angle;
+			currentLeft.y = currentCenter.y - RobotConfig.wheelBase / 2 * cos_angle;
+			if (i > 0) calculateSegmentData(currentLeft, left.getSegments().get(i - 1));
 
-			Segment s_right = right.getSegments().get(i);
-			s_right.x = current.x + RobotConfig.wheelBase / 2 * sin_angle;
-			s_right.y = current.y - RobotConfig.wheelBase / 2 * cos_angle;
-			if (i > 0) {
-				// Get distance between current and last segment
-				double dist = Math.sqrt((s_right.x - right.getSegments().get(i - 1).x)
-						* (s_right.x - right.getSegments().get(i - 1).x)
-						+ (s_right.y - right.getSegments().get(i - 1).y)
-						* (s_right.y - right.getSegments().get(i - 1).y));
-				s_right.pos = right.getSegments().get(i - 1).pos + dist;
-				s_right.vel = dist / s_right.dt;
-				s_right.acc = (s_right.vel - right.getSegments().get(i - 1).vel) / s_right.dt;
-				s_right.jerk = (s_right.acc - right.getSegments().get(i - 1).acc) / s_right.dt;
-			}
+			Segment currentRight = right.getSegments().get(i);
+			currentRight.x = currentCenter.x + RobotConfig.wheelBase / 2 * sin_angle;
+			currentRight.y = currentCenter.y - RobotConfig.wheelBase / 2 * cos_angle;
+			if (i > 0) calculateSegmentData(currentRight, right.getSegments().get(i - 1));
 		}
 
-		return new TrajectorySet(output[0], input, output[1]);
+		return new TrajectorySet(left, input, right);
+	}
+
+	private static void calculateSegmentData(Segment current, Segment previous) {
+		double dist = Math.sqrt((current.x - previous.x) 
+		* (current.x - previous.x) 
+		+ (current.y - previous.y) 
+		* (current.y - previous.y));
+		current.pos = previous.pos + dist;
+		current.vel = dist / current.dt;
+		current.acc = (current.vel - previous.vel) / current.dt;
+		current.jerk = (current.acc - previous.acc) / current.dt;
 	}
 }

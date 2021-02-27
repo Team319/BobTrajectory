@@ -5,52 +5,54 @@
 /* the project.                                                               */
 /*----------------------------------------------------------------------------*/
 
-package com.team2363;
+package com.team2363.spline;
 
-public class QuinticHermiteSpline {
+import com.team2363.geometry.Pose2d;
+
+public class ParametricQuinticSpline extends Spline {
 
     private double vectorMagnitude;
     private double dx0,dx1,dy0,dy1;
     private double ax,bx,cx,dx,ex,fx,ay,by,cy,dy,ey,fy;
 
-    public QuinticHermiteSpline(double x0, double y0, double theta0, double x1, double y1, double theta1) {
+    public ParametricQuinticSpline(Pose2d p0, Pose2d p1) {
 
         // All equations are derived with the assumtion that the second derivative is zero at both endpoints
         // Equations will have to be rederived for implementation of gradient curvature optimization function
 
-        vectorMagnitude = 1.5 * Math.sqrt(Math.pow((x1-x0), 2) + Math.pow((y1-y0), 2));
+        vectorMagnitude = 1.5 * p0.getDistance(p1);
 
-        dx0 = Math.cos(theta0) * vectorMagnitude;
-        dx1 = Math.cos(theta1) * vectorMagnitude;
+        dx0 = Math.cos(p0.getRotation()) * vectorMagnitude;
+        dx1 = Math.cos(p1.getRotation()) * vectorMagnitude;
 
-        dy0 = Math.sin(theta0) * vectorMagnitude;
-        dy1 = Math.sin(theta1) * vectorMagnitude;
+        dy0 = Math.sin(p0.getRotation()) * vectorMagnitude;
+        dy1 = Math.sin(p1.getRotation()) * vectorMagnitude;
 
-        ax = 6 * (x1 - x0) - 3 * (dx0 + dx1);
-        bx = 15 * (x0 - x1) + 8 * dx0 + 7 * dx1;
-        cx = 10 * (x1 - x0) - 6 * dx0 - 4 * dx1;
+        ax = 6 * (p1.x() - p0.x()) - 3 * (dx0 + dx1);
+        bx = 15 * (p0.x() - p1.x()) + 8 * dx0 + 7 * dx1;
+        cx = 10 * (p1.x() - p0.x()) - 6 * dx0 - 4 * dx1;
         dx = 0;
         ex = dx0;
-        fx = x0;
+        fx = p0.x();
 
-        ay = 6 * (y1 - y0) - 3 * (dy0 + dy1);
-        by = 15 * (y0 - y1) + 8 * dy0 + 7 * dy1;
-        cy = 10 * (y1 - y0) - 6 * dy0 - 4 * dy1;
+        ay = 6 * (p1.y() - p0.y()) - 3 * (dy0 + dy1);
+        by = 15 * (p0.y() - p1.y()) + 8 * dy0 + 7 * dy1;
+        cy = 10 * (p1.y() - p0.y()) - 6 * dy0 - 4 * dy1;
         dy = 0;
         ey = dy0;
-        fy = y0;
+        fy = p0.y();
     }
 
-    public double x(double t) {
+    public Pose2d getPoint(double t) {
+        return new Pose2d(x(t), y(t), Math.atan2(dy(t), dx(t)));
+    }
+
+    private double x(double t) {
         return ax * t * t * t * t * t + bx * t * t * t * t + cx * t * t * t + dx * t * t + ex * t + fx;
     }
 
-    public double y(double t) {
+    private double y(double t) {
         return ay * t * t * t * t * t + by * t * t * t * t + cy * t * t * t + dy * t * t + ey * t + fy;
-    }
-
-    public double getRotation(double t) {
-        return Math.atan2(dy(t), dx(t));
     }
 
     private double dx(double t) {
@@ -59,14 +61,6 @@ public class QuinticHermiteSpline {
 
     private double dy(double t) {
         return 5 * ay * t * t * t * t + 4 * by * t * t * t + 3 * cy * t * t + 2 * dy * t + ey;
-    }
-
-    private double ddx(double t) {
-        return 20 * ax * t * t * t + 12 * bx * t * t + 6 * cx * t + 2 * dx;
-    }
-
-    private double ddy(double t) {
-        return 20 * ay * t * t * t + 12 * by * t * t + 6 * cy * t + 2 * dy;
     }
 
     public double calculateLength() {
@@ -85,7 +79,7 @@ public class QuinticHermiteSpline {
 		return integral;
     }
     
-    public double parametrizeSpline(double distance) {
+    public double calculateInput(double distance) {
 
         final int kNumSamples = 100000;
         double integral = 0;

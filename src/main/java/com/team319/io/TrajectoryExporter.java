@@ -10,8 +10,8 @@ import com.team319.trajectory.BobPath;
 import com.team319.trajectory.RobotConfig;
 
 public class TrajectoryExporter {
-    private static final String defaultPathPath = "src/main/deploy/paths/";
-    private static final String defaultClassPath = "src/main/java/frc/paths/";
+    private static final String defaultPathPath = "src/main/java/com/paths/";
+    private static final String defaultClassPath = "src/main/java/com/paths/";
 
     /**
      * 

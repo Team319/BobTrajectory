@@ -7,7 +7,7 @@ import java.io.File;
 
 public class PathExporter {
 
-    private static final String defaultPath = "src/main/java/com/paths/";
+    private static final String defaultPath = "src/main/java/frc/paths/";
     public static void exportPaths(List<BobPath> paths) {
         
         StringBuilder data = new StringBuilder();

@@ -90,7 +90,7 @@ public class PathGenerator {
 			double cos_angle = Math.cos(currentCenter.heading);
 			double sin_angle = Math.sin(currentCenter.heading);
 
-			Segment currentLeft = right.getSegments().get(i);
+			Segment currentLeft = left.getSegments().get(i);
 			currentLeft.x = currentCenter.x + RobotConfig.wheelBase / 2 * sin_angle;
 			currentLeft.y = currentCenter.y - RobotConfig.wheelBase / 2 * cos_angle;
 			if (i > 0) calculateSegmentData(currentLeft, left.getSegments().get(i - 1));

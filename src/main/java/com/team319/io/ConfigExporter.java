@@ -6,7 +6,7 @@ import java.io.File;
 public class ConfigExporter {
 
     public static void exportConfig() {
-        exportConfig(new File("src/main/java/com/paths"));
+        exportConfig(new File("src/main/java/frc/paths"));
     }
 
     /**
